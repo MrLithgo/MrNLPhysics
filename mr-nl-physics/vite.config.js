@@ -1,21 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
     plugins: [vue()],
     resolve: {
         alias: {
-            '@': resolve(__dirname, 'src')
-        }
-    },
-    build: {
-        rollupOptions: {
-            input: {
-                main: resolve(__dirname, 'index.html'),
-                gcse: resolve(__dirname, 'public/gcse/index.html'),
-                alevel: resolve(__dirname, 'public/alevel/index.html')
-            }
+            '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
     server: {
