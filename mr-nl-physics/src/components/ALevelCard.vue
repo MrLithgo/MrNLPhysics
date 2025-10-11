@@ -1,11 +1,14 @@
 <template>
-  <div class="simulation-card" @click="handleCardClick">
+  <div class="alevel-card" @click="handleCardClick">
     <div class="card-icon" :class="category">
       <div v-html="iconSvg"></div>
     </div>
     <div class="card-content">
       <h3 class="card-title">{{ title }}</h3>
       <p class="card-description">{{ description }}</p>
+      <ul class="card-list">
+        <li v-for="topic in topics" :key="topic">{{ topic }}</li>
+      </ul>
       <a href="#" class="card-link" @click.prevent="handleCardClick">
         Launch simulations
         <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -18,7 +21,7 @@
 
 <script>
 export default {
-  name: 'SimulationCard',
+  name: 'ALevelCard',
   props: {
     title: {
       type: String,
@@ -26,6 +29,10 @@ export default {
     },
     description: {
       type: String,
+      required: true
+    },
+    topics: {
+      type: Array,
       required: true
     },
     category: {
@@ -49,7 +56,7 @@ export default {
 </script>
 
 <style scoped>
-.simulation-card {
+.alevel-card {
   cursor: pointer;
 }
 </style>
