@@ -1,8 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
-import GCSE from '@/views/GCSE.vue'
-import ALevel from '@/views/ALevel.vue'
-import Topic from '@/views/Topic.vue'
+import GCSEForces from '@/views/GCSEForces.vue'
 
 const routes = [
     {
@@ -11,25 +9,9 @@ const routes = [
         component: Home
     },
     {
-        path: '/gcse',
-        name: 'GCSE',
-        component: GCSE
-    },
-    {
-        path: '/alevel',
-        name: 'ALevel',
-        component: ALevel
-    },
-    {
-        path: '/topic/:subject/:topic',
-        name: 'Topic',
-        component: Topic,
-        props: true
-    },
-    // Catch all redirect to home
-    {
-        path: '/:pathMatch(.*)*',
-        redirect: '/'
+        path: '/gcse/forces-and-motion',
+        name: 'GCSEForces',
+        component: GCSEForces
     }
 ]
 
