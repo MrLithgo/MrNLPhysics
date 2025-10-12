@@ -36,6 +36,9 @@ body {
         "Helvetica Neue", Arial, sans-serif;
     color: var(--navy);
     background: linear-gradient(135deg, #ecf0f1 0%, #d6dbdf 100%);
+    background-attachment: fixed;
+
+    background-size: cover;
     padding: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -56,7 +59,7 @@ h6 {
 .container {
     max-width: var(--max-width);
     margin: 0 auto;
-    min-height: 100vh;
+    /* min-height: 100vh;*/
     display: flex;
     flex-direction: column;
     gap: 18px;
