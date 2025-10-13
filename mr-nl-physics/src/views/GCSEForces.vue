@@ -13,30 +13,12 @@
         <p class="quote-author">- Frank Wilczek</p>
       </div>
 
-      <div class="cards-grid">
-        <!-- Card 1 -->
-        <div class="card">
-          <div class="card-accent teal-accent"></div>
-          <div class="card-content">
-            <div class="card-icon teal-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="6" />
-                <line x1="12" y1="1" x2="12" y2="6" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 1 L9 4 M12 1 L15 4" />
-                <line x1="12" y1="18" x2="12" y2="24" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 24L9 21 M12 24L15 21z " />
-              </svg>
-            </div>
-            <h2>Investigating Motion</h2>
-            <h3>Falling under gravity</h3>
-            <p>In this investigation you measure the time taken for a paper cone to fall different heights.</p>
-            <button @click="launchSimulation('motion.html')" class="btn teal-btn">
-            Launch Simulation
-          </button>
-          </div>
-        </div>
+      
         
-        <!-- Card 1.5 -->
+        
+      <div class="cards-grid">
+
+        <!-- Card Trolley Ramp -->
         <div class="card">
           <div class="card-accent teal-accent"></div>
           <div class="card-content">
@@ -51,11 +33,13 @@
             <h2>Investigating Motion</h2>
             <h3>Trolley and Ramp</h3>
             <p>In this investigation you use light gates to measure the speed of a trolley moving down a ramp.</p>
-            <button @click="simulationAlert('Core Practical 1 - Investigating Motion')" class="btn teal-btn">Launch Simulation</button>
+           <button @click="launchSimulation('trolley-ramp.html')" class="btn teal-btn">
+            Launch Simulation
+          </button>
           </div>
         </div>
 
-        <!-- Card 2 -->
+        <!-- Card Friction -->
         <div class="card">
           <div class="card-accent navy-accent"></div>
           <div class="card-content">
@@ -69,9 +53,12 @@
             <h2>Investigating Friction</h2>
             <h3>Forces in Action</h3>
             <p>Test different surfaces and materials to understand the factors that affect friction.</p>
-            <button @click="simulationAlert('Investigating Friction')" class="btn navy-btn">Launch Simulation</button>
-          </div>
+            <button @click="launchSimulation('friction.html')" class="btn navy-btn">
+            Launch Simulation
+          </button>
         </div>
+        </div>
+        
 
         <!-- Card 3 -->
         <div class="card">
@@ -184,8 +171,8 @@ export default {
   name: 'GCSEForces',
   methods: {
     launchSimulation(page) {
-      // Force full page navigation to the vanilla JS page
-      window.location.href = `/GCSE/simulations/${page}`;
+      //navigation to the vanilla JS page
+       window.open(`/GCSE/simulations/${page}`, '_blank');
     },
   }
 }
