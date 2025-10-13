@@ -30,7 +30,9 @@
             <h2>Investigating Motion</h2>
             <h3>Falling under gravity</h3>
             <p>In this investigation you measure the time taken for a paper cone to fall different heights.</p>
-            <button @click="simulationAlert('Core Practical 1 - Investigating Motion')" class="btn teal-btn">Launch Simulation</button>
+            <button @click="launchSimulation('motion.html')" class="btn teal-btn">
+            Launch Simulation
+          </button>
           </div>
         </div>
         
@@ -181,10 +183,10 @@
 export default {
   name: 'GCSEForces',
   methods: {
-    simulationAlert(simulation) {
-      alert(`Opening ${simulation} simulation...`);
-      // In a real implementation, this would navigate to the actual simulation page
-    }
+    launchSimulation(page) {
+      // Force full page navigation to the vanilla JS page
+      window.location.href = `/GCSE/simulations/${page}`;
+    },
   }
 }
 </script>
