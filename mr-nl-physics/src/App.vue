@@ -2,7 +2,7 @@
   <div id="app">
     <Navigation />
     <main>
-      <Home />
+      <router-view />  <!-- ← Replace <Home /> with this -->
     </main>
     <Footer />
   </div>
@@ -10,15 +10,14 @@
 
 <script>
 import Navigation from '@/components/Navigation.vue'
-import Home from '@/views/Home.vue'
 import Footer from '@/components/Footer.vue'
 
 export default {
   name: 'App',
   components: {
     Navigation,
-    Home,
     Footer
+    // Remove Home from components since router will handle it
   }
 }
 </script>

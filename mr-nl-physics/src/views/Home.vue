@@ -121,7 +121,7 @@ import MagnetismIcon from '@/components/icons/MagnetismIcon.vue'
 import RadioactivityIcon from '@/components/icons/RadioactivityIcon.vue'
 import AstrophysicsIcon from '@/components/icons/AstrophysicsIcon.vue'  
 import MechanicsIcon from '@/components/icons/MechanicsIcon.vue'
-
+import ParticleIcon from '@/components/icons/ParticleIcon.vue'
 
 export default {
   name: 'Home',
@@ -138,7 +138,8 @@ export default {
           title: 'Forces and Motion',
           description: 'Explore Newton\'s laws of motion, momentum, and kinematics through interactive demonstrations.',
           category: 'forces',
-          icon: ForcesIcon
+          icon: ForcesIcon,
+          route: '/gcse/forces-and-motion'  
         },
         {
           id: 2,
@@ -198,7 +199,7 @@ export default {
           description: 'Explore mechanics, kinematics and moments through advanced simulations.',
           category: 'mechanics',
           topics: ['Kinematics', 'Dynamics', 'Moments'],
-          icon: MechanicsIcon // You would create specific icons for A Level
+          icon: MechanicsIcon 
         },
         {
           id: 6,
@@ -206,25 +207,35 @@ export default {
           description: 'The world of the very small - explore the nuclear atom, particle physics and fundamental forces.',
           category: 'particle',
           topics: ['Nuclear Atom', 'Particle Accelorators', 'Standard Model'],
-          icon: MechanicsIcon // You would create specific icons for A Level
+          icon: ParticleIcon
         },
         // ... more units
       ]
     }
   },
-  methods: {
-    handleSimulationClick(simulation) {
-      // In a real app, this would navigate to the simulation page
-      console.log('Simulation clicked:', simulation)
-      // this.$router.push(`/simulation/${simulation.category}`)
-    },
-    scrollToSection(sectionId) {
-      const element = document.getElementById(sectionId)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
-      }
+ methods: {
+  handleSimulationClick(clickedData) {
+    // Find the complete simulation object from your arrays
+    const allSimulations = [...this.igcseSimulations, ...this.alevelUnits];
+    const simulation = allSimulations.find(sim => 
+      sim.title === clickedData.title || 
+      sim.id === clickedData.id
+    );
+    
+    if (simulation && simulation.route) {
+      this.$router.push(simulation.route);
+    } else {
+      console.log('Simulation clicked:', simulation);
+      alert(`The ${clickedData.title} simulation is coming soon!`);
+    }
+  },
+  scrollToSection(sectionId) {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
     }
   }
+}
 }
 </script>
 
