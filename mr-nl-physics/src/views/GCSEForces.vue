@@ -60,7 +60,7 @@
         </div>
         
 
-        <!-- Card 3 -->
+        <!-- Card second-law -->
         <div class="card">
           <div class="card-accent coral-accent"></div>
           <div class="card-content">
@@ -73,11 +73,11 @@
             <h2>Newton's Second Law</h2>
             <h3>F = ma</h3>
             <p>Manipulate force and mass to observe changes in acceleration and verify Newton's Second Law.</p>
-            <button @click="simulationAlert('Newton\'s Second Law')" class="btn coral-btn">Launch Simulation</button>
+            <button @click="launchSimulation('second-law.html')" class="btn coral-btn">Launch Simulation</button>
           </div>
         </div>
 
-        <!-- Card 4 -->
+        <!-- Card stopping-distance -->
         <div class="card">
           <div class="card-accent navy-accent"></div>
           <div class="card-content">
@@ -94,7 +94,7 @@
             <h2>Stopping Distance</h2>
             <h3>Thinking & Braking</h3>
             <p>Investigate factors affecting stopping distance including speed, reaction time, and road conditions.</p>
-            <button @click="simulationAlert('Stopping Distance')" class="btn navy-btn">Launch Simulation</button>
+           <button @click="launchSimulation('stopping-distance.html')" class="btn navy-btn">Launch Simulation</button>
           </div>
         </div>
 
