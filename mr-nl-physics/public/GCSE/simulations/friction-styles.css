@@ -173,7 +173,9 @@ li {
     gap: 24px;
 }
 
-
+.header-left {
+    justify-self: start;
+}
 
 /* Main Content */
 .main-content {

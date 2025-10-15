@@ -136,6 +136,10 @@ h6 {
     padding: 8px 0;
 }
 
+.header-left {
+    justify-self: start;
+}
+
 .header-actions {
     order: 2;
 }

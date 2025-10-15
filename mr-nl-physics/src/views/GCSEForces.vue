@@ -166,15 +166,51 @@
 </template>
 
 <script>
-
 export default {
   name: 'GCSEForces',
+  
   methods: {
     launchSimulation(page) {
-      //navigation to the vanilla JS page
-       window.open(`/GCSE/simulations/${page}`, '_blank');
-         'noopener,noreferrer';
+      window.open(`/GCSE/simulations/${page}`, '_blank', 'noopener,noreferrer');
     },
+    
+    simulationAlert(simName) {
+      alert(`${simName} simulation coming soon!`);
+    }
+  },
+  
+  // Add these lifecycle hooks for scrolling
+  mounted() {
+    this.scrollToTop();
+  },
+  
+  activated() {
+    // This runs when using keep-alive
+    this.scrollToTop();
+  },
+  
+  methods: {
+    scrollToTop() {
+      // Multiple methods to ensure it works
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+        
+        // Force scroll if still not at top
+        if (window.scrollY > 0 || document.documentElement.scrollTop > 0) {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        }
+      }, 50);
+    },
+    
+    launchSimulation(page) {
+      window.open(`/GCSE/simulations/${page}`, '_blank', 'noopener,noreferrer');
+    },
+    
+    simulationAlert(simName) {
+      alert(`${simName} simulation coming soon!`);
+    }
   }
 }
 </script>
