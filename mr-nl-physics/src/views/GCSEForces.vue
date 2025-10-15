@@ -173,6 +173,7 @@ export default {
     launchSimulation(page) {
       //navigation to the vanilla JS page
        window.open(`/GCSE/simulations/${page}`, '_blank');
+         'noopener,noreferrer';
     },
   }
 }
