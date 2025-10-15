@@ -17,7 +17,7 @@
         <header class="page-header">
             <div class="header-grid">
                 <div class="header-left"><button id="download-worksheet-btn" class="btn navy-btn"
-                        aria-label="Download worksheet PDF">Worksheet</button></div>
+                        aria-label="Open worksheet PDF">Worksheet</button></div>
                 <h1 class="page-title">Investigating Motion</h1>
 
                 <div class="header-actions">
@@ -25,7 +25,18 @@
                 </div>
             </div>
         </header>
-
+        <script>
+            document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+                const url = '/assets/trolley-ramp-worksheet.pdf';
+                const w = window.open(url, '_blank');
+                if (w) {
+                    try { w.opener = null; } catch (e) { }
+                } else {
+                    // popup blocked — fallback to navigate in same tab
+                    window.location.href = url;
+                }
+            });
+        </script>
 
         <div class="simulation-area" id="simulationArea">
             <div class="ramp" id="ramp"></div>

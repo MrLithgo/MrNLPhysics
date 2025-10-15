@@ -28,7 +28,18 @@
                     </div>
                 </div>
             </header>
-
+            <script>
+                document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+                    const url = '/assets/friction-worksheet.pdf';
+                    const w = window.open(url, '_blank');
+                    if (w) {
+                        try { w.opener = null; } catch (e) { }
+                    } else {
+                        // popup blocked — fallback to navigate in same tab
+                        window.location.href = url;
+                    }
+                });
+            </script>
             <div class="content-area">
                 <div class="content-container">
                     <div class="grid-layout">

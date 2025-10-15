@@ -54,43 +54,7 @@ class RampSimulation {
     }
 
     setupEventListeners() {
-        (function () {
-            const btn = document.getElementById('download-worksheet-btn');
-            if (!btn) return;
 
-            // URL to your PDF file — change if needed
-            const pdfUrl = 'assets/trolley-ramp-worksheet.pdf';
-            const fallbackFilename = 'trolley-ramp-worksheet.pdf';
-
-            btn.addEventListener('click', async (e) => {
-                // First try: open in a new tab for users (best UX)
-                const win = window.open(pdfUrl, '_blank', 'noopener,noreferrer');
-                if (win) {
-                    // opened successfully -> keep opener null for security (some browsers allow)
-                    try { win.opener = null; } catch (err) { }
-                    return;
-                }
-
-                // If popup was blocked, fall back to fetching the PDF and forcing a download
-                try {
-                    const response = await fetch(pdfUrl, { mode: 'cors' }); // CORS must allow fetch if cross-origin
-                    if (!response.ok) throw new Error('Network error');
-
-                    const blob = await response.blob();
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = fallbackFilename;
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(url);
-                } catch (err) {
-                    // As last resort, navigate to the PDF URL (user can save from the viewer)
-                    window.location.href = pdfUrl;
-                }
-            });
-        })();
         this.heightSlider.addEventListener('input', () => {
             this.height = parseInt(this.heightSlider.value) / 100; // Convert cm to m
             this.heightValue.textContent = `${this.height.toFixed(2)} m`;
