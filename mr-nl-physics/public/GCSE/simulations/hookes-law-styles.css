@@ -1,4 +1,6 @@
-
+/* -------------------------
+   Core / reset
+   ------------------------- */
 :root {
   --navy: #2c3e50;
   --softgray: #ecf0f1;
@@ -168,7 +170,9 @@ li {
 }
 
 
-
+/* -------------------------
+   Main wrapper and layout
+   ------------------------- */
 
 .main {
   display: flex;
@@ -195,7 +199,9 @@ li {
 /* Controls column fixed width similar to lg:w-96 (24rem ~ 384px) */
 .controls-column { width: 384px; }
 
-
+/* -------------------------
+   Simulation container
+   ------------------------- */
 .simulation-container {
   background: #ffffff;
   border-radius: 12px;
@@ -503,7 +509,9 @@ li {
   box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
-
+/* -------------------------
+   Mass controls
+   ------------------------- */
 .mass-controls-inner {
   background: rgba(255,255,255,0.10);
   border-radius: 8px;
@@ -525,10 +533,10 @@ li {
 .remove-mass-btn { background: #E74C3C; color: #fff; width: 128px; justify-content: center; }
 .add-mass-btn { background: #F1C40F; color: #2C3E50; width: 128px; justify-content: center; }
 
-
+/* small icon sizing */
 .icon { width: 18px; height: 18px; }
 
-
+/* record block */
 .record-inner {
   display: flex;
   gap: 8px;
@@ -542,10 +550,10 @@ li {
 .block-label { display: block; margin-bottom: 6px; color: #fff; font-size: 0.9rem; }
 .extension-input { padding: 8px; border-radius: 8px; border: none; width: 100%; max-width: 160px; }
 
-
+/* record button styled similar to toggle */
 .record-btn { background: #1ABC9C; color: #fff; }
 
-
+/* reset button across full width */
 .reset-btn {
   background: #E74C3C;
   color: #fff;
@@ -555,7 +563,9 @@ li {
   margin-top: 12px;
 }
 
-
+/* -------------------------
+   Results section
+   ------------------------- */
 .results-wrapper {
   background: #2C3E50;
   color: #fff;
@@ -589,7 +599,7 @@ li {
   color: #fff;
 }
 
-
+/* actions column width like w-24 */
 .actions-col { width: 6rem; }
 
 .results-table tbody tr:nth-child(even) { background-color: rgba(255,255,255,0.03); }
@@ -602,7 +612,9 @@ li {
   font-style: italic;
 }
 
-
+/* -------------------------
+   Small responsive tweaks to match sm:px and etc
+   ------------------------- */
 @media (max-width: 1024px) {
   .controls-column { width: 100%; }
   .controls-panel { min-height: auto; }
@@ -613,4 +625,57 @@ li {
   .title-row { padding: 0 16px; }
   .page-title { font-size: 1.25rem; }
   .help-button, .quiz-button { width: 120px; top: -12px; }
+}
+/* Table row / cell utilities (replaces Tailwind utilities used in JS) */
+.table-row.row-bordered {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10); /* border-white + 10% opacity */
+}
+
+/* cell padding & alignment that matches py-2 px-4 text-centre etc */
+.cell {
+  padding: 8px 12px;            /* roughly equivalent to py-2 px-4 */
+  vertical-align: middle;
+  color: inherit;               /* inherit text color from table */
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.cell-left {
+  text-align: left;
+}
+
+.cell-center {
+  text-align: center;
+}
+
+
+.small-btn {
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+/* Coral / delete button look (from your palette) */
+.coral-btn {
+  background-color: rgba(231, 76, 60, 0.8); /* coral */
+  color: #ffffff;
+}
+
+.coral-btn:hover {
+  background-color: rgba(231, 76, 60, 1);
+  transform: translateY(-2px);
+  opacity: 0.98;
+}
+
+/* specific delete button extras (optional) */
+.delete-btn {
+  /* keep a consistent width so table stays tidy (optional) */
+  min-width: 72px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+/* Ensure table cells remain readable on narrow screens */
+@media (max-width: 480px) {
+  .cell { padding: 6px 8px; }
+  .small-btn { padding: 6px 8px; font-size: 0.85rem; min-width: 68px; }
 }
