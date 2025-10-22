@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Investigating Extension</title>
+  <title>Stopping Distance Simulator</title>
   <link rel="stylesheet" href="hookes-law-styles.css" />
 </head>
 
@@ -21,7 +21,7 @@
       </header>
 <script>
             document.getElementById('download-worksheet-btn').addEventListener('click', () => {
-                const url = '/assets/investigating-extension-worksheet.pdf';
+                const url = '/assets/stopping-distance-worksheet.pdf';
                 const w = window.open(url, '_blank');
                 if (w) {
                     try { w.opener = null; } catch (e) { }
@@ -165,7 +165,7 @@
           <thead>
             <tr class="results-thead-row">
               <th class="th-left">Material</th>
-              <th class="th-center">Masses</th>
+              <th class="th-center">Masses (kg)</th>
               <th class="th-center">Weight (N)</th>
               <th class="th-center">Extension (cm)</th>
               <th class="th-center actions-col">Actions</th>
