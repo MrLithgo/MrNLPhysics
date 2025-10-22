@@ -311,7 +311,7 @@ const RUBBER_BAND_CONSTANTS = {
       return;
     }
 
-    const force = (((currentMasses * MASS_WEIGHT*2) / 1000) * GRAVITY).toFixed(2);
+    const force = (((currentMasses * MASS_WEIGHT*2) / 1000) * GRAVITY).toFixed(0);
     let material = currentMaterial === "spring" ? "Spring" : "Rubber Band";
 
     if (currentMaterial === "spring") {
@@ -321,16 +321,16 @@ const RUBBER_BAND_CONSTANTS = {
     noResultsMessage.style.display = "none";
 
     const row = document.createElement("tr");
-    row.className = "table-row border-b border-white border-opacity-10";
-    row.innerHTML = `
-      <td class="py-2 px-4">${material}</td>
-      <td class="py-2 px-4 text-center">${currentMasses}</td>
-      <td class="py-2 px-4 text-center">${force}</td>
-      <td class="py-2 px-4 text-center">${measuredExtension.toFixed(1)}</td>
-      <td class="py-2 px-4 text-center">
-        <button class="delete-btn bg-coral bg-opacity-80 hover:bg-opacity-100 text-white py-1 px-3 rounded">Delete</button>
-      </td>
-    `;
+row.className = "table-row row-bordered";
+row.innerHTML = `
+  <td class="cell cell-left">${material}</td>
+  <td class="cell cell-center">${currentMasses*0.1}</td>
+  <td class="cell cell-center">${force}</td>
+  <td class="cell cell-center">${measuredExtension.toFixed(1)}</td>
+  <td class="cell cell-center">
+    <button class="btn delete-btn coral-btn small-btn">Delete</button>
+  </td>
+`;
 
     resultsTable.appendChild(row);
 
