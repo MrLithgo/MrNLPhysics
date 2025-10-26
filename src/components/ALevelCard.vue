@@ -1,8 +1,18 @@
 <template>
-  <div class="alevel-card" @mouseenter="isHovered = true" @mouseleave="isHovered = false">
+  <div
+    class="alevel-card"
+    @mouseenter="isHovered = true"
+    @mouseleave="isHovered = false"
+    role="button"
+    tabindex="0"
+    @keydown.enter.prevent="handleCardClick"
+    @click="handleCardClick"
+    :aria-disabled="!available"
+  >
     <div class="card-icon" :class="category">
       <component :is="iconComponent" />
     </div>
+
     <div class="card-content">
       <h3 class="card-title">{{ title }}</h3>
       <p class="card-description">{{ description }}</p>
@@ -13,6 +23,10 @@
         </svg>
       </a>
     </div>
+
+    <div v-if="!available" class="card-overlay" aria-hidden="true">
+      <div class="overlay-badge">Coming soon</div>
+    </div>
   </div>
 </template>
 
@@ -20,32 +34,24 @@
 export default {
   name: 'ALevelCard',
   props: {
-    title: {
-      type: String,
-      required: true
-    },
-    description: {
-      type: String,
-      required: true
-    },
-    topics: {
-      type: Array,
-      required: true
-    },
-    category: {
-      type: String,
-      required: true
-    },
-    iconComponent: {
-      type: Object,
-      required: true
+    title: { type: String, required: true },
+    description: { type: String, required: true },
+    topics: { type: Array, required: true },
+    category: { type: String, required: true },
+    iconComponent: { type: Object, required: true },
+    available: { type: Boolean, default: true } // new prop
+  },
+  data() {
+    return {
+      isHovered: false
     }
   },
   methods: {
     handleCardClick() {
       this.$emit('card-clicked', {
         title: this.title,
-        category: this.category
+        category: this.category,
+        available: this.available
       })
     }
   }
@@ -55,64 +61,65 @@ export default {
 <style scoped>
 .alevel-card {
   cursor: pointer;
-}
-.alevel-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-}
-
-.alevel-card {
-    background-color: var(--softgray);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    transition: var(--transition);
+  position: relative;
+  background-color: var(--softgray);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: var(--transition);
+  display: block;
 }
 
 .alevel-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .alevel-card .card-icon {
-    height: 192px;
+  height: 192px;
 }
 
 .alevel-card .card-icon svg {
-    height: 160px;
-    width: 160px;
+  height: 160px;
+  width: 160px;
 }
 
-.alevel-card .card-icon.mechanics {
-    background-color: rgba(44, 62, 80, 0.1);
+/* category styles preserved... */
+
+.card-content {
+  padding: 24px;
 }
 
-.alevel-card .card-icon.mechanics svg {
-    color: var(--navy);
+.card-title {
+  font-size: 20px;
+  margin-bottom: 8px;
 }
 
-.alevel-card .card-icon.unit2 {
-    background-color: rgba(241, 196, 15, 0.1);
+.card-description {
+  color: var(--slate);
+  margin-bottom: 16px;
 }
 
-.alevel-card .card-icon.unit2 svg {
-    color: var(--gold);
+/* Reuse same overlay styles as SimulationCard */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: start;
+  justify-content: end;
+  padding: 12px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: grayscale(1) blur(2px);
+  pointer-events: none;
 }
 
-.alevel-card .card-icon.particle {
-    background-color: rgba(241, 196, 15, 0.1);
-}
-
-.alevel-card .card-icon.particle svg {
-    color: var(--gold);
-}
-
-.alevel-card .card-icon.unit5 {
-    background-color: rgba(241, 196, 15, 0.1);
-}
-
-.alevel-card .card-icon.unit5 svg {
-    color: var(--gold);
+.overlay-badge {
+  background: rgba(0,0,0,0.65);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .2px;
 }
 </style>

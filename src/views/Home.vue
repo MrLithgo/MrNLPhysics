@@ -23,15 +23,17 @@
         </div>
         
         <div class="simulations-grid">
-          <SimulationCard
-            v-for="simulation in igcseSimulations"
-            :key="simulation.id"
-            :title="simulation.title"
-            :description="simulation.description"
-            :category="simulation.category"
-            :icon-component="simulation.icon"
-            @card-clicked="handleSimulationClick"
-          />
+         <SimulationCard
+  v-for="simulation in igcseSimulations"
+  :key="simulation.id"
+  :title="simulation.title"
+  :description="simulation.description"
+  :category="simulation.category"
+  :icon-component="simulation.icon"
+  :available="!!simulation.route"
+  @card-clicked="handleSimulationClick"
+/>
+
         </div>
       </div>
     </section>
@@ -48,16 +50,17 @@
         </div>
         
         <div class="alevel-grid">
-          <ALevelCard
-            v-for="unit in alevelUnits"
-            :key="unit.id"
-            :title="unit.title"
-            :description="unit.description"
-            :topics="unit.topics"
-            :category="unit.category"
-            :icon-component="unit.icon"
-            @card-clicked="handleSimulationClick"
-          />
+         <ALevelCard
+  v-for="unit in alevelUnits"
+  :key="unit.id"
+  :title="unit.title"
+  :description="unit.description"
+  :topics="unit.topics"
+  :category="unit.category"
+  :icon-component="unit.icon"
+  :available="!!unit.route"
+  @card-clicked="handleSimulationClick"
+/>
         </div>
       </div>
     </section>
@@ -223,11 +226,17 @@ export default {
     );
     
     if (simulation && simulation.route) {
-      this.$router.push(simulation.route);
-    } else {
-      console.log('Simulation clicked:', simulation);
-      alert(`The ${clickedData.title} simulation is coming soon!`);
+  this.$router.push(simulation.route);
+} else {
+  window.dispatchEvent(new CustomEvent('ui-notify', {
+    detail: {
+      type: 'modal',
+      title: 'Coming soon',
+      message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`
     }
+  }));
+}
+
   },
   scrollToSection(sectionId) {
     const element = document.getElementById(sectionId)
