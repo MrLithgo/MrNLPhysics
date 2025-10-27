@@ -150,7 +150,7 @@ export default {
 
         {
           id: 'hookes-law',
-          title: 'Core Practical 2',
+          title: 'Investigating Extension',
           subtitle: 'Force and Extension',
           description: "Explore Hooke's Law by testing springs and elastic materials under different loads.",
           page: 'hookes-law.html',
