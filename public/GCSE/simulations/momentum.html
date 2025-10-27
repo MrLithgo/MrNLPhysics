@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investigating Momentum</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="momentum-styles.css">
+</head>
+<body>
+    <div class="main-container">
+         <header class="page-header">
+        <div class="header-grid">
+           <div class="header-left">  <button id="download-worksheet-btn" class="btn navy-btn" aria-label="Download worksheet PDF">Worksheet</button></div>
+          <h1 class="page-title">Investigating Momentum</h1>
+          <div class="header-actions">
+            <button class="btn gold-btn">Quiz yourself</button>
+          </div>
+        </div>
+      </header>
+<script>
+            document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+                const url = '/assets/momentum-worksheet.pdf';
+                const w = window.open(url, '_blank');
+                if (w) {
+                    try { w.opener = null; } catch (e) { }
+                } else {
+                    // popup blocked — fallback to navigate in same tab
+                    window.location.href = url;
+                }
+            });
+        </script>
+        
+        <!-- Simulation Area -->
+        <div class="simulation-area">
+            <div class="simulation-container">
+                <div class="track"></div>
+                
+                <!-- Trolley 1-->
+                <div id="trolley1" class="trolley" style="left: 20%; transform: translateX(-50%);">
+                    <svg width="80" height="50" viewBox="0 0 80 50">
+                        <rect x="5" y="5" width="70" height="40" rx="4" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+                        <circle cx="20" cy="40" r="10" fill="#2C3E50"/>
+                        <circle cx="60" cy="40" r="10" fill="#2C3E50"/>
+                        <text x="40" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">T1</text>
+                    </svg>
+                </div>
+                
+                <!-- Velocity indicator for Trolley 1 -->
+                <div id="velocity1Indicator" class="velocity-indicator" style="left: 20%;">
+                    <div id="velocity1Value" class="velocity-value">5 m/s</div>
+                    <div id="velocity1Arrow" class="velocity-arrow" style="width: 50px;"></div>
+                </div>
+                
+                <!-- Trolley 2-->
+                <div id="trolley2" class="trolley" style="left: 80%; transform: translateX(-50%);">
+                    <svg width="80" height="50" viewBox="0 0 80 50">
+                        <rect x="5" y="5" width="70" height="40" rx="4" fill="#1ABC9C" stroke="#16A085" stroke-width="2"/>
+                        <circle cx="20" cy="40" r="10" fill="#2C3E50"/>
+                        <circle cx="60" cy="40" r="10" fill="#2C3E50"/>
+                        <text x="40" y="30" text-anchor="middle" fill="white" font-size="18" font-weight="bold">T2</text>
+                    </svg>
+                </div>
+                
+                <!-- Velocity indicator for Trolley 2 -->
+                <div id="velocity2Indicator" class="velocity-indicator" style="left: 80%;">
+                    <div id="velocity2Value" class="velocity-value">-2 m/s</div>
+                    <div id="velocity2Arrow" class="velocity-arrow" style="width: 20px;"></div>
+                </div>
+                
+                <!-- Position markers -->
+                <div class="position-markers">
+                    <div class="marker-container">
+                        <div class="marker-lines">
+                            <div class="marker-line"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-line"></div>
+                            <div class="marker-line"></div>
+                        </div>
+                        <div class="marker-labels">
+                            <div>0m</div>
+                            <div>2m</div>
+                            <div>4m</div>
+                            <div>6m</div>
+                            <div>8m</div>
+                            <div>10m</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Boundary indicators -->
+                <div class="boundary-left"></div>
+                <div class="boundary-right"></div>
+                
+                <!-- Edge notification -->
+                <div id="edgeNotification" class="edge-notification">
+                    Trolley reached edge! Capture results now.
+                </div>
+            </div>
+        </div>
+
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-grid">
+                <div class="control-section">
+                    <h2>Trolley 1</h2>
+                    <div class="control-group">
+                        <label>Mass (kg)</label>
+                        <input type="range" id="mass1" min="1" max="10" value="2" class="slider">
+                        <div class="slider-labels">
+                            <span>1 kg</span>
+                            <span id="mass1Display" class="value-display">2 kg</span>
+                            <span>10 kg</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Initial Velocity (m/s)</label>
+                        <input type="range" id="velocity1Input" min="-10" max="10" value="5" class="slider">
+                        <div class="slider-labels">
+                            <span>-10 m/s</span>
+                            <span id="velocity1Display" class="value-display">5 m/s</span>
+                            <span>10 m/s</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="control-section">
+                    <h2>Trolley 2</h2>
+                    <div class="control-group">
+                        <label>Mass (kg)</label>
+                        <input type="range" id="mass2" min="1" max="10" value="4" class="slider">
+                        <div class="slider-labels">
+                            <span>1 kg</span>
+                            <span id="mass2Display" class="value-display">4 kg</span>
+                            <span>10 kg</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label>Initial Velocity (m/s)</label>
+                        <input type="range" id="velocity2Input" min="-10" max="10" value="-2" class="slider">
+                        <div class="slider-labels">
+                            <span>-10 m/s</span>
+                            <span id="velocity2Display" class="value-display">-2 m/s</span>
+                            <span>10 m/s</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collision-controls">
+                <div class="collision-type">
+                    <label>Collision Type</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="collisionType" value="elastic" checked>
+                            <span>Elastic</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="collisionType" value="inelastic">
+                            <span>Inelastic</span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="collisionType" value="perfectlyInelastic">
+                            <span>Perfectly Inelastic (Stick Together)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="startBtn" class="btn teal-btn">Start Simulation</button>
+                    <button id="resetBtn" class="btn coral-btn">Reset</button>
+                    <button id="captureBtn" class="btn navy-btn">Capture Results</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Tables -->
+        <div class="results-container">
+            <div class="results-header">
+                <h2>Experiment Results</h2>
+                <div class="results-actions">
+                    <button id="clearTableBtn" class="btn coral-btn">Clear All</button>
+                    <button id="downloadBtn" class="btn navy-btn">Download CSV</button>
+                    <button id="checkAnswersBtn" class="btn teal-btn">Check Answers</button>
+                </div>
+            </div>
+            
+            <!-- Before Collision Table -->
+            <div class="table-section">
+                <h3>Before Collision</h3>
+                <div class="results-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Collision Type</th>
+                                <th class="trolley1-bg">m₁ (kg)</th>
+                                <th class="trolley1-bg">v₁ before (m/s)</th>
+                                <th class="trolley2-bg">m₂ (kg)</th>
+                                <th class="trolley2-bg">v₂ before (m/s)</th>
+                                <th class="trolley1-bg">p₁ before (kg·m/s)</th>
+                                <th class="trolley2-bg">p₂ before (kg·m/s)</th>
+                                <th>p total before (kg·m/s)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="beforeTableBody">
+                            <tr id="emptyRowBefore">
+                                <td colspan="9" class="empty-message">No results captured yet. Run a simulation and click "Capture Results".</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- After Collision Table -->
+            <div class="table-section">
+                <h3>After Collision</h3>
+                <div class="results-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Collision Type</th>
+                                <th class="trolley1-bg">m₁ (kg)</th>
+                                <th class="trolley1-bg">v₁ after (m/s)</th>
+                                <th class="trolley2-bg">m₂ (kg)</th>
+                                <th class="trolley2-bg">v₂ after (m/s)</th>
+                                <th class="trolley1-bg">p₁ after (kg·m/s)</th>
+                                <th class="trolley2-bg">p₂ after (kg·m/s)</th>
+                                <th>p total after (kg·m/s)</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="afterTableBody">
+                            <tr id="emptyRowAfter">
+                                <td colspan="10" class="empty-message">No results captured yet. Run a simulation and click "Capture Results".</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h2>Physics Explanation</h2>
+            <div class="explanation-content">
+                <p><strong>Conservation of Momentum:</strong> In an isolated system, the total momentum before a collision equals the total momentum after the collision.</p>
+                <p><strong>Momentum formula:</strong> p = m × v (mass × velocity)</p>
+                <p><strong>Elastic Collision:</strong> Objects bounce off each other with no loss of kinetic energy.</p>
+                <p><strong>Inelastic Collision:</strong> Some kinetic energy is converted to other forms (like heat or sound).</p>
+                <p><strong>Perfectly Inelastic Collision:</strong> Objects stick together after collision, moving with a common velocity.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="momentum-script.js"></script>
+</body>
+</html>
