@@ -324,7 +324,8 @@ const RUBBER_BAND_CONSTANTS = {
 row.className = "table-row row-bordered";
 row.innerHTML = `
   <td class="cell cell-left">${material}</td>
-  <td class="cell cell-center">${currentMasses*0.1}</td>
+ <td class="cell cell-center">${(currentMasses * 0.1).toFixed(1)}</td>
+
   <td class="cell cell-center">${force}</td>
   <td class="cell cell-center">${measuredExtension.toFixed(1)}</td>
   <td class="cell cell-center">
