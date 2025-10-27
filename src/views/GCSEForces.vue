@@ -170,7 +170,7 @@ export default {
           subtitle: 'Conservation Laws',
           description: 'Investigate collisions and conservation of momentum with interactive simulations of elastic and inelastic collisions.',
           page: 'momentum.html',
-          available: false,
+          available: true,
           accent: 'gold-accent',
           iconClass: 'gold-icon',
           btnClass: 'gold-btn',
