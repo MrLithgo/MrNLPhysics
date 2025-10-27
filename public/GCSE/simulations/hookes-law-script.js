@@ -26,7 +26,7 @@ const RUBBER_BAND_CONSTANTS = {
   stiffeningFactor: 0.05,   // How quickly it stiffens
   maxExtension: 100,       // cm (before breaking)
   hysteresisFactor: 0.7,   // 70% of energy returned
-  startHeight: 180          // Match your spring's start height
+  startHeight: 150          // Match your spring's start height
 };
   // Spring configurations
   const SPRING_CONFIGS = {
