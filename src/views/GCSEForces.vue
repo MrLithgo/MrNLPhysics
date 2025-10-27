@@ -149,12 +149,12 @@ export default {
         },
 
         {
-          id: 'core-practical-2',
+          id: 'hookes-law',
           title: 'Core Practical 2',
           subtitle: 'Force and Extension',
           description: "Explore Hooke's Law by testing springs and elastic materials under different loads.",
-          page: 'core-practical-2.html',
-          available: false,
+          page: 'hookes-law.html',
+          available: true,
           accent: 'teal-accent',
           iconClass: 'teal-icon',
           btnClass: 'teal-btn',
