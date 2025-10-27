@@ -190,7 +190,7 @@ export default {
           subtitle: 'Turning Forces',
           description: 'Investigate the Principle of Moments by adding different masses to a balance beam.',
           page: 'moments.html',
-          available: false,
+          available: true,
           accent: 'gold-accent',
           iconClass: 'gold-icon',
           btnClass: 'gold-btn',
