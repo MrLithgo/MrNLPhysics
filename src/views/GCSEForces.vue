@@ -67,11 +67,7 @@
 </template>
 
 <script>
-/*
-  Data-driven GCSE Forces page.
-  Each simulation includes the original inline SVG as `svg` and retains the original classes used in your CSS.
-  Set sim.available = true when the HTML file exists under /GCSE/simulations/.
-*/
+
 export default {
   name: 'GCSEForces',
   data() {
@@ -213,7 +209,7 @@ export default {
   methods: {
     launchSimulation(page) {
       if (!page) return
-      const url = `/GCSE/simulations/${page}`
+      const url = `/GCSE/simulations/forces/${page}`
       window.open(url, '_blank', 'noopener,noreferrer')
     },
 
