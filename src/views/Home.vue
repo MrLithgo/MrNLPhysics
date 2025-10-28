@@ -78,6 +78,11 @@
             <p class="about-description">
               These simulations are designed to complement classroom learning, providing visual and interactive 
               experiences that help solidify understanding of key physics principles.
+              They can be used in setting where equipment is limited, home-schooling or as revision of previous practical work.
+            </p>
+             <p class="about-description">
+              They are simplified and focussed on one or two key ideas, avoiding cognitive overload and distractions that more complex simulations can suffer from.
+              Each simulation has an accompanying worksheet and short multiple-choice quiz to check understanding.
             </p>
           </div>
           <div class="about-visual">
