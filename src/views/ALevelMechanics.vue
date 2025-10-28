@@ -9,8 +9,8 @@
 
     <div class="container main-content">
       <div class="quote-card">
-        <p class="quote-text">"In physics, you don't have to go around making trouble for yourself - nature does it for you."</p>
-        <p class="quote-author">- Frank Wilczek</p>
+        <p class="quote-text">"In Science there is only Physics; all the rest is stamp collecting"</p>
+        <p class="quote-author">- Lord Kelvin</p>
       </div>
 
       <div class="cards-grid">
@@ -56,7 +56,7 @@
             </div>
           </div>
 
-          <!-- overlay for unavailable sims -->
+        
           <div v-if="!sim.available" class="card-overlay" aria-hidden="true">
             <div class="overlay-badge">Coming soon</div>
           </div>
@@ -79,7 +79,7 @@ export default {
           id: 'vectors',
           title: 'Vector Physics',
           subtitle: 'Exploring Vector Diagrams',
-          description: 'You can draw different vector scenarios and manipulate them to explore resultants and components.',
+          description: 'Draw different vector scenarios and manipulate them to explore resultants and components.',
           page: 'vectors.html',
           available: true,
           accent: 'teal-accent',
@@ -93,16 +93,6 @@ export default {
   <path stroke="null" transform="rotate(138.483 15.9396 11.7829)" fill="none" d="m20.76287,5.82833l-2.95541,2.43573l3.27438,2.27734m-10.28444,4.32108l2.875,2.875l2.62499,-2.9375"/>
                 </svg>`
         },
-
-        
-
-
-        
-
-        
-
-       
-
        
       ]
     }
@@ -110,7 +100,7 @@ export default {
   methods: {
     launchSimulation(page) {
       if (!page) return
-      const url = `/GCSE/simulations/${page}`
+      const url = `/ALevel/simulations/${page}`
       window.open(url, '_blank', 'noopener,noreferrer')
     },
 
@@ -132,7 +122,7 @@ export default {
       }
     },
 
-    // scroll helpers preserved from your original file
+   
     scrollToTop() {
       setTimeout(() => {
         window.scrollTo(0, 0)
@@ -334,12 +324,11 @@ export default {
   font-weight: 600;
 }
 
-/* show visually-disabled state for card when not available */
+
 .card--disabled {
   opacity: 0.98;
 }
 
-/* Responsive design */
 @media (min-width: 640px) {
   .cards-grid {
     grid-template-columns: repeat(2, 1fr);
