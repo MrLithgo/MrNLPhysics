@@ -87,7 +87,11 @@ export default {
           btnClass: 'teal-btn',
           svg: 
 
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="25" height="25" viewBox="705 343.5 25 25"><g id="document" fill="#ffffff" fill-rule="nonzero" font-family="none" font-weight="none" font-size="none"><rect x="19740" y="9618" transform="scale(0.03571,0.03571)" width="700" height="700" id="Shape-1-1"/></g><g fill-opacity="0" fill="#000000" fill-rule="nonzero" stroke="#000000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" font-family="none" font-weight="none" font-size="none"><g id="stage"><g id="layer1-1"><path d="M711.19864,366.20027l0.07353,-19.63235l12.64706,10z" id="Path-1"/><path d="M716.78687,353.62674l-0.44118,-2.72059l2.72059,-0.44118" id="Path-1-1"/><path d="M715.90453,360.17086l3.30882,-0.14705l-0.88235,3.08823" id="Path-1-2"/><path d="M713.331,354.14145l-2.05883,2.27941l-1.91176,-2.20589" id="Path-1-3"/></g></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
+                 <path id="svg_1" fill="none" d="m8,1l0,23m0,-23l13,11m-13,12l13,-12"/>
+  <path id="svg_2" fill="none" d="m5.1875,9.12501l2.75,3.0625l2.68749,-2.99999m-5.4375,3.93749l2.875,2.875l2.62499,-2.9375"/>
+  <path stroke="null" transform="rotate(138.483 15.9396 11.7829)" fill="none" d="m20.76287,5.82833l-2.95541,2.43573l3.27438,2.27734m-10.28444,4.32108l2.875,2.875l2.62499,-2.9375"/>
+                </svg>`
         },
 
         
