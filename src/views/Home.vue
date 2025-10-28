@@ -168,7 +168,8 @@ export default {
           title: 'Energy',
           description: 'Explore energy transformations, conservation of energy, and efficiency in various systems.',
           category: 'energy',
-          icon: EnergyIcon
+          icon: EnergyIcon,
+           route: '/gcse/energy'  
         },
         {
           id: 5,
