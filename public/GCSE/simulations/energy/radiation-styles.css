@@ -1,0 +1,337 @@
+:root {
+  --navy: #2c3e50;
+  --softgray: #ecf0f1;
+  --teal: #1abc9c;
+  --gold: #f1c40f;
+  --slate: #7f8c8d;
+  --coral: #e74c3c;
+  --white: #ffffff;
+  --gray-100: #f7fafc;
+  --gray-200: #edf2f7;
+  --gray-300: #e2e8f0;
+  --max-width: 1120px;
+  --container-pad: 16px;
+  --radius: 10px;
+  --shadow-sm: 0 6px 18px rgba(0, 0, 0, 0.06);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial;
+  color: var(--navy);
+  background: linear-gradient(135deg, #ecf0f1 0%, #d6dbdf 100%);
+  padding: 16px 16px 80px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+li {
+  line-height: 2; 
+}
+
+/* Page header */
+.header-left{
+  justify-self: start;
+}
+
+.page-header {
+    text-align: center;
+    color: var(--navy);
+    padding: 1rem;
+    position: relative;
+}
+
+.header-grid{
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; 
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.page-title{
+  margin: 0;
+  justify-self: center;   /* ensures exact centering of the title cell */
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+.header-actions{
+  justify-self: end;
+}
+
+/* mobile: stack nicely */
+@media (max-width: 767px){
+  .header-grid{
+    grid-template-columns: 1fr; /* stack everything */
+    grid-auto-flow: row;
+    text-align: left;
+  }
+  .page-title{ justify-self: start; }
+  .header-actions{ justify-self: start; width:100%; margin-top:8px; }
+  
+}
+.cols {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* center the title inside the middle column */
+.page-title{
+  margin: 0;
+  justify-self: center;   /* ensures exact centering of the title cell */
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* position actions at the end of the right column */
+.header-actions{
+  justify-self: end;
+}
+
+/* mobile: stack nicely */
+@media (max-width: 767px){
+  .header-grid{
+    grid-template-columns: 1fr; /* stack everything */
+    grid-auto-flow: row;
+    text-align: left;
+  }
+  .page-title{ justify-self: start; }
+  .header-actions{ justify-self: start; width:100%; margin-top:8px; }
+  .quiz-btn{ width:100%; max-width:420px; }
+}
+
+
+.experiment-container {
+  background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 30px;
+    max-width: 1000px;
+    margin: 30px auto;
+    border: 1px solid #eaeaea;
+   margin-top: 5px; 
+  
+    display: flex;
+    justify-content: space-around;
+    
+   
+   flex-direction: row; /* Default horizontal layout */
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 20px; /* Space between items */
+    
+}
+
+.test-tube {
+    position: relative;
+   width: calc(25% - 20px); /* 4 tubes per row on large screens */
+    min-width: 150px; /* Minimum width */
+    margin-bottom: 30px;
+    padding-top:180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tube-body {
+    width: 40px;
+    height: 150px;
+    border-radius: 0 0 40px 40px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #333;
+    border-top: none;
+    
+}
+
+
+
+.thermometer {
+    position: absolute;
+    width: 8px;
+    height: 200px;
+  
+    background-color: #fff;
+    border: 1px solid #333;
+    border-radius: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: -120px;
+    z-index: 0;
+}
+
+.mercury {
+    position: absolute;
+    bottom: 5px;
+    left: 1px;
+    width: 6px;
+    background-color: #e74c3c;
+    border-radius: 3px;
+    transition: height 1s linear;
+}
+
+.temperature-display {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.controls {
+  margin: 30px auto 80px;
+  display: flex;
+  justify-content: center; /* Center the buttons horizontally */
+  flex-wrap: wrap; /* Allow wrapping if needed */
+  gap: 10px; /* Space between buttons */
+}
+
+/* Button styles */
+.teal-btn {
+  background-color: rgba(26, 188, 156, 0.8);
+  color: white;
+}
+
+.teal-btn:hover {
+    background-color: rgba(26, 188, 156, 0.7);
+    transform: translateY(-2px);
+}
+
+.gold-btn {
+  background-color: rgba(241, 196, 15, 1);
+  color: var(--navy); opacity:0.9;
+}
+
+.gold-btn:hover {
+  background-color: rgba(241, 196, 15, 0.5);
+  transform: translateY(-2px);
+}
+
+.coral-btn {
+  background-color: rgba(231, 76, 60, 0.8);
+  color: white;
+}
+
+.coral-btn:hover {
+  background-color: rgba(231, 76, 60, 0.7);
+  transform: translateY(-2px);
+}
+
+.navy-btn {
+  background-color: rgba(44, 62, 80, 0.8);
+  color: white;
+}
+
+.navy-btn:hover {
+    background-color: rgba(44, 62, 80, 0.7);
+    transform: translateY(-2px);
+}
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: 1px solid transparent;
+    width: auto;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+}
+
+#stopwatch {
+  font-family: 'Courier New', monospace;
+  font-size: 1.8rem;
+  background: #2c3e50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  display: block; /* Change from inline-block to block */
+  margin: 20px auto; /* Center horizontally with auto margins */
+  letter-spacing: 2px;
+  text-align: center; /* Center the text inside */
+  width: fit-content; /* Or set a specific width like 200px */
+}
+
+/* Tube colors */
+.black { background-color: #333 !important; }
+.white { background-color: #fff !important; }
+.silver { background-color: #c0c0c0 !important; background-image: linear-gradient(to right, #c0c0c0, #e0e0e0, #c0c0c0) !important; }
+.clear { background-color: rgba(200, 200, 255, 0.3) !important; }
+
+#help-button{
+  position: fixed;
+  border: none;
+  color: white;
+  top: 20px;
+  left: 20px;
+  background-color: #3498db;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 40px;
+   height: 40px;
+  
+}
+
+
+
+/* Media queries for different screen sizes */
+@media (max-width: 1024px) { /* Tablet landscape */
+    .test-tube {
+        width: calc(33% - 20px); /* 3 tubes per row */
+    }
+}
+
+@media (max-width: 768px) { /* Tablet portrait */
+    .test-tube {
+        width: calc(50% - 20px); /* 2 tubes per row */
+    }
+    
+    .experiment-container {
+        justify-content: center; /* Center tubes */
+    }
+}
+
+@media (max-width: 480px) { /* Mobile */
+    .test-tube {
+        width: 100%; /* 1 tube per row */
+        max-width: 200px;
+    }
+   .controls {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    button {
+        width: 100%;
+    }
+}
+
+.controls-wrapper {
+  margin-bottom: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
