@@ -43,6 +43,17 @@ const routes = [
         name: 'ALevelParticles',
         component: ALevelParticles
     },
+  {
+    path: '/quizzes',
+    name: 'quizzes',
+    component: QuizView
+  },
+  {
+    path: '/quiz/:id',
+    name: 'quiz',
+    component: QuizView,
+    props: true
+  }
 ]
 
 const router = createRouter({
