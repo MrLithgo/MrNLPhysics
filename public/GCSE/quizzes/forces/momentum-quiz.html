@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Momentum Quiz</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="momentum-quiz-styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+     
+       
+        <div class="site-title">Mr NL's Physics Lab</div>
+     
+
+      <h1 class="page-title">Momentum</h1>
+      <p class="page-sub">Quick Quiz</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="quiz-wrap">
+      <div class="quiz-container">
+        <div id="quiz-header" class="quiz-header">
+          <div class="logo-large">
+            <svg viewBox="0 0 24 24" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+              <circle cx="8.16" cy="9.77" r="3.12"/>
+                  <circle cx="10.91" cy="17.02" r="3.12"/>
+                  <polyline points="10.3,7.5 14.08,4.1 10.81,3.61 "/>
+                  <line x1="14.13" y1="4.45" x2="14.35" y2="7.24"/>
+                  <polyline points="14.4,18.79 19.02,20.89 18.16,17.69 "/>
+                  <line x1="18.73" y1="21.08" x2="16.26" y2="22.39"/>
+            </svg>
+          </div>
+        </div>
+
+        <div id="progress-container" class="progress-container">
+          <div class="progress-top">
+            <span id="question-number">Question 1/10</span>
+            <span id="score-display">Score: 0</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar" style="width: 10%"></div>
+          </div>
+        </div>
+
+        <div id="quiz-content" class="quiz-content">
+          <!-- questions inserted by script -->
+        </div>
+
+        <div id="results" class="result-card hidden">
+          <h2 class="results-title">Quiz Results</h2>
+          <div class="final-score"><span id="final-score">0</span>/10</div>
+          <p id="result-message" class="result-message">You've completed the quiz!</p>
+
+          <div class="final-progress-wrap">
+            <div class="progress-track small">
+              <div id="final-progress" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="final-count"><span id="correct-count">0</span> correct out of 10 questions</div>
+          </div>
+
+          <button id="restart-btn" class="btn btn-primary restart-btn">Restart Quiz</button>
+
+          <div id="review-section" class="review-section">
+            <h3>Review Your Answers</h3>
+            <div id="review-list" class="review-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="momentum-quiz-script.js"></script>
+</body>
+</html>
