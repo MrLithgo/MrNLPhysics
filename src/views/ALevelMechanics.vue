@@ -85,13 +85,14 @@ export default {
           accent: 'teal-accent',
           iconClass: 'teal-icon',
           btnClass: 'teal-btn',
-          svg: 
+          svg: `
 
-'<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
                  <path id="svg_1" fill="none" d="m8,1l0,23m0,-23l13,11m-13,12l13,-12"/>
   <path id="svg_2" fill="none" d="m5.1875,9.12501l2.75,3.0625l2.68749,-2.99999m-5.4375,3.93749l2.875,2.875l2.62499,-2.9375"/>
   <path stroke="null" transform="rotate(138.483 15.9396 11.7829)" fill="none" d="m20.76287,5.82833l-2.95541,2.43573l3.27438,2.27734m-10.28444,4.32108l2.875,2.875l2.62499,-2.9375"/>
-                </svg>`
+                </svg>
+                `
         },
        
       ]
