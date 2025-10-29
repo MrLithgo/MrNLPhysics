@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+   
+    <title>Radiation</title>
+    <link rel="stylesheet" href="radiation-styles.css">
+</head>
+<body>
+    <header class="page-header">
+        <div class="header-grid">
+           <div class="header-left">  <button id="download-worksheet-btn" class="btn navy-btn" aria-label="Download worksheet PDF">Worksheet</button></div>
+          <h1 class="page-title">Investigating Radiation</h1>
+          <div class="header-actions">
+            <button class="btn gold-btn">Quiz yourself!</button>
+          </div>
+        </div>
+      </header>
+  <script>
+            document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+                const url = '/assets/radiation-worksheet.pdf';
+                const w = window.open(url, '_blank');
+                if (w) {
+                    try { w.opener = null; } catch (e) { }
+                } else {
+                    // popup blocked — fallback to navigate in same tab
+                    window.location.href = url;
+                }
+            });
+        </script>
+    
+    <div id="stopwatch">00:00</div>
+    
+    <div class="experiment-container">
+        <div class="test-tube">
+            <div class="thermometer">
+                <div class="mercury" id="mercury-black" style="height: 170px;"></div>
+            </div>
+            <div class="tube-body black"></div>
+            
+            <div class="temperature-display" id="temp-black">85.0°C</div>
+            <div>Black Tube</div>
+        </div>
+        
+        
+        
+        <div class="test-tube">
+            <div class="thermometer">
+                <div class="mercury" id="mercury-white" style="height: 170px;"></div>
+            </div>
+            <div class="tube-body white"></div>
+           
+            <div class="temperature-display" id="temp-white">85°C</div>
+            <div>White Tube</div>
+        </div>
+        
+        <div class="test-tube">
+            <div class="thermometer">
+                <div class="mercury" id="mercury-silver" style="height: 170px;"></div>
+            </div>
+            <div class="tube-body silver"></div>
+          
+            <div class="temperature-display" id="temp-silver">85°C</div>
+            <div>Silver Tube</div>
+        </div>
+       
+        <div class="test-tube">
+            <div class="thermometer">
+                <div class="mercury" id="mercury-clear" style="height: 170px;"></div>
+            </div>
+            <div class="tube-body clear"></div>
+            
+            <div class="temperature-display" id="temp-clear">85°C</div>
+            <div>Clear Tube</div>
+        </div>
+    </div>
+    <div class="controls-wrapper">
+    <div class="controls">
+        <button id="start-btn" class="btn teal-btn">Start Experiment</button>
+        <button id="stop-btn" class="btn coral-btn"disabled>Stop</button>
+        <button id="reset-btn" class="btn navy-btn">Reset</button>
+    </div>
+  </div>
+  <div></div>
+    
+    <script src="radiation-script.js"></script>
+</body>
+</html>
