@@ -238,56 +238,16 @@ export default {
                 </svg>`
         },
 
-        {
-          id: 'momentum',
-          title: 'Momentum - Separate Physics Only',
-          subtitle: 'Conservation Laws',
-          description: 'Investigate collisions and conservation of momentum with interactive simulations of elastic and inelastic collisions.',
-          page: 'momentum.html',
-          available: true,
-          accent: 'gold-accent',
-          iconClass: 'gold-icon',
-          btnClass: 'gold-btn',
-          svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" stroke="currentColor">
-                  <circle cx="8.16" cy="9.77" r="3.12"/>
-                  <circle cx="10.91" cy="17.02" r="3.12"/>
-                  <polyline points="10.3,7.5 14.08,4.1 10.81,3.61 "/>
-                  <line x1="14.13" y1="4.45" x2="14.35" y2="7.24"/>
-                  <polyline points="14.4,18.79 19.02,20.89 18.16,17.69 "/>
-                  <line x1="18.73" y1="21.08" x2="16.26" y2="22.39"/>
-                </svg>`
-        },
+       
 
-        {
-          id: 'moments',
-          title: 'Moments - Separate Physics Only',
-          subtitle: 'Turning Forces',
-          description: 'Investigate the Principle of Moments by adding different masses to a balance beam.',
-          page: 'moments.html',
-          available: true,
-          accent: 'gold-accent',
-          iconClass: 'gold-icon',
-          btnClass: 'gold-btn',
-          svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" stroke="currentColor">
-                  <line x1="1" y1="11" x2="24" y2="11" />
-                  <line x1="12.5" y1="11" x2="11" y2="16" />
-                  <line x1="12.5" y1="11" x2="14" y2="16" />
-                  <line x1="22" y1="11" x2="22" y2="16" />
-                  <line x1="20" y1="14" x2="22" y2="16" />
-                  <line x1="24" y1="14" x2="22" y2="16" />
-                  <line x1="7" y1="11" x2="7" y2="19" />
-                  <line x1="5" y1="17" x2="7" y2="19" />
-                  <line x1="9" y1="17" x2="7" y2="19" />
-                  <line x1="11" y1="16" x2="14" y2="16" />
-                </svg>`
-        }
+        
       ]
     }
   },
   methods: {
     launchSimulation(page) {
       if (!page) return
-      const url = `/GCSE/simulations/forces/${page}`
+      const url = `/GCSE/simulations/energy/${page}`
       window.open(url, '_blank', 'noopener,noreferrer')
     },
 
