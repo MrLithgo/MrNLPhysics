@@ -1,4 +1,8 @@
-import { questions as momentumQuestions } from './questions/momentum.js'
+
+import { 
+  momentumQuestions, 
+  
+} from './questions'
 
 export const quizConfigs = {
   momentum: {
