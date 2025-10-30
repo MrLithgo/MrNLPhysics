@@ -14,7 +14,7 @@
            <div class="header-left">  <button id="download-worksheet-btn" class="btn navy-btn" aria-label="Download worksheet PDF">Worksheet</button></div>
           <h1 class="page-title">Investigating Momentum</h1>
           <div class="header-actions">
-            <button id="quiz-btn' class="btn gold-btn">Quiz yourself</button>
+            <button id="quiz-btn' class="btn gold-btn  onclick="launchQuiz('momentum')" >Quiz yourself</button>
           </div>
         </div>
       </header>
@@ -29,16 +29,10 @@
                     window.location.href = url;
                 }
             });
-    document.getElementById('quiz-btn').addEventListener('click', () => {
-                const url = '/quizzes/forces/momentum-quiz.html';
-                const w = window.open(url, '_blank');
-                if (w) {
-                    try { w.opener = null; } catch (e) { }
-                } else {
-                    // popup blocked — fallback to navigate in same tab
-                    window.location.href = url;
-                }
-            });
+  function launchQuiz(quizId) {
+    // Adjust the path to match your Vue app's location
+    window.location.href = '/quizzes?quiz=' + quizId;
+}
         </script>
         
         <!-- Simulation Area -->
