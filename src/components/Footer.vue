@@ -60,7 +60,8 @@ export default {
         }
       }
     }
-}
+  } // ← Missing this closing brace for methods
+} // ← Missing this closing brace for the component
 </script>
 
 <style scoped>
