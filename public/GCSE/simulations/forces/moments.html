@@ -6,6 +6,7 @@
     <title>Investigating Moments</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="moments-styles.css">
+    <link rel="icon" type="image/svg+xml" href="/assets/atomlogo.svg">
 </head>
 
 <body>
@@ -24,6 +25,16 @@
 <script>
             document.getElementById('download-worksheet-btn').addEventListener('click', () => {
                 const url = '/assets/moments-worksheet.pdf';
+                const w = window.open(url, '_blank');
+                if (w) {
+                    try { w.opener = null; } catch (e) { }
+                } else {
+                    // popup blocked — fallback to navigate in same tab
+                    window.location.href = url;
+                }
+            });
+    document.getElementById('quiz-btn').addEventListener('click', () => {
+                const url = '/GCSE/quizzes/forces/moments-quiz.html';
                 const w = window.open(url, '_blank');
                 if (w) {
                     try { w.opener = null; } catch (e) { }
