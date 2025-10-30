@@ -38,6 +38,16 @@
                         window.location.href = url;
                     }
                 });
+                document.getElementById('quiz-btn').addEventListener('click', () => {
+                const url = '/quizzes/forces/second-law-quiz.html';
+                const w = window.open(url, '_blank');
+                if (w) {
+                    try { w.opener = null; } catch (e) { }
+                } else {
+                    // popup blocked — fallback to navigate in same tab
+                    window.location.href = url;
+                }
+            });
             </script>
 
             <section class="experiment-area">
