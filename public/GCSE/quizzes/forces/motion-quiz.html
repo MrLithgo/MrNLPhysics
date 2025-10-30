@@ -1,1 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Investigating Motion Quiz</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="quiz-styles.css" />
+  <link rel="icon" type="image/svg+xml" href="/assets/atomlogo.svg">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+     
+       
+        <div class="site-title">Mr NL's Physics Lab</div>
+     
+
+      <h1 class="page-title">Investigating Motion</h1>
+      <p class="page-sub">Quick Quiz</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="quiz-wrap">
+      <div class="quiz-container">
+        <div id="quiz-header" class="quiz-header">
+          <div class="logo-large">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5">
+                  <rect transform="rotate(23.7214 10.053 8.68634)" height="5.31243" width="12.2991" y="6.03012" x="3.90342" fill="none"/>
+                  <line y2="21.09329" x2="22.78111" y1="11.63025" x1="1.2189" fill="none"/>
+                  <ellipse ry="1.71873" rx="1.71873" cy="10.62468" cx="5.68759" fill="#ffffff"/>
+                  <ellipse ry="1.71873" rx="1.71873" cy="13.12465" cx="11.50001" fill="#ffffff"/>
+                </svg>
+          </div>
+        </div>
+
+        <div id="progress-container" class="progress-container">
+          <div class="progress-top">
+            <span id="question-number">Question 1/10</span>
+            <span id="score-display">Score: 0</span>
+          </div>
+          <div class="progress-track">
+            <div id="progress-bar" class="progress-bar" style="width: 10%"></div>
+          </div>
+        </div>
+
+        <div id="quiz-content" class="quiz-content">
+          <!-- questions inserted by script -->
+        </div>
+
+        <div id="results" class="result-card hidden">
+          <h2 class="results-title">Quiz Results</h2>
+          <div class="final-score"><span id="final-score">0</span>/10</div>
+          <p id="result-message" class="result-message">You've completed the quiz!</p>
+
+          <div class="final-progress-wrap">
+            <div class="progress-track small">
+              <div id="final-progress" class="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="final-count"><span id="correct-count">0</span> correct out of 10 questions</div>
+          </div>
+
+          <button id="restart-btn" class="btn btn-primary restart-btn">Restart Quiz</button>
+
+          <div id="review-section" class="review-section">
+            <h3>Review Your Answers</h3>
+            <div id="review-list" class="review-list"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="motion-quiz-script.js"></script>
+</body>
+</html>
 
