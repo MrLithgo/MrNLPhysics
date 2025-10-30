@@ -42,12 +42,24 @@ export default {
   },
   methods: {
     scrollToSection(sectionId) {
-      const element = document.getElementById(sectionId)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
+      // If we're not on the home page, navigate there first
+      if (this.$route.path !== '/') {
+        this.$router.push('/');
+        // Wait for navigation to complete, then scroll
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100);
+      } else {
+        // We're already on home page, just scroll
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
       }
     }
-  }
 }
 </script>
 
