@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@unhead/vue": "^2.0.19",
     "vue": "^3.3.0",
     "vue-router": "^4.6.3"
   },
