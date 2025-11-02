@@ -87,7 +87,7 @@ export default {
         {
           name: 'keywords',
           content:
-            'forces simulations, motion physics, GCSE forces, Newton Laws, friction, momentum, moments, physics animations, Edexcel physics',
+            'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics',
         },
       ],
       script: [
@@ -98,10 +98,11 @@ export default {
             '@type': 'CollectionPage',
             name: 'GCSE Forces and Motion Simulations',
             description: 'Interactive forces and motion physics simulations for GCSE students',
-            about: 'Physics education, Newtonian mechanics, forces, motion, friction, momentum',
+            about:
+              'Worksheet-integrated virtual labs, Physics education, Newtonian mechanics, forces, motion, friction, momentum, moments, hookes law, stopping distance, second law, F=ma',
             educationalAlignment: {
               '@type': 'AlignmentObject',
-              educationalFramework: 'Edexcel GCSE Physics',
+              educationalFramework: 'International Edexcel GCSE Physics',
               targetName: 'Forces and Motion',
             },
           }),
