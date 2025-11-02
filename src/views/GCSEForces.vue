@@ -9,7 +9,10 @@
 
     <div class="container main-content">
       <div class="quote-card">
-        <p class="quote-text">"In physics, you don't have to go around making trouble for yourself - nature does it for you."</p>
+        <p class="quote-text">
+          "In physics, you don't have to go around making trouble for yourself - nature does it for
+          you."
+        </p>
         <p class="quote-author">- Frank Wilczek</p>
       </div>
 
@@ -67,9 +70,46 @@
 </template>
 
 <script>
-
 export default {
   name: 'GCSEForces',
+
+  setup() {
+    // ← ADD THIS setup() FUNCTION
+    // SEO META DATA GOES HERE
+    useHead({
+      title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
+      meta: [
+        {
+          name: 'description',
+          content:
+            "Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes.",
+        },
+        {
+          name: 'keywords',
+          content:
+            'forces simulations, motion physics, GCSE forces, Newton Laws, friction, momentum, moments, physics animations, Edexcel physics',
+        },
+      ],
+      script: [
+        {
+          type: 'application/ld+json',
+          innerHTML: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'GCSE Forces and Motion Simulations',
+            description: 'Interactive forces and motion physics simulations for GCSE students',
+            about: 'Physics education, Newtonian mechanics, forces, motion, friction, momentum',
+            educationalAlignment: {
+              '@type': 'AlignmentObject',
+              educationalFramework: 'Edexcel GCSE Physics',
+              targetName: 'Forces and Motion',
+            },
+          }),
+        },
+      ],
+    })
+  },
+
   data() {
     return {
       simulations: [
@@ -77,7 +117,8 @@ export default {
           id: 'trolley',
           title: 'Investigating Motion',
           subtitle: 'Trolley and Ramp',
-          description: 'In this investigation you use light gates to measure the speed of a trolley moving down a ramp.',
+          description:
+            'In this investigation you use light gates to measure the speed of a trolley moving down a ramp.',
           page: 'trolley-ramp.html',
           available: true,
           accent: 'teal-accent',
@@ -88,14 +129,15 @@ export default {
                   <line y2="21.09329" x2="22.78111" y1="11.63025" x1="1.2189" fill="none"/>
                   <ellipse ry="1.71873" rx="1.71873" cy="10.62468" cx="5.68759" fill="#ffffff"/>
                   <ellipse ry="1.71873" rx="1.71873" cy="13.12465" cx="11.50001" fill="#ffffff"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'friction',
           title: 'Investigating Friction',
           subtitle: 'Forces in Action',
-          description: 'Test different surfaces and materials to understand the factors that affect friction.',
+          description:
+            'Test different surfaces and materials to understand the factors that affect friction.',
           page: 'friction.html',
           available: true,
           accent: 'navy-accent',
@@ -105,14 +147,15 @@ export default {
                   <rect x="6.28" y="7.51" width="16.75" height="8.5"/>
                   <polyline points="17.58,17.52 0.99,17.51 3.14,15.07 "/>
                   <line x1="3.03" y1="19.92" x2="1.06" y2="17.68"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'second-law',
           title: "Newton's Second Law",
           subtitle: 'F = ma',
-          description: "Manipulate force and mass to observe changes in acceleration and verify Newton's Second Law.",
+          description:
+            "Manipulate force and mass to observe changes in acceleration and verify Newton's Second Law.",
           page: 'second-law.html',
           available: true,
           accent: 'coral-accent',
@@ -121,14 +164,15 @@ export default {
           svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 25 25" stroke="currentColor">
                   <circle cx="7.5" cy="12.5" r="5" fill="none" stroke-width="1.5"/>
                   <line x1="13" y1="12.5" x2="22.5" y2="12.5" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2,2"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'stopping-distance',
           title: 'Stopping Distance',
           subtitle: 'Thinking & Braking',
-          description: 'Investigate factors affecting stopping distance including speed, reaction time, and road conditions.',
+          description:
+            'Investigate factors affecting stopping distance including speed, reaction time, and road conditions.',
           page: 'stopping-distance.html',
           available: true,
           accent: 'navy-accent',
@@ -141,14 +185,15 @@ export default {
                   <rect x="16.65" y="16.67" width="2.5" height="4.24"/>
                   <circle cx="8.24" cy="13.08" r="1"/>
                   <circle cx="16.49" cy="13.08" r="1"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'hookes-law',
           title: 'Investigating Extension',
           subtitle: 'Force and Extension',
-          description: "Explore Hooke's Law by testing springs and elastic materials under different loads.",
+          description:
+            "Explore Hooke's Law by testing springs and elastic materials under different loads.",
           page: 'hookes-law.html',
           available: true,
           accent: 'teal-accent',
@@ -157,14 +202,15 @@ export default {
           svg: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" stroke="currentColor">
                   <line x1="1.39" y1="1.56" x2="23.83" y2="1.49"/>
                   <polyline points="12.67,1.57 12.7,6.77 17.62,8.3 8.74,10.95 17.73,14.26 8.47,17.88 13.25,20.02 13.38,23.07 "/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'momentum',
           title: 'Momentum - Separate Physics Only',
           subtitle: 'Conservation Laws',
-          description: 'Investigate collisions and conservation of momentum with interactive simulations of elastic and inelastic collisions.',
+          description:
+            'Investigate collisions and conservation of momentum with interactive simulations of elastic and inelastic collisions.',
           page: 'momentum.html',
           available: true,
           accent: 'gold-accent',
@@ -177,14 +223,15 @@ export default {
                   <line x1="14.13" y1="4.45" x2="14.35" y2="7.24"/>
                   <polyline points="14.4,18.79 19.02,20.89 18.16,17.69 "/>
                   <line x1="18.73" y1="21.08" x2="16.26" y2="22.39"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'moments',
           title: 'Moments - Separate Physics Only',
           subtitle: 'Turning Forces',
-          description: 'Investigate the Principle of Moments by adding different masses to a balance beam.',
+          description:
+            'Investigate the Principle of Moments by adding different masses to a balance beam.',
           page: 'moments.html',
           available: true,
           accent: 'gold-accent',
@@ -201,9 +248,9 @@ export default {
                   <line x1="5" y1="17" x2="7" y2="19" />
                   <line x1="9" y1="17" x2="7" y2="19" />
                   <line x1="11" y1="16" x2="14" y2="16" />
-                </svg>`
-        }
-      ]
+                </svg>`,
+        },
+      ],
     }
   },
   methods: {
@@ -214,13 +261,15 @@ export default {
     },
 
     notifyComingSoon(sim) {
-      window.dispatchEvent(new CustomEvent('ui-notify', {
-        detail: {
-          type: 'modal',
-          title: 'Coming soon',
-          message: `<strong>${sim.title}</strong> — this simulation is coming soon.`
-        }
-      }))
+      window.dispatchEvent(
+        new CustomEvent('ui-notify', {
+          detail: {
+            type: 'modal',
+            title: 'Coming soon',
+            message: `<strong>${sim.title}</strong> — this simulation is coming soon.`,
+          },
+        })
+      )
     },
 
     onCardClick(sim) {
@@ -241,14 +290,14 @@ export default {
           window.scrollTo({ top: 0, behavior: 'instant' })
         }
       }, 50)
-    }
+    },
   },
   mounted() {
     this.scrollToTop()
   },
   activated() {
     this.scrollToTop()
-  }
+  },
 }
 </script>
 
@@ -418,14 +467,14 @@ export default {
   align-items: flex-start;
   justify-content: flex-end;
   padding: 12px;
-  background: rgba(255,255,255,0.62);
+  background: rgba(255, 255, 255, 0.62);
   backdrop-filter: blur(2px) grayscale(1);
   pointer-events: none; /* buttons remain clickable if you want them to be */
   z-index: 5;
 }
 
 .overlay-badge {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 6px 10px;
   border-radius: 999px;
