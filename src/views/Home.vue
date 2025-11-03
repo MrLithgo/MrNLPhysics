@@ -218,7 +218,7 @@ export default {
           category: 'particle',
           topics: ['Nuclear Atom', 'Particle Accelorators', 'Standard Model'],
           icon: ParticleIcon,
-          route: 'ALevel/particles'
+          route: 'ALevel/nuclear-and-particles'
         },
         // ... more units
       ]
