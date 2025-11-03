@@ -208,7 +208,8 @@ export default {
           description: 'Explore mechanics, kinematics and moments through advanced simulations.',
           category: 'mechanics',
           topics: ['Kinematics', 'Dynamics', 'Moments'],
-          icon: MechanicsIcon 
+          icon: MechanicsIcon,
+          route: 'ALevel/mechanics'
         },
         {
           id: 6,
@@ -217,6 +218,7 @@ export default {
           category: 'particle',
           topics: ['Nuclear Atom', 'Particle Accelorators', 'Standard Model'],
           icon: ParticleIcon
+          route: 'ALevel/particles'
         },
         // ... more units
       ]
