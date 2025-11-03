@@ -99,7 +99,7 @@ svg: `
           subtitle: 'Investigating Gamma Ray absorption',
           description: 'Investigate how the thickness of lead affects the absorption of gamma rays.',
           page: 'gamma-ray-absorption.html',
-          available: true,
+          available: false,
           accent: 'coral-accent',
           iconClass: 'coral-icon',
           btnClass: 'coral-btn',
