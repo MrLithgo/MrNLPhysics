@@ -217,7 +217,7 @@ export default {
           description: 'The world of the very small - explore the nuclear atom, particle physics and fundamental forces.',
           category: 'particle',
           topics: ['Nuclear Atom', 'Particle Accelorators', 'Standard Model'],
-          icon: ParticleIcon
+          icon: ParticleIcon,
           route: 'ALevel/particles'
         },
         // ... more units
