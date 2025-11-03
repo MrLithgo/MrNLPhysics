@@ -104,7 +104,6 @@ svg: `
           iconClass: 'coral-icon',
           btnClass: 'coral-btn',
           svg: `
-
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
                 <path id="svg_1" d="m13.4375,5.75003l0.875,0l0,13.49995l-0.875,0l0,-13.49995z" opacity="undefined" stroke="#000" fill="#fff"/>
   <rect id="svg_2" height="0.625" width="1.37499" y="2.24994" x="-6.84367" stroke="#000" fill="#fff"/>
