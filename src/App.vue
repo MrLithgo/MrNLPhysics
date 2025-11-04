@@ -2,8 +2,8 @@
   <div id="app">
     <Navigation />
     <main>
-      <router-view />  <!-- ← Replace <Home /> with this -->
-       <!-- global notify/toast modal mounted once -->
+      <router-view />  
+     
     <UiNotify />
     </main>
     <Footer />
@@ -21,7 +21,7 @@ export default {
     Navigation,
     Footer,
     UiNotify
-    // Remove Home from components since router will handle it
+    
   }
 }
 </script>
