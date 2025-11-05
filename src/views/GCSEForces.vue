@@ -93,7 +93,7 @@ export default {
           content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
         },
         {
-          property: 'og:description'
+          property: 'og:description',
           content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.'
         },
         {
