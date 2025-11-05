@@ -69,6 +69,7 @@
   </div>
 </template>
 
+<script>
 import { useHead } from '@unhead/vue'
 
 setup() {
