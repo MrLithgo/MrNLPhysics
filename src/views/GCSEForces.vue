@@ -75,7 +75,7 @@ export default {
   name: 'GCSEForces',
   
   setup() {
-   
+   console.log('🎯 GCSEForces setup() is executing!') // ← ADD THIS
     useHead({
       title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
       meta: [
