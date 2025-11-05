@@ -110,7 +110,7 @@ setup() {
   })
 
   return {}
-}
+},
 
   data() {
     return {
