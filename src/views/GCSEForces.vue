@@ -71,7 +71,7 @@
 
 <script>
 import { useHead } from '@unhead/vue'
-
+export default {
 setup() {
   useHead({
     title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
