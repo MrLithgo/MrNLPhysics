@@ -74,8 +74,7 @@ export default {
   name: 'GCSEForces',
 
   setup() {
-    // ← ADD THIS setup() FUNCTION
-    // SEO META DATA GOES HERE
+    
     useHead({
       title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
       meta: [
@@ -88,6 +87,26 @@ export default {
           name: 'keywords',
           content:
             'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics',
+        },
+         {
+          property: 'og:title',
+          content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
+        },
+        {
+          property: 'og:description'
+          content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.'
+        },
+        {
+          property: 'og:image',
+          content: 'https://mrnlphysics.com/images/forces-preview.png'
+        },
+        {
+          property: 'og:url',
+          content: 'https://mrnlphysics.com/gcse/forces-and-motion'
+        },
+        {
+          property: 'og:type',
+          content: 'website'
         },
       ],
       script: [
