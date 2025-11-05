@@ -69,66 +69,47 @@
   </div>
 </template>
 
-<script>
-  import { useHead } from '@unhead/vue' 
-export default {
-  name: 'GCSEForces',
-  
-  setup() {
-   console.log('🎯 GCSEForces setup() is executing!') // ← ADD THIS
-    useHead({
-      title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
-      meta: [
-        {
-          name: 'description',
-          content: "Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes."
-        },
-        {
-          name: 'keywords',
-          content: 'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics'
-        },
-        {
-          property: 'og:title',
-          content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
-        },
-        {
-          property: 'og:description',
-          content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.'
-        },
-        {
-          property: 'og:image',
-          content: 'https://mrnlphysics.com/images/forces-preview.png'
-        },
-        {
-          property: 'og:url',
-          content: 'https://mrnlphysics.com/gcse/forces-and-motion'
-        },
-        {
-          property: 'og:type',
-          content: 'website'
-        }
-      ],
-      script: [
-        {
-          type: 'application/ld+json',
-          innerHTML: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'CollectionPage',
-            name: 'GCSE Forces and Motion Simulations',
-            description: 'Interactive forces and motion physics simulations for GCSE students',
-            about: 'Worksheet-integrated virtual labs, Physics education, Newtonian mechanics, forces, motion, friction, momentum, moments, hookes law, stopping distance, second law, F=ma',
-            educationalAlignment: {
-              '@type': 'AlignmentObject',
-              educationalFramework: 'International Edexcel GCSE Physics',
-              targetName: 'Forces and Motion'
-            }
-          })
-        }
-      ]
-    })
+import { useHead } from '@unhead/vue'
 
-    return {}
-  },
+setup() {
+  useHead({
+    title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
+    meta: [
+      { name: 'description', content: "Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes." },
+      { name: 'keywords', content: 'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics' },
+
+  
+      { property: 'og:title', content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs' },
+      { property: 'og:description', content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.' },
+      { property: 'og:image', content: 'https://mrnlphysics.com/images/forces-preview.png' },
+      { property: 'og:url', content: 'https://mrnlphysics.com/gcse/forces-and-motion' },
+      { property: 'og:type', content: 'website' },
+    ],
+    script: [
+      {
+        type: 'application/ld+json',
+        
+        children: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'GCSE Forces and Motion Simulations',
+          description: 'Interactive forces and motion physics simulations for GCSE students',
+          about: 'Worksheet-integrated virtual labs, Physics education, Newtonian mechanics, forces, motion, friction, momentum, moments, hookes law, stopping distance, second law, F=ma',
+          educationalAlignment: {
+            '@type': 'AlignmentObject',
+            educationalFramework: 'International Edexcel GCSE Physics',
+            targetName: 'Forces and Motion'
+          }
+        })
+      }
+    ],
+    link: [
+      { rel: 'canonical', href: 'https://mrnlphysics.com/gcse/forces-and-motion' }
+    ]
+  })
+
+  return {}
+}
 
   data() {
     return {
