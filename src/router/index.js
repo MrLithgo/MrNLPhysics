@@ -11,7 +11,7 @@ import GCSEEnergy from '@/views/GCSEEnergy.vue'
 
 import ALevelMechanics from '@/views/ALevelMechanics.vue'
 import ALevelParticles from '@/views/ALevelParticles.vue'
-
+console.log('🔍 Router: GCSEForces component imported:', !!GCSEForces) // ← ADD THIS
 
 const routes = [
     {
