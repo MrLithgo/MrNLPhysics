@@ -11,7 +11,7 @@
         <div class="nav-menu">
           <!-- Use router-link for navigation -->
           <router-link to="/" class="nav-link" exact-active-class="active">Home</router-link>
-          <a href="#igcse" class="nav-link" @click.prevent="scrollToSection('igcse')">IGCSE</a>
+          <a href="#igcse" class="nav-link" @click.prevent="scrollToSection('igcse')">GCSE</a>
           <a href="#alevel" class="nav-link" @click.prevent="scrollToSection('alevel')">A Level</a>
           <a href="#about" class="nav-link" @click.prevent="scrollToSection('about')">About</a>
         </div>
