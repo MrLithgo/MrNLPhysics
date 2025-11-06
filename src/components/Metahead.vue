@@ -1,20 +1,21 @@
 <script setup>
-import { useHead } from '@vueuse/head'
 
-// Props to customize per page
+import { useHead } from '@unhead/vue'
+
 const props = defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   url: { type: String, required: true },
-  image: { type: String, default: 'https://mrnlphysics.netlify.app/assets/og-image.jpg' },
+  image: { type: String, default: 'https://mrnlphysics.com/images/forces-preview.png' },
   keywords: { type: String, default: 'Physics, GCSE, Science, Mr NL Physics, Interactive Simulations' },
-  author: { type: String, default: 'Mr NL Physics' }
+  author: { type: String, default: 'Mr NL Physics' },
+  jsonld: { type: Object, default: null } // optional structured data object
 })
 
-// Apply metadata dynamically
-useHead({
-  title: props.title,
-  meta: [
+// apply head
+useHead(() => {
+  // build base meta array
+  const meta = [
     { name: 'description', content: props.description },
     { name: 'keywords', content: props.keywords },
     { name: 'author', content: props.author },
@@ -31,16 +32,31 @@ useHead({
     { name: 'twitter:title', content: props.title },
     { name: 'twitter:description', content: props.description },
     { name: 'twitter:image', content: props.image },
-  ],
-  link: [
-    { rel: 'canonical', href: props.url },
-    { rel: 'icon', href: '/favicon.ico' },
-    { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
-  ],
+  ]
+
+  // script array (include JSON-LD if provided)
+  const script = []
+  if (props.jsonld) {
+    script.push({
+      type: 'application/ld+json',
+      children: JSON.stringify(props.jsonld)
+    })
+  }
+
+  return {
+    title: props.title,
+    meta,
+    link: [
+      { rel: 'canonical', href: props.url },
+      { rel: 'icon', href: '/favicon.ico' },
+      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
+    ],
+    script
+  }
 })
 </script>
 
 <template>
-  <!-- This component doesn’t render visible HTML -->
-  <span style="display:none"></span>
+  <!-- Invisible — this component updates <head> only -->
+  <span aria-hidden="true" style="display:none"></span>
 </template>
