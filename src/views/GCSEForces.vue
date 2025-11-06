@@ -72,6 +72,28 @@
 <script>
 import { useHead } from '@unhead/vue'
 export default {
+  name: 'GCSEForces',
+  mounted() {
+    // Force update meta tags for crawlers
+    document.title = 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
+    
+    // Update or create OG tags
+    this.updateMetaTag('property', 'og:title', 'Forces & Motion Simulations - GCSE Physics Interactive Labs')
+    this.updateMetaTag('property', 'og:description', 'Simple forces simulations with worksheets and quizzes')
+    this.updateMetaTag('property', 'og:image', 'https://mrnlphysics.com/images/forces-preview.png')
+    this.updateMetaTag('property', 'og:url', window.location.href)
+  },
+  methods: {
+    updateMetaTag(attr, name, content) {
+      let tag = document.querySelector(`meta[${attr}="${name}"]`)
+      if (!tag) {
+        tag = document.createElement('meta')
+        tag.setAttribute(attr, name)
+        document.head.appendChild(tag)
+      }
+      tag.setAttribute('content', content)
+    }
+  },
 setup() {
   useHead({
     title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
