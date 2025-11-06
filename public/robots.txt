@@ -1,0 +1,4 @@
+User-agent: *
+Disallow:
+# optional sitemap line:
+Sitemap: https://mrnlphysics.com/sitemap.xml
