@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         explanation: "Moments must balance: 5 × 0.4 = W × 0.2, so W = 10 N."
     },
     {
-        qquestion: "Why are spanners made with long handles?",
+        question: "Why are spanners made with long handles?",
         options: [
             "To make them lighter",
             "To reduce friction",
