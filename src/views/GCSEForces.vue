@@ -281,7 +281,6 @@ export default {
 </script>
 
 <style scoped>
-/* — Styles unchanged — */
 .page-header {
   background-color: var(--navy);
   color: white;
@@ -325,5 +324,166 @@ export default {
   margin-top: 0.5rem;
 }
 
-/* ...rest of styles unchanged... */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: var(--white);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-accent {
+  height: 0.75rem;
+}
+
+.teal-accent {
+  background-color: rgba(26, 188, 156, 0.5);
+}
+
+.gold-accent {
+  background-color: rgba(241, 196, 15, 0.5);
+}
+
+.coral-accent {
+  background-color: rgba(231, 76, 60, 0.5);
+}
+
+.navy-accent {
+  background-color: rgba(44, 62, 80, 0.5);
+}
+
+.card-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  margin: 0 auto 1rem;
+}
+
+.teal-icon {
+  background-color: rgba(26, 188, 156, 0.1);
+  color: var(--navy);
+}
+
+.gold-icon {
+  background-color: rgba(241, 196, 15, 0.1);
+  color: var(--gold);
+}
+
+.coral-icon {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: var(--coral);
+}
+
+.navy-icon {
+  background-color: rgba(44, 62, 80, 0.1);
+  color: var(--navy);
+}
+
+.card-icon svg {
+  height: 3rem;
+  width: 3rem;
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  color: var(--navy);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.card h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--slate);
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.card p {
+  color: var(--slate);
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+  flex-grow: 1;
+}
+
+.card-actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+/* overlay for coming-soon cards */
+.card-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 12px;
+  background: rgba(255,255,255,0.62);
+  backdrop-filter: blur(2px) grayscale(1);
+  pointer-events: none; /* buttons remain clickable if you want them to be */
+  z-index: 5;
+}
+
+.overlay-badge {
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* show visually-disabled state for card when not available */
+.card--disabled {
+  opacity: 0.98;
+}
+
+/* Responsive design */
+@media (min-width: 640px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .page-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .container {
+    padding: 0 2rem;
+  }
+}
 </style>
