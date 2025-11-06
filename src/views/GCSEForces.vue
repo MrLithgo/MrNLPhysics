@@ -70,69 +70,49 @@
 </template>
 
 <script>
+import { nextTick } from 'vue'
 import { useHead } from '@unhead/vue'
+
 export default {
   name: 'GCSEForces',
-  mounted() {
-    // Force update meta tags for crawlers
-    document.title = 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
-    
-    // Update or create OG tags
-    this.updateMetaTag('property', 'og:title', 'Forces & Motion Simulations - GCSE Physics Interactive Labs')
-    this.updateMetaTag('property', 'og:description', 'Simple forces simulations with worksheets and quizzes')
-    this.updateMetaTag('property', 'og:image', 'https://mrnlphysics.com/images/forces-preview.png')
-    this.updateMetaTag('property', 'og:url', window.location.href)
-  },
-  methods: {
-    updateMetaTag(attr, name, content) {
-      let tag = document.querySelector(`meta[${attr}="${name}"]`)
-      if (!tag) {
-        tag = document.createElement('meta')
-        tag.setAttribute(attr, name)
-        document.head.appendChild(tag)
-      }
-      tag.setAttribute('content', content)
-    }
-  },
-setup() {
-  useHead({
-    title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
-    meta: [
-      { name: 'description', content: "Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes." },
-      { name: 'keywords', content: 'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics' },
 
-  
-      { property: 'og:title', content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs' },
-      { property: 'og:description', content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.' },
-      { property: 'og:image', content: 'https://mrnlphysics.com/images/forces-preview.png' },
-      { property: 'og:url', content: 'https://mrnlphysics.com/gcse/forces-and-motion' },
-      { property: 'og:type', content: 'website' },
-    ],
-    script: [
-      {
-        type: 'application/ld+json',
-        
-        children: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'CollectionPage',
-          name: 'GCSE Forces and Motion Simulations',
-          description: 'Interactive forces and motion physics simulations for GCSE students',
-          about: 'Worksheet-integrated virtual labs, Physics education, Newtonian mechanics, forces, motion, friction, momentum, moments, hookes law, stopping distance, second law, F=ma',
-          educationalAlignment: {
-            '@type': 'AlignmentObject',
-            educationalFramework: 'International Edexcel GCSE Physics',
-            targetName: 'Forces and Motion'
-          }
-        })
-      }
-    ],
-    link: [
-      { rel: 'canonical', href: 'https://mrnlphysics.com/gcse/forces-and-motion' }
-    ]
-  })
+  setup() {
+    useHead({
+      title: 'Forces & Motion Simulations - GCSE Physics Interactive Labs',
+      meta: [
+        { name: 'description', content: "Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes." },
+        { name: 'keywords', content: 'Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics' },
 
-  return {}
-},
+        { property: 'og:title', content: 'Forces & Motion Simulations - GCSE Physics Interactive Labs' },
+        { property: 'og:description', content: 'Simple forces simulations: motion, speed, friction, second law, stopping distance, hookes law, momentum, moments. Worksheets & quizzes included.' },
+        { property: 'og:image', content: 'https://mrnlphysics.com/images/forces-preview.png' },
+        { property: 'og:url', content: 'https://mrnlphysics.com/gcse/forces-and-motion' },
+        { property: 'og:type', content: 'website' },
+      ],
+      script: [
+        {
+          type: 'application/ld+json',
+          children: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'CollectionPage',
+            name: 'GCSE Forces and Motion Simulations',
+            description: 'Interactive forces and motion physics simulations for GCSE students',
+            about: 'Worksheet-integrated virtual labs, Physics education, Newtonian mechanics, forces, motion, friction, momentum, moments, hookes law, stopping distance, second law, F=ma',
+            educationalAlignment: {
+              '@type': 'AlignmentObject',
+              educationalFramework: 'International Edexcel GCSE Physics',
+              targetName: 'Forces and Motion'
+            }
+          })
+        }
+      ],
+      link: [
+        { rel: 'canonical', href: 'https://mrnlphysics.com/gcse/forces-and-motion' }
+      ]
+    })
+
+    return {}
+  },
 
   data() {
     return {
@@ -277,6 +257,7 @@ setup() {
       ],
     }
   },
+
   methods: {
     launchSimulation(page) {
       if (!page) return
@@ -315,13 +296,53 @@ setup() {
         }
       }, 50)
     },
+
+    // meta helper (kept for backward-compat)
+    updateMetaTag(attr, name, content) {
+      let tag = document.querySelector(`meta[${attr}="${name}"]`)
+      if (!tag) {
+        tag = document.createElement('meta')
+        tag.setAttribute(attr, name)
+        document.head.appendChild(tag)
+      }
+      tag.setAttribute('content', content)
+    }
   },
-  mounted() {
+
+  // merged mounted: set meta, scroll, then signal prerender readiness
+  async mounted() {
+    // set classic DOM meta as a fallback for any non-unhead consumers
+    document.title = 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
+    this.updateMetaTag('property', 'og:title', 'Forces & Motion Simulations - GCSE Physics Interactive Labs')
+    this.updateMetaTag('property', 'og:description', 'Simple forces simulations with worksheets and quizzes')
+    this.updateMetaTag('property', 'og:image', 'https://mrnlphysics.com/images/forces-preview.png')
+    this.updateMetaTag('property', 'og:url', window.location.href)
+
+    // scroll helpers from your original code
     this.scrollToTop()
+
+    // wait for Vue to finish DOM updates and for useHead() to apply
+    await nextTick()
+    await nextTick()
+
+    // (optional) If you still have race issues with Netlify, add a tiny delay:
+    // await new Promise(r => setTimeout(r, 120))
+
+    if (typeof window !== 'undefined') {
+      window.prerenderReady = true
+    }
   },
+
+  beforeUnmount() {
+    if (typeof window !== 'undefined') {
+      window.prerenderReady = false
+    }
+  },
+
+  // keep activated in case component is used with <keep-alive>
   activated() {
     this.scrollToTop()
-  },
+  }
 }
 </script>
 
