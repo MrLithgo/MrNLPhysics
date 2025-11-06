@@ -115,6 +115,7 @@
 </template>
 
 <script>
+import { nextTick } from 'vue'
 import Hero from '@/components/Hero.vue'
 import SimulationCard from '@/components/SimulationCard.vue'
 import ALevelCard from '@/components/ALevelCard.vue'
@@ -127,7 +128,7 @@ import EnergyIcon from '@/components/icons/EnergyIcon.vue'
 import MatterIcon from '@/components/icons/MatterIcon.vue'
 import MagnetismIcon from '@/components/icons/MagnetismIcon.vue'
 import RadioactivityIcon from '@/components/icons/RadioactivityIcon.vue'
-import AstrophysicsIcon from '@/components/icons/AstrophysicsIcon.vue'  
+import AstrophysicsIcon from '@/components/icons/AstrophysicsIcon.vue'
 import MechanicsIcon from '@/components/icons/MechanicsIcon.vue'
 import ParticleIcon from '@/components/icons/ParticleIcon.vue'
 
@@ -147,7 +148,7 @@ export default {
           description: 'Explore Newton\'s laws of motion, momentum, and kinematics through interactive demonstrations.',
           category: 'forces',
           icon: ForcesIcon,
-          route: '/gcse/forces-and-motion'  
+          route: '/gcse/forces-and-motion'
         },
         {
           id: 2,
@@ -156,7 +157,7 @@ export default {
           category: 'electricity',
           icon: ElectricityIcon
         },
-         {
+        {
           id: 3,
           title: 'Waves',
           description: 'Visualize wave properties, reflection, refraction, diffraction, and interference patterns.',
@@ -169,7 +170,7 @@ export default {
           description: 'Explore energy transformations, conservation of energy, and efficiency in various systems.',
           category: 'energy',
           icon: EnergyIcon,
-           route: '/gcse/energy'  
+          route: '/gcse/energy'
         },
         {
           id: 5,
@@ -192,14 +193,13 @@ export default {
           category: 'radioactivity',
           icon: RadioactivityIcon
         },
-         {
+        {
           id: 8,
           title: 'Astrophysics',
           description: 'Explore the solar system, stars, galaxies, and the expanding universe.',
           category: 'astrophysics',
           icon: AstrophysicsIcon
         }
-        
       ],
       alevelUnits: [
         {
@@ -224,37 +224,57 @@ export default {
       ]
     }
   },
- methods: {
-  handleSimulationClick(clickedData) {
-    // Find the complete simulation object from your arrays
-    const allSimulations = [...this.igcseSimulations, ...this.alevelUnits];
-    const simulation = allSimulations.find(sim => 
-      sim.title === clickedData.title || 
-      sim.id === clickedData.id
-    );
-    
-    if (simulation && simulation.route) {
-  this.$router.push(simulation.route);
-} else {
-  window.dispatchEvent(new CustomEvent('ui-notify', {
-    detail: {
-      type: 'modal',
-      title: 'Coming soon',
-      message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`
-    }
-  }));
-}
+  methods: {
+    handleSimulationClick(clickedData) {
+      // Find the complete simulation object from your arrays
+      const allSimulations = [...this.igcseSimulations, ...this.alevelUnits];
+      const simulation = allSimulations.find(sim =>
+        sim.title === clickedData.title ||
+        sim.id === clickedData.id
+      );
 
+      if (simulation && simulation.route) {
+        this.$router.push(simulation.route);
+      } else {
+        window.dispatchEvent(new CustomEvent('ui-notify', {
+          detail: {
+            type: 'modal',
+            title: 'Coming soon',
+            message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`
+          }
+        }));
+      }
+    },
+    scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId)
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' })
+      }
+    }
   },
-  scrollToSection(sectionId) {
-    const element = document.getElementById(sectionId)
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' })
+
+  // --- prerender handshake ---
+  async mounted() {
+    // wait for Vue to apply DOM updates and for any synchronous head changes
+    await nextTick()
+    await nextTick()
+
+    // If you also update head info asynchronously, you can add a small delay here
+    // await new Promise(r => setTimeout(r, 120))
+
+    if (typeof window !== 'undefined') {
+      window.prerenderReady = true
+    }
+  },
+
+  beforeUnmount() {
+    if (typeof window !== 'undefined') {
+      window.prerenderReady = false
     }
   }
 }
-}
 </script>
+
 
 <style scoped>
 /* Home-specific styles */
