@@ -62,7 +62,7 @@ export default {
 .alevel-card {
   cursor: pointer;
   position: relative;
-  background-color: var(--softgray);
+  background-color: var(--gray-100);
   border-radius: 8px;
   box-shadow: var(--shadow);
   overflow: hidden;
