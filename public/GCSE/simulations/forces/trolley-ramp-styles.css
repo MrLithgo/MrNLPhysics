@@ -218,7 +218,6 @@ h6 {
 .quiz-btn:hover {
   background-color: #e6b801;
 }
-
 /* Simulation styles */
 .simulation-area {
   background: var(--gray-100);
@@ -232,22 +231,25 @@ h6 {
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  overflow: hidden;
 }
 
-.ramp {
+/* Ramp */
+#ramp {
   position: absolute;
   bottom: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
+  width: 600px; /* desktop default */
   height: 15px;
   background: linear-gradient(45deg, #8b4513, #a0522d);
+  transform: translateX(-50%); /* center the ramp horizontally */
   transform-origin: left bottom;
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.car {
+/* Car */
+#car {
   position: absolute;
   width: 80px;
   height: 50px;
@@ -256,15 +258,22 @@ h6 {
   justify-content: center;
   z-index: 10;
   bottom: 40px;
-  left: calc(50% - 300px);
+  left: 50%; /* center horizontally */
+  transform: translateX(-50%); /* keep centered on resize */
   transform-origin: center center;
   transition: all 0.1s ease;
 }
 
+#car svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Light gates */
 .light-gate {
   position: absolute;
-  width: 6px;
-  height: 80px;
+  width: 6px; /* desktop default */
+  height: 80px; /* desktop default */
   background: #48bb78;
   border-radius: 2px;
   z-index: 5;
@@ -275,6 +284,50 @@ h6 {
   background: #f56565;
   box-shadow: 0 0 10px #f56565;
 }
+
+/* Responsive scaling */
+@media (max-width: 1200px) {
+  #ramp {
+    width: 80%;
+    height: 12px;
+  }
+  #car {
+    width: 70px;
+    height: 45px;
+    left: calc(50% - 35%);
+  }
+  .light-gate {
+    width: 5px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  #ramp {
+    width: 400px;
+    height: 10px;
+  }
+  #car {
+    width: 60px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  #ramp {
+    width: 300px;
+    height: 8px;
+  }
+  #car {
+    width: 50px;
+    height: 35px;
+  }
+  #car svg {
+    width: 50px;
+    height: 35px;
+  }
+}
+
 .instructions {
   background-color: var(--softgray);
   padding: 1rem;
