@@ -6,7 +6,7 @@
       url="https://SimplyPhys.com/gcse/forces-and-motion"
       image="https://SimplyPhys.com/images/forces-preview.png"
       keywords="Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics"
-      author="Mr NL Physics"
+      author="SimpliPhys"
     />
 
     <header class="page-header">
