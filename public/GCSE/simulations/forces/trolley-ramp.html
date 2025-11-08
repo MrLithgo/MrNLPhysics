@@ -3,37 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Investigating Motion - Trolley Ramp Investigation</title>
-    <meta
-      name="description"
-      content="Interactive simulation to investigate speed of a trolley down a ramp. Minimalist physics simulations designed to reduce cognitive load. Free interactive labs for forces, electricity, waves, radioactivity with worksheets & quizzes."
-    />
-
-    <meta property="og:title" content="Investigating Motion - Trolley Ramp Investigation" />
-    <meta
-      property="og:description"
-      content="Interactive simulation to investigate speed of a trolley down a ramp. Minimalist, distraction-free physics simulations with worksheets & quizzes"
-    />
-    <meta property="og:image" content="https://simpliphys.com/images/trolley-preview.png" />
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "SimpliPhys",
-        "description": "Simple, distraction-free physics simulations for GCSE and A-Level students",
-        "applicationCategory": "EducationalApplication",
-        "operatingSystem": "Any"
-      }
-    </script>
+    <title>Ramp Speed Investigation</title>
     <link rel="stylesheet" href="trolley-ramp-styles.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Montserrat:wght@600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="icon" type="image/svg+xml" href="/assets/atomlogo.svg" />
   </head>
-
   <body>
     <div class="container">
       <header class="page-header">
@@ -42,7 +18,7 @@
             <button
               id="download-worksheet-btn"
               class="btn navy-btn"
-              aria-label="Open worksheet PDF"
+              aria-label="Download worksheet PDF"
             >
               Worksheet
             </button>
@@ -50,7 +26,7 @@
           <h1 class="page-title">Investigating Motion</h1>
 
           <div class="header-actions">
-            <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+            <button class="btn gold-btn">Quiz yourself!</button>
           </div>
         </div>
       </header>
@@ -67,24 +43,12 @@
             window.location.href = url
           }
         })
-        document.getElementById('quiz-btn').addEventListener('click', () => {
-          const url = '/GCSE/quizzes/forces/motion-quiz.html'
-          const w = window.open(url, '_blank')
-          if (w) {
-            try {
-              w.opener = null
-            } catch (e) {}
-          } else {
-            // popup blocked — fallback to navigate in same tab
-            window.location.href = url
-          }
-        })
       </script>
 
       <div class="simulation-area" id="simulationArea">
         <div class="ramp" id="ramp"></div>
         <div id="car" class="car">
-          <svg width="80" height="50" viewBox="0 0 80 50">
+          <svg viewBox="0 0 80 50" preserveAspectRatio="xMidYMid meet" width="100%" height="100%">
             <rect
               x="5"
               y="5"
@@ -99,6 +63,7 @@
             <circle cx="60" cy="40" r="10" fill="#2C3E50" />
           </svg>
         </div>
+
         <div class="light-gate" id="gate1"></div>
         <div class="light-gate" id="gate2"></div>
       </div>
@@ -113,7 +78,7 @@
               <li>Click "Record Data" to save your results</li>
               <li>Run the experiment 2 more times</li>
 
-              <li>You can adjust the ramp height using the slider</li>
+              <li>You can adjust the ramp height and gate distance using the sliders</li>
               <li>Calculate speed using: <strong>Speed = Distance ÷ Time</strong></li>
               <li>Enter your calculated speed in the table</li>
             </ol>
