@@ -25,7 +25,7 @@ export default {
   },
   setup() {
     useHead({
-      title: 'SimplyPhys - A Level and GCSE Interactive Physics Simulations',
+      title: 'SimpliPhys - A Level and GCSE Interactive Physics Simulations',
       meta: [
         {
           name: 'description',
