@@ -4,7 +4,7 @@
       <div class="nav-content">
         <div class="nav-brand">
           <AtomLogo class="nav-logo" />
-          <router-link to="/" class="nav-title">SimplyPhys</router-link>
+          <router-link to="/" class="nav-title">SimpliPhys</router-link>
         </div>
 
         <div class="nav-menu">
