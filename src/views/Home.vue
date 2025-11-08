@@ -71,9 +71,9 @@
       <div class="container">
         <div class="about-content">
           <div class="about-text">
-            <h2 class="section-title">About SimplyPhys</h2>
+            <h2 class="section-title">About SimpliPhys</h2>
             <p class="about-description">
-              Welcome to SimplyPhys, where physics concepts come to life through interactive
+              Welcome to SimpliPhys, where physics concepts come to life through interactive
               simulations. My goal is to make physics accessible, engaging and easy to understand
               for students at both GCSE and A Level.
             </p>
