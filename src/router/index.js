@@ -11,44 +11,40 @@ import GCSEEnergy from '@/views/GCSEEnergy.vue'
 
 import ALevelMechanics from '@/views/ALevelMechanics.vue'
 import ALevelParticles from '@/views/ALevelParticles.vue'
-console.log('🔍 Router: GCSEForces component imported:', !!GCSEForces) // ← ADD THIS
 
 const routes = [
-    {
-        path: '/',
-        name: 'Home',
-        component: Home
-    },
-    {
-        path: '/gcse/forces-and-motion',
-        name: 'GCSEForces',
-        component: GCSEForces
-    },
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+  },
+  {
+    path: '/gcse/forces-and-motion',
+    name: 'GCSEForces',
+    component: GCSEForces,
+  },
 
-  
   {
-        path: '/gcse/energy',
-        name: 'GCSEEnergy',
-        component: GCSEEnergy
-    },
- 
- 
+    path: '/gcse/energy',
+    name: 'GCSEEnergy',
+    component: GCSEEnergy,
+  },
+
   {
-        path: '/ALevel/mechanics',
-        name: 'ALevelMechanics',
-        component: ALevelMechanics
-    },
+    path: '/ALevel/mechanics',
+    name: 'ALevelMechanics',
+    component: ALevelMechanics,
+  },
   {
-        path: '/ALevel/nuclear-and-particles',
-        name: 'ALevelParticles',
-        component: ALevelParticles
-    },
- 
+    path: '/ALevel/nuclear-and-particles',
+    name: 'ALevelParticles',
+    component: ALevelParticles,
+  },
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes
+  history: createWebHistory(),
+  routes,
 })
 
 export default router

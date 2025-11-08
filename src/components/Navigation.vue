@@ -4,7 +4,7 @@
       <div class="nav-content">
         <div class="nav-brand">
           <AtomLogo class="nav-logo" />
-          <router-link to="/" class="nav-title">Mr NL's Physics Lab</router-link>
+          <router-link to="/" class="nav-title">SimplyPhys</router-link>
         </div>
 
         <div class="nav-menu">
@@ -22,26 +22,43 @@
             @click.stop="toggleMobileMenu"
             ref="mobileToggle"
           >
-            <svg class="menu-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              class="menu-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Mobile menu: use v-show so it is removed from pointer flow when hidden -->
-    <div
-      class="mobile-menu"
-      v-show="isMobileMenuOpen"
-      ref="mobileMenu"
-      @click.stop
-    >
+    <div class="mobile-menu" v-show="isMobileMenuOpen" ref="mobileMenu" @click.stop>
       <div class="mobile-menu-content" ref="mobileMenuContent">
-        <router-link to="/" class="mobile-menu-link" exact-active-class="active" @click.native="onMobileHomeClick">Home</router-link>
-        <a href="#igcse" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('igcse')">IGCSE</a>
-        <a href="#alevel" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('alevel')">A Level</a>
-        <a href="#about" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('about')">About</a>
+        <router-link
+          to="/"
+          class="mobile-menu-link"
+          exact-active-class="active"
+          @click.native="onMobileHomeClick"
+          >Home</router-link
+        >
+        <a href="#igcse" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('igcse')"
+          >IGCSE</a
+        >
+        <a href="#alevel" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('alevel')"
+          >A Level</a
+        >
+        <a href="#about" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('about')"
+          >About</a
+        >
       </div>
     </div>
   </nav>
@@ -61,12 +78,10 @@ export default {
     }
   },
   mounted() {
-    // close menu when route changes (safe fallback)
     this.$watch('$route', () => {
       this.closeMobileMenu()
     })
 
-    // click outside to close
     this.outsideClickHandler = (e) => {
       const menuEl = this.$refs.mobileMenu
       const toggleEl = this.$refs.mobileToggle
@@ -128,14 +143,12 @@ export default {
           this.scrollToSection(sectionId)
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-/* basic styles you can adapt to your main.css layout */
-
 .mobile-menu {
   position: fixed;
   top: 56px; /* adjust to header height */
@@ -148,7 +161,7 @@ export default {
   transform-origin: top center;
 }
 
-.mobile-menu[style*="display: none"] {
+.mobile-menu[style*='display: none'] {
   /* when v-show hides it, don't allow pointer events */
   pointer-events: none;
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <Hero />
-    
+
     <!-- Quote Section -->
     <div class="quote-section">
       <div class="container">
@@ -17,23 +17,23 @@
         <div class="section-header">
           <h2 class="section-title">GCSE Physics Simulations</h2>
           <p class="section-description">
-            Interactive simulations to help GCSE students visualize and understand key physics concepts.
-            Although designed with the Edexcel IGCSE specification in mind, content is still useful for other specs.
+            Interactive simulations to help GCSE students visualize and understand key physics
+            concepts. Although designed with the Edexcel IGCSE specification in mind, content is
+            still useful for other specs.
           </p>
         </div>
-        
-        <div class="simulations-grid">
-         <SimulationCard
-  v-for="simulation in igcseSimulations"
-  :key="simulation.id"
-  :title="simulation.title"
-  :description="simulation.description"
-  :category="simulation.category"
-  :icon-component="simulation.icon"
-  :available="!!simulation.route"
-  @card-clicked="handleSimulationClick"
-/>
 
+        <div class="simulations-grid">
+          <SimulationCard
+            v-for="simulation in igcseSimulations"
+            :key="simulation.id"
+            :title="simulation.title"
+            :description="simulation.description"
+            :category="simulation.category"
+            :icon-component="simulation.icon"
+            :available="!!simulation.route"
+            @card-clicked="handleSimulationClick"
+          />
         </div>
       </div>
     </section>
@@ -44,23 +44,24 @@
         <div class="section-header">
           <h2 class="section-title">A Level Physics Simulations</h2>
           <p class="section-description">
-            Advanced simulations for A Level students to deepen their understanding of complex physics concepts.
-            Although designed with Edexcel International A Level in mind, can still be used alongside other specifications.
+            Advanced simulations for A Level students to deepen their understanding of complex
+            physics concepts. Although designed with Edexcel International A Level in mind, can
+            still be used alongside other specifications.
           </p>
         </div>
-        
+
         <div class="alevel-grid">
-         <ALevelCard
-  v-for="unit in alevelUnits"
-  :key="unit.id"
-  :title="unit.title"
-  :description="unit.description"
-  :topics="unit.topics"
-  :category="unit.category"
-  :icon-component="unit.icon"
-  :available="!!unit.route"
-  @card-clicked="handleSimulationClick"
-/>
+          <ALevelCard
+            v-for="unit in alevelUnits"
+            :key="unit.id"
+            :title="unit.title"
+            :description="unit.description"
+            :topics="unit.topics"
+            :category="unit.category"
+            :icon-component="unit.icon"
+            :available="!!unit.route"
+            @card-clicked="handleSimulationClick"
+          />
         </div>
       </div>
     </section>
@@ -70,25 +71,38 @@
       <div class="container">
         <div class="about-content">
           <div class="about-text">
-            <h2 class="section-title">About Mr NL's Physics Lab</h2>
+            <h2 class="section-title">About SimplyPhys</h2>
             <p class="about-description">
-              Welcome to Mr NL's Physics Lab, where physics concepts come to life through interactive simulations. 
-              My goal is to make physics accessible, engaging and easy to understand for students at both GCSE and A Level.
+              Welcome to SimplyPhys, where physics concepts come to life through interactive
+              simulations. My goal is to make physics accessible, engaging and easy to understand
+              for students at both GCSE and A Level.
             </p>
             <p class="about-description">
-              These simulations are designed to complement classroom learning, providing visual and interactive 
-              experiences that help solidify understanding of key physics principles.
-              They can be used in setting where equipment is limited, home-schooling or as revision of previous practical work.
+              These simulations are designed to complement classroom learning, providing visual and
+              interactive experiences that help solidify understanding of key physics principles.
+              They can be used in setting where equipment is limited, home-schooling or as revision
+              of previous practical work.
             </p>
-             <p class="about-description">
-              They are simplified and focussed on one or two key ideas, avoiding cognitive overload and distractions that more complex simulations can suffer from.
-              Each simulation has an accompanying worksheet and short multiple-choice quiz to check understanding.
+            <p class="about-description">
+              They are simplified and focussed on one or two key ideas, avoiding cognitive overload
+              and distractions that more complex simulations can suffer from. Each simulation has an
+              accompanying worksheet and short multiple-choice quiz to check understanding.
             </p>
           </div>
           <div class="about-visual">
             <div class="about-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                />
               </svg>
             </div>
           </div>
@@ -102,11 +116,16 @@
         <div class="cta-content">
           <h2 class="cta-title">Ready to explore physics in a new way?</h2>
           <p class="cta-description">
-            Start with our interactive simulations and enhance your understanding of physics concepts.
+            Start with our interactive simulations and enhance your understanding of physics
+            concepts.
           </p>
           <div class="cta-actions">
-            <button class="btn btn-cta-primary" @click="scrollToSection('igcse')">IGCSE Simulations</button>
-            <button class="btn btn-cta-secondary" @click="scrollToSection('alevel')">A Level Simulations</button>
+            <button class="btn btn-cta-primary" @click="scrollToSection('igcse')">
+              GCSE Simulations
+            </button>
+            <button class="btn btn-cta-secondary" @click="scrollToSection('alevel')">
+              A Level Simulations
+            </button>
           </div>
         </div>
       </div>
@@ -137,7 +156,7 @@ export default {
   components: {
     Hero,
     SimulationCard,
-    ALevelCard
+    ALevelCard,
   },
   data() {
     return {
@@ -145,61 +164,68 @@ export default {
         {
           id: 1,
           title: 'Forces and Motion',
-          description: 'Explore Newton\'s laws of motion, momentum, and kinematics through interactive demonstrations.',
+          description:
+            "Explore Newton's laws of motion, momentum, and kinematics through interactive demonstrations.",
           category: 'forces',
           icon: ForcesIcon,
-          route: '/gcse/forces-and-motion'
+          route: '/gcse/forces-and-motion',
         },
         {
           id: 2,
           title: 'Electricity',
-          description: 'Experiment with circuits, current, voltage, and resistance in various configurations.',
+          description:
+            'Experiment with circuits, current, voltage, and resistance in various configurations.',
           category: 'electricity',
-          icon: ElectricityIcon
+          icon: ElectricityIcon,
         },
         {
           id: 3,
           title: 'Waves',
-          description: 'Visualize wave properties, reflection, refraction, diffraction, and interference patterns.',
+          description:
+            'Visualize wave properties, reflection, refraction, diffraction, and interference patterns.',
           category: 'waves',
-          icon: WavesIcon
+          icon: WavesIcon,
         },
         {
           id: 4,
           title: 'Energy',
-          description: 'Explore energy transformations, conservation of energy, and efficiency in various systems.',
+          description:
+            'Explore energy transformations, conservation of energy, and efficiency in various systems.',
           category: 'energy',
           icon: EnergyIcon,
-          route: '/gcse/energy'
+          route: '/gcse/energy',
         },
         {
           id: 5,
           title: 'Solids, Liquids and Gases',
-          description: 'Investigate states of matter, particle models, pressure, and thermal properties.',
+          description:
+            'Investigate states of matter, particle models, pressure, and thermal properties.',
           category: 'matter',
-          icon: MatterIcon
+          icon: MatterIcon,
         },
         {
           id: 6,
           title: 'Magnetism & Electromagnetism',
-          description: 'Explore magnetic fields, electromagnetic induction, and motor/generator principles.',
+          description:
+            'Explore magnetic fields, electromagnetic induction, and motor/generator principles.',
           category: 'magnetism',
-          icon: MagnetismIcon
+          icon: MagnetismIcon,
         },
         {
           id: 7,
           title: 'Radioactivity',
-          description: 'Understand radioactive decay, half-life, and nuclear reactions through simulations.',
+          description:
+            'Understand radioactive decay, half-life, and nuclear reactions through simulations.',
           category: 'radioactivity',
-          icon: RadioactivityIcon
+          icon: RadioactivityIcon,
         },
         {
           id: 8,
           title: 'Astrophysics',
           description: 'Explore the solar system, stars, galaxies, and the expanding universe.',
           category: 'astrophysics',
-          icon: AstrophysicsIcon
-        }
+          icon: AstrophysicsIcon,
+        },
       ],
       alevelUnits: [
         {
@@ -209,40 +235,42 @@ export default {
           category: 'mechanics',
           topics: ['Kinematics', 'Dynamics', 'Moments'],
           icon: MechanicsIcon,
-          route: 'ALevel/mechanics'
+          route: 'ALevel/mechanics',
         },
         {
           id: 6,
           title: 'Nuclear and Particle Physics',
-          description: 'The world of the very small - explore the nuclear atom, particle physics and fundamental forces.',
+          description:
+            'The world of the very small - explore the nuclear atom, particle physics and fundamental forces.',
           category: 'particle',
           topics: ['Nuclear Atom', 'Particle Accelorators', 'Standard Model'],
           icon: ParticleIcon,
-          route: 'ALevel/nuclear-and-particles'
+          route: 'ALevel/nuclear-and-particles',
         },
         // ... more units
-      ]
+      ],
     }
   },
   methods: {
     handleSimulationClick(clickedData) {
       // Find the complete simulation object from your arrays
-      const allSimulations = [...this.igcseSimulations, ...this.alevelUnits];
-      const simulation = allSimulations.find(sim =>
-        sim.title === clickedData.title ||
-        sim.id === clickedData.id
-      );
+      const allSimulations = [...this.igcseSimulations, ...this.alevelUnits]
+      const simulation = allSimulations.find(
+        (sim) => sim.title === clickedData.title || sim.id === clickedData.id
+      )
 
       if (simulation && simulation.route) {
-        this.$router.push(simulation.route);
+        this.$router.push(simulation.route)
       } else {
-        window.dispatchEvent(new CustomEvent('ui-notify', {
-          detail: {
-            type: 'modal',
-            title: 'Coming soon',
-            message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`
-          }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('ui-notify', {
+            detail: {
+              type: 'modal',
+              title: 'Coming soon',
+              message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`,
+            },
+          })
+        )
       }
     },
     scrollToSection(sectionId) {
@@ -250,17 +278,12 @@ export default {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' })
       }
-    }
+    },
   },
 
-  // --- prerender handshake ---
   async mounted() {
-    // wait for Vue to apply DOM updates and for any synchronous head changes
     await nextTick()
     await nextTick()
-
-    // If you also update head info asynchronously, you can add a small delay here
-    // await new Promise(r => setTimeout(r, 120))
 
     if (typeof window !== 'undefined') {
       window.prerenderReady = true
@@ -271,13 +294,11 @@ export default {
     if (typeof window !== 'undefined') {
       window.prerenderReady = false
     }
-  }
+  },
 }
 </script>
 
-
 <style scoped>
-/* Home-specific styles */
 .home {
   min-height: 100vh;
 }
@@ -421,20 +442,20 @@ export default {
   .simulations-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .alevel-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .about-content {
     flex-direction: row;
     justify-content: space-between;
   }
-  
+
   .about-text {
     max-width: 50%;
   }
-  
+
   .cta-actions {
     flex-direction: row;
     justify-content: center;

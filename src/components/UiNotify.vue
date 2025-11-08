@@ -43,8 +43,8 @@ export default {
       modal: {
         visible: false,
         title: '',
-        message: ''
-      }
+        message: '',
+      },
     }
   },
   mounted() {
@@ -69,7 +69,7 @@ export default {
 
       // tiny nextTick so CSS transition can run
       this.$nextTick(() => {
-        const t = this.toasts.find(tt => tt.id === id)
+        const t = this.toasts.find((tt) => tt.id === id)
         if (t) t.visible = true
       })
 
@@ -78,7 +78,7 @@ export default {
     },
 
     dismissToast(id) {
-      const t = this.toasts.find(tt => tt.id === id)
+      const t = this.toasts.find((tt) => tt.id === id)
       if (!t) return
       t.visible = false
       // remove after transition
@@ -86,7 +86,7 @@ export default {
     },
 
     removeToast(id) {
-      this.toasts = this.toasts.filter(tt => tt.id !== id)
+      this.toasts = this.toasts.filter((tt) => tt.id !== id)
     },
 
     showModal({ title = 'Notice', message = '' } = {}) {
@@ -98,8 +98,8 @@ export default {
 
     closeModal() {
       this.modal.visible = false
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -122,12 +122,12 @@ export default {
   max-width: 360px;
   background: #ffffff;
   border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(16,24,40,0.12);
+  box-shadow: 0 8px 24px rgba(16, 24, 40, 0.12);
   padding: 12px 14px;
   transform: translateY(8px);
   opacity: 0;
-  transition: transform .28s ease, opacity .28s ease;
-  border-left: 4px solid rgba(26,188,156,0.95);
+  transition: transform 0.28s ease, opacity 0.28s ease;
+  border-left: 4px solid rgba(26, 188, 156, 0.95);
   position: relative;
 }
 
@@ -164,7 +164,7 @@ export default {
 .ui-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(2,6,23,0.55);
+  background: rgba(2, 6, 23, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -177,7 +177,7 @@ export default {
   border-radius: 12px;
   width: 100%;
   max-width: 560px;
-  box-shadow: 0 18px 40px rgba(2,6,23,0.35);
+  box-shadow: 0 18px 40px rgba(2, 6, 23, 0.35);
   overflow: hidden;
 }
 
@@ -204,7 +204,6 @@ export default {
   border-top: 1px solid #eef2f7;
 }
 
-/* Button baseline (you can replace with your .btn styles) */
 .btn {
   background: var(--navy, #2c3e50);
   color: white;

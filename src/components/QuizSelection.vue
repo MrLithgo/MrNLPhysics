@@ -2,7 +2,7 @@
   <div class="quiz-selection">
     <header class="site-header">
       <div class="header-inner">
-        <div class="site-title">Mr NL's Physics Lab</div>
+        <div class="site-title">SimplyPhys</div>
         <h1 class="page-title">Physics Quizzes</h1>
         <p class="page-sub">Choose a topic to test your knowledge</p>
       </div>
@@ -24,9 +24,9 @@
           <div :class="['card-accent', quiz.accentColor]"></div>
 
           <div class="card-content">
-            <QuizLogo 
-              :icon-id="quiz.iconId" 
-              size="medium" 
+            <QuizLogo
+              :icon-id="quiz.iconId"
+              size="medium"
               :class="quiz.iconClass"
               class="card-icon"
             />
@@ -75,7 +75,7 @@ export default {
   components: { QuizLogo },
   data() {
     return {
-      availableQuizzes: []
+      availableQuizzes: [],
     }
   },
   mounted() {
@@ -91,9 +91,9 @@ export default {
     },
     notifyComingSoon(quiz) {
       alert(`${quiz.title} quiz is coming soon!`)
-    }
+    },
   },
-  emits: ['quiz-selected']
+  emits: ['quiz-selected'],
 }
 </script>
 
@@ -115,7 +115,7 @@ export default {
   position: relative;
   background: white;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   overflow: hidden;
@@ -123,7 +123,7 @@ export default {
 
 .card:hover:not(.card--disabled) {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .card--disabled {
@@ -136,10 +136,18 @@ export default {
   width: 100%;
 }
 
-.teal-accent { background: var(--teal); }
-.navy-accent { background: var(--navy); }
-.coral-accent { background: var(--coral); }
-.gold-accent { background: var(--gold); }
+.teal-accent {
+  background: var(--teal);
+}
+.navy-accent {
+  background: var(--navy);
+}
+.coral-accent {
+  background: var(--coral);
+}
+.gold-accent {
+  background: var(--gold);
+}
 
 .card-content {
   padding: 24px;
@@ -150,13 +158,21 @@ export default {
   margin: 0 auto 16px;
 }
 
-.teal-icon :deep(svg) { color: var(--teal); }
-.navy-icon :deep(svg) { color: var(--navy); }
-.coral-icon :deep(svg) { color: var(--coral); }
-.gold-icon :deep(svg) { color: var(--gold); }
+.teal-icon :deep(svg) {
+  color: var(--teal);
+}
+.navy-icon :deep(svg) {
+  color: var(--navy);
+}
+.coral-icon :deep(svg) {
+  color: var(--coral);
+}
+.gold-icon :deep(svg) {
+  color: var(--gold);
+}
 
 .card h2 {
-  font-family: "Montserrat", sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--navy);
@@ -164,7 +180,7 @@ export default {
 }
 
 .card h3 {
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 0.9rem;
   color: var(--slate);
   margin: 0 0 12px;
@@ -187,7 +203,7 @@ export default {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  font-family: "Inter", sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 600;
   font-size: 0.875rem;
   cursor: pointer;
@@ -196,10 +212,18 @@ export default {
   color: white;
 }
 
-.teal-btn { background: var(--teal); }
-.navy-btn { background: var(--navy); }
-.coral-btn { background: var(--coral); }
-.gold-btn { background: var(--gold); }
+.teal-btn {
+  background: var(--teal);
+}
+.navy-btn {
+  background: var(--navy);
+}
+.coral-btn {
+  background: var(--coral);
+}
+.gold-btn {
+  background: var(--gold);
+}
 
 .btn:hover:not(:disabled) {
   opacity: 0.9;
@@ -217,7 +241,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255,255,255,0.9);
+  background: rgba(255, 255, 255, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;

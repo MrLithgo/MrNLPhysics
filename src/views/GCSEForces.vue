@@ -1,11 +1,10 @@
 <template>
   <div class="gcse-forces-page">
-    <!-- Invisible SEO component -->
     <MetaHead
       title="Forces & Motion Simulations - GCSE Physics Interactive Labs"
       description="Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes."
-      url="https://mrnlphysics.com/gcse/forces-and-motion"
-      image="https://mrnlphysics.com/images/forces-preview.png"
+      url="https://SimplyPhys.com/gcse/forces-and-motion"
+      image="https://SimplyPhys.com/images/forces-preview.png"
       keywords="Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics"
       author="Mr NL Physics"
     />
@@ -20,7 +19,8 @@
     <div class="container main-content">
       <div class="quote-card">
         <p class="quote-text">
-          "In physics, you don't have to go around making trouble for yourself – nature does it for you."
+          "In physics, you don't have to go around making trouble for yourself – nature does it for
+          you."
         </p>
         <p class="quote-author">- Frank Wilczek</p>
       </div>
@@ -93,8 +93,7 @@ export default {
           id: 'trolley',
           title: 'Investigating Motion',
           subtitle: 'Trolley and Ramp',
-          description:
-            'Use light gates to measure the speed of a trolley moving down a ramp.',
+          description: 'Use light gates to measure the speed of a trolley moving down a ramp.',
           page: 'trolley-ramp.html',
           available: true,
           accent: 'teal-accent',
@@ -446,14 +445,14 @@ export default {
   align-items: flex-start;
   justify-content: flex-end;
   padding: 12px;
-  background: rgba(255,255,255,0.62);
+  background: rgba(255, 255, 255, 0.62);
   backdrop-filter: blur(2px) grayscale(1);
   pointer-events: none; /* buttons remain clickable if you want them to be */
   z-index: 5;
 }
 
 .overlay-badge {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 6px 10px;
   border-radius: 999px;

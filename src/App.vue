@@ -2,16 +2,16 @@
   <div id="app">
     <Navigation />
     <main>
-      <router-view />  
-     
-    <UiNotify />
+      <router-view />
+
+      <UiNotify />
     </main>
     <Footer />
   </div>
 </template>
 
 <script>
-import { useHead } from '@unhead/vue'  
+import { useHead } from '@unhead/vue'
 import Navigation from '@/components/Navigation.vue'
 import Footer from '@/components/Footer.vue'
 import UiNotify from '@/components/UiNotify.vue'
@@ -21,82 +21,85 @@ export default {
   components: {
     Navigation,
     Footer,
-    UiNotify
+    UiNotify,
   },
-  setup() {  
-    
+  setup() {
     useHead({
-      title: 'Mr NL Physics Lab - A Level and GCSE Interactive Physics Simulations',
+      title: 'SimplyPhys - A Level and GCSE Interactive Physics Simulations',
       meta: [
         {
           name: 'description',
-          content: 'Minimalist physics simulations designed to reduce cognitive load. Interactive simulations for forces, electricity, waves, particles, energy, radioactivity and astrophysics with worksheets & quizzes.'
+          content:
+            'Minimalist physics simulations designed to reduce cognitive load. Interactive simulations for forces, electricity, waves, particles, energy, radioactivity and astrophysics with worksheets & quizzes.',
         },
         {
           name: 'keywords',
-          content: 'physics simulations, GCSE physics, A-Level physics, International Edexcel physics, forces and motion, electricity, waves, radioactivity, astrophysics, physics worksheets'
+          content:
+            'physics simulations, GCSE physics, A-Level physics, International Edexcel physics, forces and motion, electricity, waves, radioactivity, astrophysics, physics worksheets',
         },
         {
           property: 'og:title',
-          content: 'Mr NL Physics Lab - A Level and GCSE Interactive Physics Simulations'
+          content: 'SimplyPhys - A Level and GCSE Interactive Physics Simulations',
         },
         {
           property: 'og:description',
-          content: 'Interactive simulations for forces, electricity, waves, particles, energy, radioactivity and astrophysics with worksheets & quizzes'
+          content:
+            'Interactive simulations for forces, electricity, waves, particles, energy, radioactivity and astrophysics with worksheets & quizzes',
         },
         {
           property: 'og:image',
-          content: 'https://mrnlphysics.com/images/main-preview.png'
+          content: 'https://SimplyPhys.com/images/main-preview.png',
         },
         {
           property: 'og:url',
-          content: 'https://mrnlphysics.com'
+          content: 'https://SimplyPhys.com',
         },
         {
           property: 'og:type',
-          content: 'website'
+          content: 'website',
         },
         {
           property: 'og:site_name',
-          content: 'Mr NL Physics Lab'
+          content: 'SimplyPhys',
         },
         {
           name: 'twitter:card',
-          content: 'summary_large_image'
+          content: 'summary_large_image',
         },
         {
           name: 'twitter:title',
-          content: 'Mr NL Physics Lab - Physics Simulations'
+          content: 'SimplyPhys - Physics Simulations',
         },
         {
           name: 'twitter:description',
-          content: 'Simple, minimalist physics simulations with worksheets and quizzes'
+          content: 'Simple, minimalist physics simulations with worksheets and quizzes',
         },
         {
           name: 'twitter:image',
-          content: 'https://mrnlphysics.com/images/main-preview.png'
-        }
+          content: 'https://SimplyPhys.com/images/main-preview.png',
+        },
       ],
       script: [
         {
           type: 'application/ld+json',
           innerHTML: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "WebApplication",
-            "name": "Mr NL Physics",
-            "description": "Simple, distraction-free interactive physics simulations for GCSE and A-Level students. Based on Edexcel syllabus covering forces, motion, electricity, particles, energy, waves, radioactivity, and astrophysics.",
-            "applicationCategory": "EducationalApplication",
-            "operatingSystem": "Any",
-            "permissions": "browser",
-            "audience": {
-              "@type": "EducationalAudience",
-              "educationalRole": "student, teacher"
-            }
-          })
-        }
-      ]
+            '@context': 'https://schema.org',
+            '@type': 'WebApplication',
+            name: 'SimplyPhys',
+            description:
+              'Simple, distraction-free interactive physics simulations for GCSE and A-Level students. Based on Edexcel syllabus covering forces, motion, electricity, particles, energy, waves, radioactivity, and astrophysics.',
+            applicationCategory: 'EducationalApplication',
+            operatingSystem: 'Any',
+            permissions: 'browser',
+            audience: {
+              '@type': 'EducationalAudience',
+              educationalRole: 'student, teacher',
+            },
+          }),
+        },
+      ],
     })
-  }
+  },
 }
 </script>
 

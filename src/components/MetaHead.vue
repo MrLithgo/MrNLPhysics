@@ -1,15 +1,17 @@
 <script setup>
-
 import { useHead } from '@unhead/vue'
 
 const props = defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   url: { type: String, required: true },
-  image: { type: String, default: 'https://mrnlphysics.com/images/forces-preview.png' },
-  keywords: { type: String, default: 'Physics, GCSE, Science, Mr NL Physics, Interactive Simulations' },
-  author: { type: String, default: 'Mr NL Physics' },
-  jsonld: { type: Object, default: null } // optional structured data object
+  image: { type: String, default: 'https://SimplyPhys.com/images/forces-preview.png' },
+  keywords: {
+    type: String,
+    default: 'Physics, GCSE, Science, SimplyPhys, Mr NL Physics, Interactive Simulations',
+  },
+  author: { type: String, default: 'SimplyPhys' },
+  jsonld: { type: Object, default: null }, // optional structured data object
 })
 
 // apply head
@@ -39,7 +41,7 @@ useHead(() => {
   if (props.jsonld) {
     script.push({
       type: 'application/ld+json',
-      children: JSON.stringify(props.jsonld)
+      children: JSON.stringify(props.jsonld),
     })
   }
 
@@ -49,14 +51,14 @@ useHead(() => {
     link: [
       { rel: 'canonical', href: props.url },
       { rel: 'icon', href: '/favicon.ico' },
-      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' }
+      { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },
     ],
-    script
+    script,
   }
 })
 </script>
 
 <template>
   <!-- Invisible — this component updates <head> only -->
-  <span aria-hidden="true" style="display:none"></span>
+  <span aria-hidden="true" style="display: none"></span>
 </template>

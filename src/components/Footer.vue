@@ -5,7 +5,7 @@
         <div class="footer-section">
           <div class="footer-brand">
             <AtomLogo class="footer-logo" />
-            <span class="footer-title">Mr NL's Physics Lab</span>
+            <span class="footer-title">SimplyPhys</span>
           </div>
           <p class="footer-description">
             Making physics interactive, engaging, and accessible for all students.
@@ -15,18 +15,15 @@
           <h3 class="footer-heading">Quick Links</h3>
           <ul class="footer-links">
             <li><a href="#">Home</a></li>
-            <li><a href="#igcse" @click="scrollToSection('igcse')">IGCSE Simulations</a></li>
+            <li><a href="#igcse" @click="scrollToSection('igcse')">GCSE Simulations</a></li>
             <li><a href="#alevel" @click="scrollToSection('alevel')">A Level Simulations</a></li>
             <li><a href="#about" @click="scrollToSection('about')">About</a></li>
           </ul>
         </div>
       </div>
       <div class="footer-bottom">
-        <p class="footer-copyright">© 2025 MrNLPhysics.com. All rights reserved.</p>
-        <div class="footer-social">
-         
-         
-        </div>
+        <p class="footer-copyright">© 2025 SimplyPhys.com. All rights reserved.</p>
+        <div class="footer-social"></div>
       </div>
     </div>
   </footer>
@@ -38,30 +35,30 @@ import AtomLogo from './AtomLogo.vue'
 export default {
   name: 'Footer',
   components: {
-    AtomLogo
+    AtomLogo,
   },
   methods: {
     scrollToSection(sectionId) {
       // If we're not on the home page, navigate there first
       if (this.$route.path !== '/') {
-        this.$router.push('/');
+        this.$router.push('/')
         // Wait for navigation to complete, then scroll
         setTimeout(() => {
-          const element = document.getElementById(sectionId);
+          const element = document.getElementById(sectionId)
           if (element) {
-            element.scrollIntoView({ behavior: 'smooth' });
+            element.scrollIntoView({ behavior: 'smooth' })
           }
-        }, 100);
+        }, 100)
       } else {
         // We're already on home page, just scroll
-        const element = document.getElementById(sectionId);
+        const element = document.getElementById(sectionId)
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          element.scrollIntoView({ behavior: 'smooth' })
         }
       }
-    }
-  } // ← Missing this closing brace for methods
-} // ← Missing this closing brace for the component
+    },
+  },
+}
 </script>
 
 <style scoped>
