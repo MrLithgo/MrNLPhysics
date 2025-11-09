@@ -25,7 +25,7 @@ export default {
   },
   setup() {
     useHead({
-      title: 'SimplyPhys - A Level and GCSE Interactive Physics Simulations',
+      title: 'SimpliPhys - A Level and GCSE Interactive Physics Simulations',
       meta: [
         {
           name: 'description',
@@ -39,7 +39,7 @@ export default {
         },
         {
           property: 'og:title',
-          content: 'SimplyPhys - A Level and GCSE Interactive Physics Simulations',
+          content: 'SimpliPhys - A Level and GCSE Interactive Physics Simulations',
         },
         {
           property: 'og:description',
@@ -48,11 +48,11 @@ export default {
         },
         {
           property: 'og:image',
-          content: 'https://SimplyPhys.com/images/main-preview.png',
+          content: 'https://SimpliPhys.com/images/main-preview.png',
         },
         {
           property: 'og:url',
-          content: 'https://SimplyPhys.com',
+          content: 'https://SimpliPhys.com',
         },
         {
           property: 'og:type',
@@ -60,7 +60,7 @@ export default {
         },
         {
           property: 'og:site_name',
-          content: 'SimplyPhys',
+          content: 'SimpliPhys',
         },
         {
           name: 'twitter:card',
@@ -68,7 +68,7 @@ export default {
         },
         {
           name: 'twitter:title',
-          content: 'SimplyPhys - Physics Simulations',
+          content: 'SimpliPhys - Physics Simulations',
         },
         {
           name: 'twitter:description',
@@ -76,7 +76,7 @@ export default {
         },
         {
           name: 'twitter:image',
-          content: 'https://SimplyPhys.com/images/main-preview.png',
+          content: 'https://SimpliPhys.com/images/main-preview.png',
         },
       ],
       script: [
@@ -85,7 +85,7 @@ export default {
           innerHTML: JSON.stringify({
             '@context': 'https://schema.org',
             '@type': 'WebApplication',
-            name: 'SimplyPhys',
+            name: 'SimpliPhys',
             description:
               'Simple, distraction-free interactive physics simulations for GCSE and A-Level students. Based on Edexcel syllabus covering forces, motion, electricity, particles, energy, waves, radioactivity, and astrophysics.',
             applicationCategory: 'EducationalApplication',
