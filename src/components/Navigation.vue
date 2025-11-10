@@ -51,7 +51,7 @@
           >Home</router-link
         >
         <a href="#igcse" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('igcse')"
-          >IGCSE</a
+          >GCSE</a
         >
         <a href="#alevel" class="mobile-menu-link" @click.prevent="scrollToSectionMobile('alevel')"
           >A Level</a
