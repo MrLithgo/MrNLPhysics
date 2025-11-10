@@ -6,7 +6,8 @@
     <div class="quote-section">
       <div class="container">
         <blockquote class="quote">
-          "Physics is not about memorising facts; it's about understanding how our universe works."
+          "The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"
+          - Isaac Asimov
         </blockquote>
       </div>
     </div>
