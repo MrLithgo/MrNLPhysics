@@ -3,8 +3,8 @@
     <MetaHead
       title="Forces & Motion Simulations - GCSE Physics Interactive Labs"
       description="Simple forces simulations: Newton's Laws, motion graphs, projectiles, friction, stopping distance. Reduce cognitive load with focused physics practice. Free worksheets & quizzes."
-      url="https://SimplyPhys.com/gcse/forces-and-motion"
-      image="https://SimplyPhys.com/images/forces-preview.png"
+      url="https://SimpliPhys.com/gcse/forces-and-motion"
+      image="https://SimpliPhys.com/images/forces-preview.png"
       keywords="Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics"
       author="SimpliPhys"
     />

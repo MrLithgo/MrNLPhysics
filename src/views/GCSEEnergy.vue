@@ -1,5 +1,13 @@
 <template>
   <div class="gcse-energy-page">
+    <MetaHead
+      title="Energy Simulations - GCSE Physics Interactive Labs"
+      description="Simple energy simulations: conduction, radiation, energy stores, energy transfers, efficiency, sankey diagrams. Reduce cognitive load with focused physics practice. Free worksheets & quizzes."
+      url="https://SimpliPhys.com/gcse/energy"
+      image="https://SimpliPhys.com/images/energy-preview.png"
+      keywords="Worksheet-integrated virtual labs, forces simulations, motion physics, GCSE forces, second law, hookes law, force and extension, Newton Laws, friction, momentum, moments, physics animations, Edexcel international GCSE IGCSE physics"
+      author="SimpliPhys"
+    />
     <header class="page-header">
       <div class="container">
         <h1>GCSE Energy</h1>
@@ -9,7 +17,10 @@
 
     <div class="container main-content">
       <div class="quote-card">
-        <p class="quote-text">"Everything is energy and that is all there is to it. ...this is not philosophy. This is physics,"</p>
+        <p class="quote-text">
+          "Everything is energy and that is all there is to it. ...this is not philosophy. This is
+          physics,"
+        </p>
         <p class="quote-author">- Albert Einstein</p>
       </div>
 
@@ -67,9 +78,12 @@
 </template>
 
 <script>
+import { nextTick } from 'vue'
+import MetaHead from '@/components/MetaHead.vue'
 
 export default {
   name: 'GCSEEnergy',
+  components: { MetaHead },
   data() {
     return {
       simulations: [
@@ -124,15 +138,16 @@ export default {
   <ellipse ry="0.49999" rx="0.49999" id="svg_38" cy="13.87471" cx="23.09363" stroke="#000" fill="#fff"/>
   <ellipse ry="0.49999" rx="0.49999" id="svg_39" cy="16.21843" cx="20.78116" stroke="#000" fill="#fff"/>
   <ellipse ry="0.49999" rx="0.49999" id="svg_40" cy="16.21843" cx="23.09363" stroke="#000" fill="#fff"/>
- 
-                </svg>`
+
+                </svg>`,
         },
 
         {
           id: 'radiation',
           title: 'Investigating Radiation',
           subtitle: 'Heat transfer by radiation',
-          description: 'Test different surfaces and materials to understand the factors that affect radiation.',
+          description:
+            'Test different surfaces and materials to understand the factors that affect radiation.',
           page: 'radiation.html',
           available: true,
           accent: 'navy-accent',
@@ -146,14 +161,14 @@ export default {
    <path stroke="#000" id="svg_4" d="m18.57614,14.87558c1.21961,0.00004 0.70071,-4.82764 2.08204,-4.75036c1.44203,0 0.57951,4.71187 1.77895,4.75049" opacity="NaN" fill="#fff"/>
   </g>
   <rect id="svg_6" height="20.31216" width="5.06241" y="2.34392" x="1.59393" stroke="#000" fill="#fff"/>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'stores-and-transfers',
-          title: "Energy",
+          title: 'Energy',
           subtitle: 'Stores and Transfers',
-          description: "Explore the 8 different energy stores and 4 ways of transferring energy",
+          description: 'Explore the 8 different energy stores and 4 ways of transferring energy',
           page: 'stores-and-transfers.html',
           available: false,
           accent: 'coral-accent',
@@ -178,7 +193,7 @@ export default {
    <line id="svg_13" y2="18.74996" x2="19.03124" y1="16.62496" x1="16.65624" stroke="#000" fill="none"/>
    <path id="svg_14" d="m16.71874,20.74995l2.4375,-2" opacity="undefined" stroke="#000" fill="none"/>
   </g>
-                </svg>`
+                </svg>`,
         },
 
         {
@@ -203,14 +218,14 @@ export default {
    <line stroke="#000" id="svg_23" y2="12.64749" x2="21.58135" y1="13.70139" x1="20.31016" fill="none"/>
    <line stroke="#000" id="svg_24" y2="11.42361" x2="20.34276" y1="12.47751" x1="21.58135" fill="none"/>
   </g>
-                </svg>`
+                </svg>`,
         },
 
         {
           id: 'snakey-diagrams',
           title: 'Sankey Diagrams',
           subtitle: 'Representing Energy Transfers',
-          description: "Explore Sankey Diagrams for a variety of different scenarios.",
+          description: 'Explore Sankey Diagrams for a variety of different scenarios.',
           page: 'sankey-diagrams.html',
           available: false,
           accent: 'teal-accent',
@@ -235,13 +250,9 @@ export default {
    <path stroke="#000" id="svg_45" d="m15.65268,7.23468l5.87452,4.28284" opacity="undefined" fill="none"/>
    <line stroke="#000" id="svg_46" y2="7.44311" x2="15.82307" y1="7.475" x1="18.34846" fill="none"/>
   </g>
-                </svg>`
+                </svg>`,
         },
-
-       
-
-        
-      ]
+      ],
     }
   },
   methods: {
@@ -252,13 +263,15 @@ export default {
     },
 
     notifyComingSoon(sim) {
-      window.dispatchEvent(new CustomEvent('ui-notify', {
-        detail: {
-          type: 'modal',
-          title: 'Coming soon',
-          message: `<strong>${sim.title}</strong> — this simulation is coming soon.`
-        }
-      }))
+      window.dispatchEvent(
+        new CustomEvent('ui-notify', {
+          detail: {
+            type: 'modal',
+            title: 'Coming soon',
+            message: `<strong>${sim.title}</strong> — this simulation is coming soon.`,
+          },
+        })
+      )
     },
 
     onCardClick(sim) {
@@ -269,7 +282,6 @@ export default {
       }
     },
 
-    // scroll helpers preserved from your original file
     scrollToTop() {
       setTimeout(() => {
         window.scrollTo(0, 0)
@@ -279,14 +291,25 @@ export default {
           window.scrollTo({ top: 0, behavior: 'instant' })
         }
       }, 50)
-    }
+    },
   },
   mounted() {
     this.scrollToTop()
   },
   activated() {
     this.scrollToTop()
-  }
+  },
+
+  async mounted() {
+    document.title = 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
+    this.scrollToTop()
+    await nextTick()
+    if (typeof window !== 'undefined') window.prerenderReady = true
+  },
+
+  beforeUnmount() {
+    if (typeof window !== 'undefined') window.prerenderReady = false
+  },
 }
 </script>
 
@@ -456,14 +479,14 @@ export default {
   align-items: flex-start;
   justify-content: flex-end;
   padding: 12px;
-  background: rgba(255,255,255,0.62);
+  background: rgba(255, 255, 255, 0.62);
   backdrop-filter: blur(2px) grayscale(1);
   pointer-events: none; /* buttons remain clickable if you want them to be */
   z-index: 5;
 }
 
 .overlay-badge {
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 6px 10px;
   border-radius: 999px;
