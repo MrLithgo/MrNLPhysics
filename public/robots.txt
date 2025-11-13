@@ -1,4 +1,3 @@
 User-agent: *
 Disallow:
-# optional sitemap line:
-Sitemap: https://SimplyPhys.com/sitemap.xml
+
