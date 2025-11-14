@@ -6,8 +6,8 @@
     <div class="quote-section">
       <div class="container">
         <blockquote class="quote">
-          "The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"
-          - Isaac Asimov
+          "The most exciting phrase to hear in science, the one that heralds new discoveries, is not
+          'Eureka!' but 'That's funny...'" - Isaac Asimov
         </blockquote>
       </div>
     </div>
@@ -81,7 +81,7 @@
             <p class="about-description">
               These simulations are designed to complement classroom learning, providing visual and
               interactive experiences that help solidify understanding of key physics principles.
-              They can be used in setting where equipment is limited, home-schooling or as revision
+              They can be used in settings where equipment is limited, home-schooling or as revision
               of previous practical work.
             </p>
             <p class="about-description">
