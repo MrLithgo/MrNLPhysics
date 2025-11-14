@@ -5,7 +5,7 @@
         <div class="footer-section">
           <div class="footer-brand">
             <AtomLogo class="footer-logo" />
-            <span class="footer-title">SimplyPhys</span>
+            <span class="footer-title">SimpliPhys</span>
           </div>
           <p class="footer-description">
             Making physics interactive, engaging, and accessible for all students.
@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p class="footer-copyright">© 2025 SimplyPhys.com. All rights reserved.</p>
+        <p class="footer-copyright">© 2025 SimpliPhys.com. All rights reserved.</p>
         <div class="footer-social"></div>
       </div>
     </div>
