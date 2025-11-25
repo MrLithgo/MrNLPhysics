@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Element refs (defensive) ----------
@@ -38,13 +36,64 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---------- Presets ----------
   const particlePresets = {
-    electron: { charge: -1, mass: 1 / 1836, velocityPreset: 0.03, energy: 1, energyLossRate: 0.015, magneticScaleFactor: 0.23 },
-    positron: { charge: 1, mass: 1 / 1836, velocityPreset: 0.03, energy: 1, energyLossRate: 0.015, magneticScaleFactor: 0.23 },
-    neutron: { charge: 0, mass: 1.008, velocityPreset: 20, energy: 0.01, energyLossRate: 0.000001, magneticScaleFactor: 0.23 },
-    proton: { charge: 1, mass: 1, velocityPreset: 40, energy: 0.1, energyLossRate: 0.0008, magneticScaleFactor: 3 },
-    photon: { charge: 0, mass: 0, velocityPreset: 1, energy: 1, energyLossRate: 0.00, magneticScaleFactor: 1 },
-    alphaParticle: { charge: 2, mass: 4.0015, velocityPreset: 3, energy: 3, energyLossRate: 0.02, magneticScaleFactor: 2 },
-    none: { charge: 1, mass: 1, velocityPreset: 40, energy: 0.5, energyLossRate: 0.002, magneticScaleFactor: 3 }
+    electron: {
+      charge: -1,
+      mass: 1 / 1836,
+      velocityPreset: 0.03,
+      energy: 1,
+      energyLossRate: 0.015,
+      magneticScaleFactor: 0.23
+    },
+    positron: {
+      charge: 1,
+      mass: 1 / 1836,
+      velocityPreset: 0.03,
+      energy: 1,
+      energyLossRate: 0.015,
+      magneticScaleFactor: 0.23
+    },
+    // neutron explicitly has no trail
+    neutron: {
+      charge: 0,
+      mass: 1.008,
+      velocityPreset: 20,
+      energy: 0.01,
+      energyLossRate: 0.000001,
+      magneticScaleFactor: 0.23,
+      hasTrail: false
+    },
+    proton: {
+      charge: 1,
+      mass: 1,
+      velocityPreset: 40,
+      energy: 0.1,
+      energyLossRate: 0.0008,
+      magneticScaleFactor: 3
+    },
+    photon: {
+      charge: 0,
+      mass: 0,
+      velocityPreset: 1,
+      energy: 1,
+      energyLossRate: 0.00,
+      magneticScaleFactor: 1
+    },
+    alphaParticle: {
+      charge: 2,
+      mass: 4.0015,
+      velocityPreset: 3,
+      energy: 3,
+      energyLossRate: 0.02,
+      magneticScaleFactor: 2
+    },
+    none: {
+      charge: 1,
+      mass: 1,
+      velocityPreset: 40,
+      energy: 0.5,
+      energyLossRate: 0.002,
+      magneticScaleFactor: 3
+    }
   };
 
   // ---------- Resize / DPR handling ----------
@@ -111,35 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return Number.isFinite(n) ? n : fallback;
   }
 
-  // ---------- updateInputFieldsFromPreset (kept) ----------
-  function updateInputFieldsFromPreset(presetKey) {
-    const preset = particlePresets[presetKey];
-    if (!preset) return;
-
-    const chargeEl = document.getElementById('charge');
-    const massEl = document.getElementById('mass');
-    const energyEl = document.getElementById('energy');
-
-    if (!chargeEl || !massEl || !energyEl) return;
-
-    // Set input values
-    chargeEl.value = preset.charge;
-    massEl.value = preset.mass;
-    energyEl.value = preset.energy;
-
-    // Update lastParticleInitialValues so radius calculation sees latest values
-    lastParticleInitialValues = { charge: Number(chargeEl.value), mass: Number(massEl.value), energy: Number(energyEl.value) };
-
-    // Recalculate radius immediately if magnetic field is on
-    if (magneticField && radiusInput) {
-      const r = calculateRadius();
-      
-    }
-  }
-
-  // ---------- Particle class with Part 2 update() ----------
+  // ---------- Particle class ----------
   class Particle {
-    constructor(x = SPAWN_X, y = SPAWN_Y, charge = 1, mass = 1, velocityPreset = 40, energy = 0.5, energyLossRate = 0.002, magneticScaleFactor = 1) {
+    constructor(
+      x = SPAWN_X,
+      y = SPAWN_Y,
+      charge = 1,
+      mass = 1,
+      velocityPreset = 40,
+      energy = 0.5,
+      energyLossRate = 0.002,
+      magneticScaleFactor = 1,
+      hasTrail = true // <--- NEW flag
+    ) {
       this.x = x;
       this.y = y;
       this.charge = charge;
@@ -152,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.lastParticleInitialValues = { mass, velocity: velocityPreset, energy, charge };
       this._dead = false;
       this._fade = 0;
+      this.hasTrail = hasTrail; // <--- store flag
     }
 
     update() {
@@ -225,41 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return [forceX, forceY];
   }
 
-  // ---------- UI wiring (add-particle) ----------
-  document.getElementById('add-particle')?.addEventListener('click', () => {
-    if (radiusInput) radiusInput.value = '';
-    radiusInput?.classList.remove('correct', 'incorrect');
-  if (radiusFeedback) radiusFeedback.textContent = '';
-
-    const preset = document.getElementById('preset-select')?.value || 'none';
-    if (preset === 'photon') {
-      createPhoton();
-      const energyInputEl = document.getElementById('energy');
-      photons[photons.length - 1].energy = safeNum(energyInputEl?.value, particlePresets.photon.energy);
-      return;
-    }
-
-    if (preset === 'none') {
-      const charge = safeNum(document.getElementById('charge')?.value, 1);
-      const mass = safeNum(document.getElementById('mass')?.value, 1);
-      const energy = safeNum(document.getElementById('energy')?.value, 0.5);
-      const cfg = particlePresets.none;
-      particles.push(new Particle(SPAWN_X, SPAWN_Y, charge, mass, cfg.velocityPreset, energy, cfg.energyLossRate, cfg.magneticScaleFactor));
-      lastParticleInitialValues = { charge, mass, energy };
-      return;
-    }
-
-    const cfg = particlePresets[preset];
-    const energyVal = safeNum(document.getElementById('energy')?.value, cfg.energy);
-    let spawnX = SPAWN_X;
-if (preset === 'electron' || preset === 'positron') {
-  spawnX = SPAWN_X + PRESET_E_PAIR_OFFSET_X;
-}
-    particles.push(new Particle(spawnX, SPAWN_Y, cfg.charge, cfg.mass, Math.abs(cfg.velocityPreset), energyVal, cfg.energyLossRate, cfg.magneticScaleFactor));
-    // Note: when spawning from preset we will use the current energy input (so user can edit energy)
-    lastParticleInitialValues = { charge: cfg.charge, mass: cfg.mass, energy: energyVal };
-  });
-
   // ---------- Single tidy preset handler ----------
   presetSelect?.addEventListener('change', () => {
     const presetKey = presetSelect.value || 'none';
@@ -282,7 +281,7 @@ if (preset === 'electron' || preset === 'positron') {
     else document.getElementById('hint-box')?.classList.add('hidden');
   });
 
-  // ---------- updateInputFieldsFromPreset used by the single handler ----------
+  // ---------- updateInputFieldsFromPreset ----------
   function updateInputFieldsFromPreset(presetKey) {
     const preset = particlePresets[presetKey];
     if (!preset) return;
@@ -299,12 +298,16 @@ if (preset === 'electron' || preset === 'positron') {
     energyEl.value = preset.energy;
 
     // Update lastParticleInitialValues: mass & charge from preset, energy from input
-    lastParticleInitialValues = { charge: Number(chargeEl.value), mass: Number(massEl.value), energy: Number(energyEl.value) };
+    lastParticleInitialValues = {
+      charge: Number(chargeEl.value),
+      mass: Number(massEl.value),
+      energy: Number(energyEl.value)
+    };
 
     // Recalculate radius immediately if magnetic field is on
     if (magneticField && radiusInput) {
       const r = calculateRadius();
-     
+      // r is just computed; UI uses it later
     }
   }
 
@@ -312,10 +315,11 @@ if (preset === 'electron' || preset === 'positron') {
   const energyEl = document.getElementById('energy');
   energyEl?.addEventListener('input', () => {
     const v = Number(energyEl.value);
-    lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, { energy: Number.isFinite(v) ? v : 0 });
+    lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, {
+      energy: Number.isFinite(v) ? v : 0
+    });
     if (magneticField && radiusInput) {
       const r = calculateRadius();
-      
     }
   });
 
@@ -325,27 +329,99 @@ if (preset === 'electron' || preset === 'positron') {
   massEl?.addEventListener('input', () => {
     if (!massEl.disabled) {
       const v = Number(massEl.value);
-      lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, { mass: Number.isFinite(v) ? v : 0 });
+      lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, {
+        mass: Number.isFinite(v) ? v : 0
+      });
       if (magneticField && radiusInput) {
         const r = calculateRadius();
-        
       }
     }
   });
   chargeEl?.addEventListener('input', () => {
     if (!chargeEl.disabled) {
       const v = Number(chargeEl.value);
-      lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, { charge: Number.isFinite(v) ? v : 0 });
+      lastParticleInitialValues = Object.assign({}, lastParticleInitialValues || {}, {
+        charge: Number.isFinite(v) ? v : 0
+      });
       if (magneticField && radiusInput) {
         const r = calculateRadius();
-        
       }
     }
   });
 
+  // ---------- UI wiring (add-particle) ----------
+  document.getElementById('add-particle')?.addEventListener('click', () => {
+    if (radiusInput) radiusInput.value = '';
+    radiusInput?.classList.remove('correct', 'incorrect');
+    if (radiusFeedback) radiusFeedback.textContent = '';
+
+    const preset = document.getElementById('preset-select')?.value || 'none';
+
+    // Photon
+    if (preset === 'photon') {
+      createPhoton();
+      const energyInputEl = document.getElementById('energy');
+      photons[photons.length - 1].energy = safeNum(
+        energyInputEl?.value,
+        particlePresets.photon.energy
+      );
+      return;
+    }
+
+    // Custom particle ('none')
+    if (preset === 'none') {
+      const charge = safeNum(document.getElementById('charge')?.value, 1);
+      const mass = safeNum(document.getElementById('mass')?.value, 1);
+      const energy = safeNum(document.getElementById('energy')?.value, 0.5);
+      const cfg = particlePresets.none;
+
+      // hasTrail defaults to true in constructor
+      particles.push(new Particle(
+        SPAWN_X,
+        SPAWN_Y,
+        charge,
+        mass,
+        cfg.velocityPreset,
+        energy,
+        cfg.energyLossRate,
+        cfg.magneticScaleFactor
+      ));
+
+      lastParticleInitialValues = { charge, mass, energy };
+      return;
+    }
+
+    // Preset particles (including neutron)
+    const cfg = particlePresets[preset];
+    const energyVal = safeNum(document.getElementById('energy')?.value, cfg.energy);
+    let spawnX = SPAWN_X;
+    if (preset === 'electron' || preset === 'positron') {
+      spawnX = SPAWN_X + PRESET_E_PAIR_OFFSET_X;
+    }
+
+    const hasTrail = cfg.hasTrail !== false; // neutron hasTrail:false, everyone else true
+
+    particles.push(new Particle(
+      spawnX,
+      SPAWN_Y,
+      cfg.charge,
+      cfg.mass,
+      Math.abs(cfg.velocityPreset),
+      energyVal,
+      cfg.energyLossRate,
+      cfg.magneticScaleFactor,
+      hasTrail
+    ));
+
+    // Note: when spawning from preset we will use the current energy input (so user can edit energy)
+    lastParticleInitialValues = { charge: cfg.charge, mass: cfg.mass, energy: energyVal };
+  });
+
   // ---------- Clear button ----------
   document.getElementById('clear-button')?.addEventListener('click', () => {
-    particles = []; trail = []; photons = [];
+    particles = [];
+    trail = [];
+    photons = [];
     radiusInput?.classList.remove('correct', 'incorrect');
     if (radiusFeedback) radiusFeedback.textContent = '';
     lastParticleInitialValues = null;
@@ -413,13 +489,13 @@ if (preset === 'electron' || preset === 'positron') {
 
   // ---------- Magnetic strength input ----------
   magneticFieldStrengthInput.addEventListener('input', () => {
-  const n = parseFloat(magneticFieldStrengthInput.value);
-  if (!Number.isNaN(n)) {
-    // update internal state but DO NOT overwrite the visible input
-    magneticFieldStrength = n;
-  }
-  // if the field is empty or temporarily invalid (e.g. user typed "0.") do nothing
-});
+    const n = parseFloat(magneticFieldStrengthInput.value);
+    if (!Number.isNaN(n)) {
+      // update internal state but DO NOT overwrite the visible input
+      magneticFieldStrength = n;
+    }
+    // if the field is empty or temporarily invalid (e.g. user typed "0.") do nothing
+  });
 
   // ---------- Animation loop ----------
   function animate() {
@@ -460,7 +536,11 @@ if (preset === 'electron' || preset === 'positron') {
       }
 
       p.draw();
-      if (p.energy > 0) trail.push([p.x, p.y]);
+
+      // Only particles with hasTrail === true add to trail
+      if (p.energy > 0 && p.hasTrail) {
+        trail.push([p.x, p.y]);
+      }
     }
 
     for (let i = 0; i < photons.length; i++) {
@@ -468,18 +548,45 @@ if (preset === 'electron' || preset === 'positron') {
       drawPhoton(photon.x, photon.y, photon.energy);
       photon.x += 5;
       if (photon.x > LOGICAL_W) {
-        photons.splice(i, 1); i--; continue;
+        photons.splice(i, 1);
+        i--;
+        continue;
       }
       if (photon.energy > 1.022 * particlePresets.electron.energy && photon.x > LOGICAL_W / 3) {
-        const electron = new Particle(photon.x, photon.y, -1, particlePresets.electron.mass, 0.03, 1, particlePresets.electron.energyLossRate, particlePresets.electron.magneticScaleFactor);
-        const positron = new Particle(photon.x, photon.y, 1, particlePresets.electron.mass, 0.03, 1, particlePresets.electron.energyLossRate, particlePresets.electron.magneticScaleFactor);
+        const electron = new Particle(
+          photon.x,
+          photon.y,
+          -1,
+          particlePresets.electron.mass,
+          0.03,
+          1,
+          particlePresets.electron.energyLossRate,
+          particlePresets.electron.magneticScaleFactor
+          // hasTrail omitted => true
+        );
+        const positron = new Particle(
+          photon.x,
+          photon.y,
+          1,
+          particlePresets.electron.mass,
+          0.03,
+          1,
+          particlePresets.electron.energyLossRate,
+          particlePresets.electron.magneticScaleFactor
+          // hasTrail omitted => true
+        );
         const remainingEnergy = photon.energy - 1.022;
         const energyRatio = Math.random() * 0.2 + 0.35;
         electron.energy = remainingEnergy * energyRatio;
         positron.energy = remainingEnergy * (1 - energyRatio);
-        particles.push(electron); particles.push(positron);
-        photons.splice(i, 1); i--;
-        if (!magneticField) { electron.velocity[0] = -0.03; positron.velocity[0] = 0.03; }
+        particles.push(electron);
+        particles.push(positron);
+        photons.splice(i, 1);
+        i--;
+        if (!magneticField) {
+          electron.velocity[0] = -0.03;
+          positron.velocity[0] = 0.03;
+        }
       }
     }
 
@@ -566,10 +673,15 @@ if (preset === 'electron' || preset === 'positron') {
     }
   }
 
-  checkRadiusButton?.addEventListener('click', (e) => { e?.preventDefault(); checkRadiusAnswer(); });
+  checkRadiusButton?.addEventListener('click', (e) => {
+    e?.preventDefault();
+    checkRadiusAnswer();
+  });
   radiusInput?.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); checkRadiusAnswer(); }
-    else {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      checkRadiusAnswer();
+    } else {
       radiusInput.classList.remove('correct', 'incorrect');
       if (radiusFeedback) radiusFeedback.textContent = '';
     }
