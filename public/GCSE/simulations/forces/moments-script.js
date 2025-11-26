@@ -50,11 +50,74 @@ const PIXELS_PER_METER = 80;
 const TIME_SCALE = 0.02;
 const MAX_ARROW_WIDTH = 100; // Maximum width for velocity arrows
 const ARROW_SCALE = 10; // Scale factor for arrow width
-const TOLERANCE = 0.05; // Tolerance for 1 decimal place validation
+const TOLERANCE = 0.01; // Tolerance for 2 decimal place validation
+
+// Helper function to round to 2 decimal places
+function roundToTwo(num) {
+    return Math.round(num * 100) / 100;
+}
 
 // Helper function to round to 1 decimal place
 function roundToOne(num) {
     return Math.round(num * 10) / 10;
+}
+
+// Show toast message with consistent styling
+function showToast(message, type = 'info') {
+    // Create unique toast IDs for different message types
+    const toastId = `toast-${type}`;
+    
+    // Remove existing toast of the same type
+    const existingToast = document.getElementById(toastId);
+    if (existingToast) {
+        document.body.removeChild(existingToast);
+    }
+    
+    // Create new toast element
+    const toast = document.createElement('div');
+    toast.id = toastId;
+    toast.className = 'edge-notification';
+    toast.style.cssText = `
+        position: fixed;
+        top: ${type === 'score' ? '20%' : '50%'};
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(44, 62, 80, 0.95);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        text-align: center;
+        max-width: 80%;
+        white-space: pre-line;
+        line-height: 1.4;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    `;
+    
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    // Fade in
+    setTimeout(() => {
+        toast.style.opacity = "1";
+    }, 10);
+    
+    // Set timeout based on message type
+    const timeout = type === 'score' ? 5000 : 3000;
+    
+    // Fade out and remove
+    setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                document.body.removeChild(toast);
+            }
+        }, 300);
+    }, timeout);
 }
 
 // Update display values
@@ -186,6 +249,7 @@ function handleCollision() {
 
 // Show edge notification
 function showEdgeNotification() {
+    edgeNotification.textContent = "Trolley reached edge! Capture results now.";
     edgeNotification.style.opacity = "1";
     setTimeout(() => {
         edgeNotification.style.opacity = "0";
@@ -295,11 +359,6 @@ startBtn.addEventListener('click', () => {
     x1 = trackWidth / PIXELS_PER_METER * 0.2;
     x2 = trackWidth / PIXELS_PER_METER * 0.8;
     
-    // Calculate initial momentum (using rounded values for display)
-    initialMomentum1 = roundToOne(m1 * v1);
-    initialMomentum2 = roundToOne(m2 * v2);
-    initialMomentumTotal = roundToOne((m1 * v1) + (m2 * v2));
-    
     // Reset trolley styles
     trolley1.style.transition = "none";
     trolley2.style.transition = "none";
@@ -371,15 +430,15 @@ resetBtn.addEventListener('click', () => {
     startBtn.style.opacity = "1";
 });
 
-// Capture results
+// Capture results - BACK TO 2 DECIMAL PLACES
 captureBtn.addEventListener('click', () => {
     if (!collisionOccurred && simulationRunning && !edgeReached) {
-        alert("No collision has occurred yet. Wait for the trolleys to collide before capturing results.");
+        showToast("No collision has occurred yet. Wait for the trolleys to collide before capturing results.", 'warning');
         return;
     }
     
     if (!simulationRunning && !collisionOccurred && !edgeReached) {
-        alert("Please run a simulation first.");
+        showToast("Please run a simulation first.", 'warning');
         return;
     }
     
@@ -410,13 +469,23 @@ captureBtn.addEventListener('click', () => {
         collisionTypeDisplay = 'Perfectly Inelastic';
     }
     
-    // Use rounded values for display and validation (1 decimal place)
-    // Calculate total momentum directly from unrounded values to avoid rounding errors
-    const roundedInitialV1 = roundToOne(initialV1);
-    const roundedInitialV2 = roundToOne(initialV2);
-    const roundedInitialMomentum1 = roundToOne(m1 * initialV1);
-    const roundedInitialMomentum2 = roundToOne(m2 * initialV2);
-    const roundedInitialMomentumTotal = roundToOne((m1 * initialV1) + (m2 * initialV2));
+    // Calculate exact values with 2 decimal places
+    const displayInitialV1 = roundToTwo(initialV1);
+    const displayInitialV2 = roundToTwo(initialV2);
+    const displayInitialMomentum1 = roundToTwo(m1 * initialV1);
+    const displayInitialMomentum2 = roundToTwo(m2 * initialV2);
+    const displayInitialMomentumTotal = roundToTwo(m1 * initialV1 + m2 * initialV2);
+    
+    // Use post-collision velocities if available, otherwise use current velocities
+    const finalV1 = postCollisionV1 !== null ? postCollisionV1 : v1;
+    const finalV2 = postCollisionV2 !== null ? postCollisionV2 : v2;
+    
+    // Calculate exact values with 2 decimal places
+    const displayFinalV1 = roundToTwo(finalV1);
+    const displayFinalV2 = roundToTwo(finalV2);
+    const displayFinalP1 = roundToTwo(m1 * finalV1);
+    const displayFinalP2 = roundToTwo(m2 * finalV2);
+    const displayFinalPTotal = roundToTwo(m1 * finalV1 + m2 * finalV2);
     
     // Create new row for "Before" table
     const beforeRow = document.createElement('tr');
@@ -424,31 +493,19 @@ captureBtn.addEventListener('click', () => {
         <td>${resultCount}</td>
         <td>${collisionTypeDisplay}</td>
         <td class="trolley1-bg">${m1}</td>
-        <td class="trolley1-bg">${roundedInitialV1.toFixed(1)}</td>
-        <td class="trolley2-bg">${m2}</td>
-        <td class="trolley2-bg">${roundedInitialV2.toFixed(1)}</td>
+        <td class="trolley1-bg">${displayInitialV1.toFixed(2)}</td>
         <td class="trolley1-bg">
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-before" data-correct="${roundedInitialMomentum1.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-before" data-correct="${displayInitialMomentum1.toFixed(2)}">
         </td>
+        <td class="trolley2-bg">${m2}</td>
+        <td class="trolley2-bg">${displayInitialV2.toFixed(2)}</td>
         <td class="trolley2-bg">
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-before" data-correct="${roundedInitialMomentum2.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-before" data-correct="${displayInitialMomentum2.toFixed(2)}">
         </td>
         <td>
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-before" data-correct="${roundedInitialMomentumTotal.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input total-momentum-before" data-correct="${displayInitialMomentumTotal.toFixed(2)}">
         </td>
     `;
-    
-    // Use post-collision velocities if available, otherwise use current velocities
-    const finalV1 = postCollisionV1 !== null ? postCollisionV1 : v1;
-    const finalV2 = postCollisionV2 !== null ? postCollisionV2 : v2;
-    
-    // Use rounded values for display and validation (1 decimal place)
-    // Calculate total momentum directly from unrounded values to avoid rounding errors
-    const roundedFinalV1 = roundToOne(finalV1);
-    const roundedFinalV2 = roundToOne(finalV2);
-    const roundedFinalP1 = roundToOne(m1 * finalV1);
-    const roundedFinalP2 = roundToOne(m2 * finalV2);
-    const roundedFinalPTotal = roundToOne((m1 * finalV1) + (m2 * finalV2));
     
     // Create new row for "After" table
     const afterRow = document.createElement('tr');
@@ -456,17 +513,17 @@ captureBtn.addEventListener('click', () => {
         <td>${resultCount}</td>
         <td>${collisionTypeDisplay}</td>
         <td class="trolley1-bg">${m1}</td>
-        <td class="trolley1-bg">${roundedFinalV1.toFixed(1)}</td>
-        <td class="trolley2-bg">${m2}</td>
-        <td class="trolley2-bg">${roundedFinalV2.toFixed(1)}</td>
+        <td class="trolley1-bg">${displayFinalV1.toFixed(2)}</td>
         <td class="trolley1-bg">
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-after" data-correct="${roundedFinalP1.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-after" data-correct="${displayFinalP1.toFixed(2)}">
         </td>
+        <td class="trolley2-bg">${m2}</td>
+        <td class="trolley2-bg">${displayFinalV2.toFixed(2)}</td>
         <td class="trolley2-bg">
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-after" data-correct="${roundedFinalP2.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-after" data-correct="${displayFinalP2.toFixed(2)}">
         </td>
         <td>
-            <input type="number" step="0.1" placeholder="Calculate..." class="student-input momentum-after" data-correct="${roundedFinalPTotal.toFixed(1)}">
+            <input type="number" step="0.01" placeholder="Calculate..." class="student-input total-momentum-after" data-correct="${displayFinalPTotal.toFixed(2)}">
         </td>
         <td>
             <input type="text" placeholder="Add notes..." class="notes-input">
@@ -502,34 +559,33 @@ captureBtn.addEventListener('click', () => {
             const parent = input.parentNode;
             const inputClone = input.cloneNode(true);
             
-            // Add input event listener to automatically round to 1 decimal place
-            inputClone.addEventListener('blur', function() {
-                if (this.value && !isNaN(parseFloat(this.value))) {
-                    this.value = roundToOne(parseFloat(this.value)).toFixed(1);
-                }
-            });
-            
             parent.innerHTML = '';
             tooltip.appendChild(inputClone);
             parent.appendChild(tooltip);
         }
     });
     
-    // Also add the rounding behavior to any existing inputs
-    document.querySelectorAll('.student-input').forEach(input => {
+    // Add special behavior for total momentum inputs
+    document.querySelectorAll('.total-momentum-before, .total-momentum-after').forEach(input => {
         input.addEventListener('blur', function() {
             if (this.value && !isNaN(parseFloat(this.value))) {
-                this.value = roundToOne(parseFloat(this.value)).toFixed(1);
+                const originalValue = parseFloat(this.value);
+                const roundedValue = roundToOne(originalValue);
+                this.value = roundedValue.toFixed(1);
+                
+                if (originalValue !== roundedValue) {
+                    showToast("Total momentum to 1 decimal place to avoid rounding error", 'info');
+                }
             }
         });
     });
 });
 
-// Check student answers - uses rounded values for validation
+// Check student answers
 checkAnswersBtn.addEventListener('click', () => {
     const inputs = document.querySelectorAll('.student-input');
     if (inputs.length === 0) {
-        alert("No results to check. Capture some results first.");
+        showToast("No results to check. Capture some results first.", 'warning');
         return;
     }
     
@@ -544,8 +600,14 @@ checkAnswersBtn.addEventListener('click', () => {
         if (!isNaN(studentValue)) {
             totalCount++;
             
-            // Check if student's answer matches exactly (since both are rounded to 1 decimal place)
-            if (Math.abs(studentValue - correctValue) < TOLERANCE) {
+            // For total momentum, round student input to 1 decimal place for comparison
+            let comparisonValue = studentValue;
+            if (input.classList.contains('total-momentum-before') || input.classList.contains('total-momentum-after')) {
+                comparisonValue = roundToOne(studentValue);
+            }
+            
+            // Check if student's answer matches
+            if (Math.abs(comparisonValue - correctValue) < TOLERANCE) {
                 input.classList.add('correct-answer');
                 input.classList.remove('incorrect-answer');
                 correctCount++;
@@ -561,9 +623,10 @@ checkAnswersBtn.addEventListener('click', () => {
     
     if (totalCount > 0) {
         const percentage = Math.round((correctCount / totalCount) * 100);
-        alert(`You got ${correctCount} out of ${totalCount} answers correct (${percentage}%).\n\nGreen = Correct\nRed = Incorrect`);
+        const message = `You got ${correctCount} out of ${totalCount} answers correct (${percentage}%).`;
+        showToast(message, 'score');
     } else {
-        alert("Please enter your calculations before checking answers.");
+        showToast("Please enter your calculations before checking answers.", 'warning');
     }
 });
 
@@ -587,7 +650,7 @@ clearTableBtn.addEventListener('click', () => {
 // Download CSV
 downloadBtn.addEventListener('click', () => {
     if (resultCount === 0) {
-        alert("No results to download. Capture some results first.");
+        showToast("No results to download. Capture some results first.", 'warning');
         return;
     }
     
