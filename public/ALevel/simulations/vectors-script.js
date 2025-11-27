@@ -923,7 +923,7 @@ if (resultantBtn) resultantBtn.addEventListener('click', () => this.toggleResult
 }
 
   drawAngleIndicator(ctx, start, end) {
-     if (!this.showAngles) return;
+    // if (!this.showAngles) return;
     const dx = end.x - start.x;
     const dy = end.y - start.y;
     const angle = Math.atan2(dx, -dy) * 180 / Math.PI;
