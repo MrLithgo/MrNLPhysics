@@ -824,7 +824,7 @@ if (resultantBtn) resultantBtn.addEventListener('click', () => this.toggleResult
       const angleDeg = theta * 180 / Math.PI;
       const angleText = Math.round(angleDeg) + "°";
 
-      ctx.font = "bold 14px Arial";
+      ctx.font = "10px Arial";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       const metrics = ctx.measureText(angleText);
@@ -847,12 +847,12 @@ if (resultantBtn) resultantBtn.addEventListener('click', () => this.toggleResult
       ctx.lineTo(rectX, rectY + radiusCorner);
       ctx.quadraticCurveTo(rectX, rectY, rectX + radiusCorner, rectY);
       ctx.closePath();
-      ctx.fillStyle = "rgba(255,255,255,0.9)";
+      ctx.fillStyle = "rgba(255,255,255,0.7)";
       ctx.fill();
       ctx.lineWidth = 0.8;
       ctx.strokeStyle = "rgba(44,62,80,0.12)";
       ctx.stroke();
-      ctx.fillStyle = "rgba(44,62,80,0.95)";
+      ctx.fillStyle = "rgba(44,62,80,0.7)";
       ctx.fillText(angleText, textX, textY);
       ctx.restore();
     }
