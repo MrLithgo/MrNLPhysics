@@ -1,729 +1,822 @@
-// DOM elements
-const mass1Slider = document.getElementById('mass1');
-const mass2Slider = document.getElementById('mass2');
-const velocity1Slider = document.getElementById('velocity1Input');
-const velocity2Slider = document.getElementById('velocity2Input');
-const mass1Value = document.getElementById('mass1Display');
-const mass2Value = document.getElementById('mass2Display');
-const velocity1Display = document.getElementById('velocity1Display');
-const velocity2Display = document.getElementById('velocity2Display');
-const startBtn = document.getElementById('startBtn');
-const resetBtn = document.getElementById('resetBtn');
-const captureBtn = document.getElementById('captureBtn');
-const clearTableBtn = document.getElementById('clearTableBtn');
-const downloadBtn = document.getElementById('downloadBtn');
-const checkAnswersBtn = document.getElementById('checkAnswersBtn');
-const trolley1 = document.getElementById('trolley1');
-const trolley2 = document.getElementById('trolley2');
-const velocity1Indicator = document.getElementById('velocity1Indicator');
-const velocity2Indicator = document.getElementById('velocity2Indicator');
-const velocity1Value = document.getElementById('velocity1Value');
-const velocity2Value = document.getElementById('velocity2Value');
-const velocity1Arrow = document.getElementById('velocity1Arrow');
-const velocity2Arrow = document.getElementById('velocity2Arrow');
-const beforeTableBody = document.getElementById('beforeTableBody');
-const afterTableBody = document.getElementById('afterTableBody');
-const edgeNotification = document.getElementById('edgeNotification');
 
-// Simulation variables
-let simulationRunning = false;
-let animationId;
-let simulationTime = 0;
-let collisionOccurred = false;
-let trackWidth;
-let resultCount = 0;
-let initialV1, initialV2; // Store initial velocities for results table
-let edgeReached = false;
+// Globals & constants
+let masses = [];
+let massCounter = 1;
+let draggedMass = null;
+let dragOffset = { x: 0, y: 0 };
+let activePointerId = null;
+let advancedMode = false;
 
-// Physics variables
-let m1, m2, v1, v2;
-let x1, x2;
-let initialMomentum1, initialMomentum2, initialMomentumTotal;
-let currentMomentum1, currentMomentum2, currentMomentumTotal;
+let balanceNoticeTimeout = null;
 
-// Store post-collision velocities before any edge detection
-let postCollisionV1, postCollisionV2;
+let originalParent = null;
+let nextSibling = null;
 
-// Constants
-const TROLLEY_WIDTH = 80; // Increased trolley width
-const PIXELS_PER_METER = 80;
-const TIME_SCALE = 0.02;
-const MAX_ARROW_WIDTH = 100; // Maximum width for velocity arrows
-const ARROW_SCALE = 10; // Scale factor for arrow width
-const TOLERANCE = 0.01; // Tolerance for 2 decimal place validation
+// Scale inset so ticks/labels/zones/snap sit inside the beam ends
+const SCALE_INSET_PX = 40;       
 
-// Helper function to round to 2 decimal places
-function roundToTwo(num) {
-    return Math.round(num * 100) / 100;
+// Force & arrow visuals
+const GRAVITY_N_PER_KG = 10;      
+const ARROW_PX_PER_NEWTON = 0.8;  
+const ARROW_MIN_PX = 12;
+const ARROW_MAX_PX = 60;
+
+
+let toastTimeout = null;
+
+
+function showToast(message, ms = 900) {
+  // remove any existing toast immediately
+  const existing = document.getElementById('sim-toast');
+  if (existing) {
+    existing.remove();
+    if (toastTimeout) { clearTimeout(toastTimeout); toastTimeout = null; }
+  }
+
+  const toast = document.createElement('div');
+  toast.id = 'sim-toast';
+  toast.setAttribute('role', 'status');       // polite announcement
+  toast.setAttribute('aria-live', 'polite');  // screen-reader friendly
+  toast.className = 'sim-toast';
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+
+  // trigger fade-in (allow CSS transition)
+  requestAnimationFrame(() => toast.classList.add('visible'));
+
+  // remove after ms
+  toastTimeout = setTimeout(() => {
+    toast.classList.remove('visible');
+    // wait for transition to finish (match CSS transition-duration)
+    setTimeout(() => toast.remove(), 260);
+    toastTimeout = null;
+  }, ms);
 }
 
-// Helper function to round to 1 decimal place
-function roundToOne(num) {
-    return Math.round(num * 10) / 10;
+
+
+// Geometry helpers
+function getBeamWidth() {
+  const beam = document.getElementById('beam');
+  return beam ? beam.offsetWidth : 980 * 0.95;
+}
+function getInsetSpacingPx() {
+  const bw = getBeamWidth();
+  const usable = Math.max(0, bw - 2 * SCALE_INSET_PX);
+  return usable / 24;
 }
 
-// Show toast message with consistent styling
-function showToast(message, type = 'info') {
-    // Create unique toast IDs for different message types
-    const toastId = `toast-${type}`;
-    
-    // Remove existing toast of the same type
-    const existingToast = document.getElementById(toastId);
-    if (existingToast) {
-        document.body.removeChild(existingToast);
+// Init
+function init() {
+  createScale();
+  createDropZones();
+  updateBeamBalance();
+  renderMassOptionTiles();
+  updateResultsTableHeadings();
+
+  // Controls
+  document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+
+  // Storage tiles 
+  document.querySelectorAll('.mass-option').forEach(option => {
+    option.addEventListener('pointerdown', startCreateDrag, { passive: false });
+  });
+
+  // Advanced toggle
+
+const adv = document.getElementById('advancedToggle');
+if (adv) {
+  adv.checked = false;
+  adv.setAttribute('aria-checked', 'false');
+  advancedMode = adv.checked;
+
+  adv.addEventListener('change', () => {
+    const wasOn = advancedMode;
+    advancedMode = adv.checked;
+    adv.setAttribute('aria-checked', advancedMode ? 'true' : 'false');
+
+    if (!advancedMode && wasOn) {
+     
+      masses.forEach(m => {
+        try { m.element.remove(); } catch (_) {}
+      });
+      masses = [];
+      massCounter = 1;
+
+      // Reset beam and UI
+      updateBeamBalance();
+      updateMassCount();
+      updateForceArrows();
+      updateMomentFeedback();
     }
     
-    // Create new toast element
-    const toast = document.createElement('div');
-    toast.id = toastId;
-    toast.className = 'edge-notification';
-    toast.style.cssText = `
-        position: fixed;
-        top: ${type === 'score' ? '20%' : '50%'};
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(44, 62, 80, 0.95);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        font-weight: bold;
-        z-index: 1000;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        pointer-events: none;
-        text-align: center;
-        max-width: 80%;
-        white-space: pre-line;
-        line-height: 1.4;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    `;
-    
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    // Fade in
-    setTimeout(() => {
-        toast.style.opacity = "1";
-    }, 10);
-    
-    // Set timeout based on message type
-    const timeout = type === 'score' ? 5000 : 3000;
-    
-    // Fade out and remove
-    setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => {
-            if (document.body.contains(toast)) {
-                document.body.removeChild(toast);
-            }
-        }, 300);
-    }, timeout);
+
+    // Rebuild headings + table for the new mode
+    updateResultsTableHeadings();
+    renderResultsTable();
+  });
 }
 
-// Update display values
-function updateDisplayValues() {
-    mass1Value.textContent = `${mass1Slider.value} kg`;
-    mass2Value.textContent = `${mass2Slider.value} kg`;
-    velocity1Display.textContent = `${velocity1Slider.value} m/s`;
-    velocity2Display.textContent = `${velocity2Slider.value} m/s`;
-    
-    // Update velocity indicators
-    updateVelocityIndicators(parseFloat(velocity1Slider.value), parseFloat(velocity2Slider.value));
+
+  // Render the table 
+  renderResultsTable();
+
+  // Moment inputs: validate while typing 
+  updateMomentFeedback();
+
+  // initial arrows if any 
+  updateForceArrows();
 }
 
-// Update velocity indicators
-function updateVelocityIndicators(v1, v2) {
-    // Update text
-    velocity1Value.textContent = `${v1.toFixed(1)} m/s`;
-    velocity2Value.textContent = `${v2.toFixed(1)} m/s`;
-    
-    // Update arrows
-    const v1Abs = Math.abs(v1);
-    const v2Abs = Math.abs(v2);
-    
-    // Set arrow widths (capped at MAX_ARROW_WIDTH)
-    const arrow1Width = Math.min(v1Abs * ARROW_SCALE, MAX_ARROW_WIDTH);
-    const arrow2Width = Math.min(v2Abs * ARROW_SCALE, MAX_ARROW_WIDTH);
-    
-    velocity1Arrow.style.width = `${arrow1Width}px`;
-    velocity2Arrow.style.width = `${arrow2Width}px`;
-    
-    // Set arrow directions and colors
-    if (v1 < 0) {
-        velocity1Arrow.style.marginLeft = `${arrow1Width}px`;
-        velocity1Arrow.style.transform = 'scaleX(-1)';
-        velocity1Arrow.style.backgroundColor = '#E74C3C';
+// Scale / zones
+function createScale() {
+  const scale = document.querySelector('.scale');
+  scale.innerHTML = '';
+  const spacing = getInsetSpacingPx();
+  const beamWidth = getBeamWidth();
+  const centerPosition = beamWidth / 2;
+
+  for (let i = -12; i <= 12; i++) {
+    const mark = document.createElement('div');
+    mark.className = 'scale-mark';
+    mark.style.position = 'absolute';
+    mark.style.left = `${centerPosition + (i * spacing)}px`;
+    mark.style.transform = 'translateX(-50%)';
+
+    if (i % 2 === 0) {
+      const number = document.createElement('div');
+      number.className = 'scale-number';
+      number.textContent = Math.abs(i);
+      number.style.left = `${centerPosition + (i * spacing)}px`;
+      number.style.transform = 'translateX(-50%)';
+      scale.appendChild(number);
+    }
+    scale.appendChild(mark);
+  }
+}
+
+function createDropZones() {
+  const container = document.querySelector('.beam');
+  document.querySelectorAll('.drop-zone').forEach(zone => zone.remove());
+  const spacing = getInsetSpacingPx();
+  const beamWidth = getBeamWidth();
+  const centerPosition = beamWidth / 2;
+
+  for (let i = -12; i <= 12; i++) {
+    const zone = document.createElement('div');
+    zone.className = 'drop-zone';
+    zone.style.left = `${centerPosition + (i * spacing)}px`;
+    zone.style.transform = 'translateX(-50%)';
+    zone.dataset.position = i;
+    container.appendChild(zone);
+  }
+}
+
+// ---------- Render results table (Basic or Advanced) ----------
+
+function createStandardRowsMarkup() {
+  // 4 columns: Side | Total Force (N) | Distance | Moment
+  return `
+    <tr>
+      <td><strong>Left</strong></td>
+      <td><input type="number" id="leftTotalMass" min="0" value="0" readonly></td>
+      <td><input type="number" id="leftDistance" min="0" max="12" value="0"></td>
+      <td><input type="number" id="leftMoment" placeholder="Calculate yourself"></td>
+    </tr>
+    <tr>
+      <td><strong>Right</strong></td>
+      <td><input type="number" id="rightTotalMass" min="0" value="0" readonly></td>
+      <td><input type="number" id="rightDistance" min="0" max="12" value="0"></td>
+      <td><input type="number" id="rightMoment" placeholder="Calculate yourself"></td>
+    </tr>
+  `;
+}
+
+
+function validateAdvancedRow(distInput, momentInput, force) {
+  if (!momentInput) return;
+  const tol = 1e-2; // tolerance in N·m (adjust if you want looser/stricter)
+  const dtxt = (distInput && distInput.value) ? distInput.value.trim() : '';
+  const mtxt = (momentInput && momentInput.value) ? momentInput.value.trim() : '';
+
+  if (mtxt === '' && dtxt === '') {
+    // no inputs yet — clear feedback
+    setInputFeedback(momentInput, null);
+    return;
+  }
+
+  // If distance blank but moment provided, can't validate yet — mark incorrect
+  const d = dtxt === '' ? NaN : Number(dtxt);
+  const m = mtxt === '' ? NaN : Number(mtxt);
+
+  if (!Number.isFinite(d) || !Number.isFinite(m)) {
+    // invalid numeric entry -> mark incorrect
+    setInputFeedback(momentInput, false);
+    return;
+  }
+
+  const expected = force * d;
+  const ok = Math.abs(m - expected) <= tol;
+  setInputFeedback(momentInput, ok);
+}
+
+// Validate all advanced-mode rows currently rendered
+function validateAllAdvancedRows() {
+  // Rows have inputs with classes .distance-input and .moment-input and dataset.massId
+  const tbody = document.querySelector('.data-table table tbody');
+  if (!tbody) return;
+
+  const momentInputs = tbody.querySelectorAll('.moment-input');
+  momentInputs.forEach(mi => {
+    const id = mi.dataset.massId;
+    const di = tbody.querySelector(`.distance-input[data-mass-id="${id}"]`);
+    const forceEl = mi.parentNode.parentNode.querySelector('.force-cell');
+    const force = forceEl ? Number(forceEl.value) : NaN;
+    if (!Number.isFinite(force)) {
+      setInputFeedback(mi, null);
     } else {
-        velocity1Arrow.style.marginLeft = '0';
-        velocity1Arrow.style.transform = 'scaleX(1)';
-        velocity1Arrow.style.backgroundColor = '#E74C3C';
+      validateAdvancedRow(di, mi, force);
     }
-    
-    if (v2 < 0) {
-        velocity2Arrow.style.marginLeft = `${arrow2Width}px`;
-        velocity2Arrow.style.transform = 'scaleX(-1)';
-        velocity2Arrow.style.backgroundColor = '#1ABC9C';
-    } else {
-        velocity2Arrow.style.marginLeft = '0';
-        velocity2Arrow.style.transform = 'scaleX(1)';
-        velocity2Arrow.style.backgroundColor = '#1ABC9C';
-    }
+  });
 }
 
-// Initialize sliders
-mass1Slider.addEventListener('input', updateDisplayValues);
-mass2Slider.addEventListener('input', updateDisplayValues);
-velocity1Slider.addEventListener('input', updateDisplayValues);
-velocity2Slider.addEventListener('input', updateDisplayValues);
-updateDisplayValues();
 
-// Calculate momentum
-function calculateMomentum() {
-    // Calculate individual and total momentum
-    currentMomentum1 = m1 * v1;
-    currentMomentum2 = m2 * v2;
-    currentMomentumTotal = currentMomentum1 + currentMomentum2;
-    
-    return {
-        momentum1: currentMomentum1,
-        momentum2: currentMomentum2,
-        momentumTotal: currentMomentumTotal
-    };
-}
+function renderResultsTable() {
+  const tbody = document.querySelector('.data-table table tbody');
+  if (!tbody) return;
 
-// Check for collision
-function checkCollision() {
-    // Convert positions to the same reference frame as the visual elements
-    const trolley1Right = x1 * PIXELS_PER_METER + TROLLEY_WIDTH / 2;
-    const trolley2Left = x2 * PIXELS_PER_METER - TROLLEY_WIDTH / 2;
-    
-    if (trolley1Right >= trolley2Left && !collisionOccurred) {
-        collisionOccurred = true;
-        handleCollision();
-        
-        // Store post-collision velocities
-        postCollisionV1 = v1;
-        postCollisionV2 = v2;
-    }
-}
+  // Clear existing content
+  tbody.innerHTML = '';
 
-// Handle collision physics
-function handleCollision() {
-    const collisionType = document.querySelector('input[name="collisionType"]:checked').value;
-    
-    if (collisionType === 'elastic') {
-        // Elastic collision formulas - momentum and kinetic energy are both conserved
-        const v1Final = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-        const v2Final = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
-        
-        v1 = v1Final;
-        v2 = v2Final;
-    } 
-    else if (collisionType === 'inelastic') {
-        // Partially inelastic collision (coefficient of restitution = 0.5)
-        // Momentum is conserved, but some kinetic energy is lost
-        const e = 0.5; // coefficient of restitution
-        
-        // These formulas ensure momentum conservation
-        const v1Final = (m1 * v1 + m2 * v2 - m2 * e * (v1 - v2)) / (m1 + m2);
-        const v2Final = (m1 * v1 + m2 * v2 + m1 * e * (v1 - v2)) / (m1 + m2);
-        
-        v1 = v1Final;
-        v2 = v2Final;
-    }
-    else if (collisionType === 'perfectlyInelastic') {
-        // Perfectly inelastic collision (objects stick together)
-        // Momentum is conserved, but maximum kinetic energy is lost
-        const vFinal = (m1 * v1 + m2 * v2) / (m1 + m2);
-        v1 = vFinal;
-        v2 = vFinal;
-        
-        // Make trolleys visually stick together
-        trolley1.style.transition = "transform 0.3s ease";
-        trolley2.style.transition = "transform 0.3s ease";
-    }
-    
-    // Update velocity indicators after collision
-    updateVelocityIndicators(v1, v2);
-}
+  // BASIC MODE: restore two-row layout with expected IDs (students fill moments)
+  if (!advancedMode) {
+    tbody.innerHTML = createStandardRowsMarkup();
 
-// Show edge notification
-function showEdgeNotification() {
-    edgeNotification.textContent = "Trolley reached edge! Capture results now.";
-    edgeNotification.style.opacity = "1";
-    setTimeout(() => {
-        edgeNotification.style.opacity = "0";
-    }, 3000);
-}
-
-// Update trolley positions
-function updatePositions(deltaTime) {
-    // Update positions based on velocities
-    x1 += v1 * deltaTime;
-    x2 += v2 * deltaTime;
-    
-    // Enforce boundaries
-    const minX = TROLLEY_WIDTH / 2 / PIXELS_PER_METER;
-    const maxX = trackWidth / PIXELS_PER_METER - TROLLEY_WIDTH / 2 / PIXELS_PER_METER;
-    
-    let boundaryReached = false;
-    
-    // Check boundaries for trolley 1
-    if (x1 < minX) {
-        x1 = minX;
-        boundaryReached = true;
-        // Don't set v1 to 0 here, just stop the visual movement
-    }
-    
-    // Check boundaries for trolley 2
-    if (x2 > maxX) {
-        x2 = maxX;
-        boundaryReached = true;
-        // Don't set v2 to 0 here, just stop the visual movement
-    }
-    
-    // Update visual positions
-    trolley1.style.left = `${x1 * PIXELS_PER_METER}px`;
-    trolley2.style.left = `${x2 * PIXELS_PER_METER}px`;
-    
-    // Update velocity indicator positions
-    velocity1Indicator.style.left = `${x1 * PIXELS_PER_METER}px`;
-    velocity2Indicator.style.left = `${x2 * PIXELS_PER_METER}px`;
-    
-    // If a boundary was reached, pause the simulation and show notification
-    if (boundaryReached && !edgeReached) {
-        edgeReached = true;
-        showEdgeNotification();
-        pauseSimulation();
-        
-        // We'll keep the velocity indicators showing the actual velocities
-        // even though the trolleys have stopped moving visually
-    }
-}
-
-// Pause simulation
-function pauseSimulation() {
-    cancelAnimationFrame(animationId);
-    // Don't reset simulationRunning so we know a simulation is in progress but paused
-}
-
-// Animation loop
-function animate(timestamp) {
-    if (!simulationRunning) return;
-    
-    // Calculate time delta
-   const deltaTime = TIME_SCALE;
-   simulationTime += deltaTime;
-    
-    // Check for collision
-    checkCollision();
-    
-    // Update positions
-    updatePositions(deltaTime);
-    
-    // Update momentum display
-    calculateMomentum();
-    
-    // Continue animation if not paused
-    if (simulationRunning && !edgeReached) {
-        animationId = requestAnimationFrame(animate);
-    }
-}
-
-// Start simulation
-startBtn.addEventListener('click', () => {
-    if (simulationRunning) return;
-    
-    // Reset simulation state
-    simulationRunning = true;
-    simulationTime = 0;
-    collisionOccurred = false;
-    edgeReached = false;
-    postCollisionV1 = null;
-    postCollisionV2 = null;
-    
-    // Get track width
-    trackWidth = document.querySelector('.track').offsetWidth;
-    
-    // Get physics parameters
-    m1 = parseFloat(mass1Slider.value);
-    m2 = parseFloat(mass2Slider.value);
-    v1 = parseFloat(velocity1Slider.value);
-    v2 = parseFloat(velocity2Slider.value);
-    
-    // Store initial velocities for results table
-    initialV1 = v1;
-    initialV2 = v2;
-    
-    // Set initial positions (in meters)
-    x1 = trackWidth / PIXELS_PER_METER * 0.2;
-    x2 = trackWidth / PIXELS_PER_METER * 0.8;
-    
-    // Reset trolley styles
-    trolley1.style.transition = "none";
-    trolley2.style.transition = "none";
-    
-    // Update initial positions
-    trolley1.style.left = `${x1 * PIXELS_PER_METER}px`;
-    trolley2.style.left = `${x2 * PIXELS_PER_METER}px`;
-    velocity1Indicator.style.left = `${x1 * PIXELS_PER_METER}px`;
-    velocity2Indicator.style.left = `${x2 * PIXELS_PER_METER}px`;
-    
-    // Update velocity indicators
-    updateVelocityIndicators(v1, v2);
-    
-    // Hide edge notification
-    edgeNotification.style.opacity = "0";
-    
-    // Start animation
-    animationId = requestAnimationFrame(animate);
-    
-    // Disable inputs during simulation
-    mass1Slider.disabled = true;
-    mass2Slider.disabled = true;
-    velocity1Slider.disabled = true;
-    velocity2Slider.disabled = true;
-    document.querySelectorAll('input[name="collisionType"]').forEach(input => {
-        input.disabled = true;
+    // Attach listeners for left/right moment inputs so validation works (Basic mode)
+    const leftMoment = document.getElementById('leftMoment');
+    const rightMoment = document.getElementById('rightMoment');
+    ['input', 'change', 'blur'].forEach(ev => {
+      leftMoment?.addEventListener(ev, updateMomentFeedback);
+      rightMoment?.addEventListener(ev, updateMomentFeedback);
     });
-    
-    startBtn.disabled = true;
-    startBtn.style.opacity = "0.7";
-});
 
-// Reset simulation
-resetBtn.addEventListener('click', () => {
-    // Stop animation
-    cancelAnimationFrame(animationId);
-    simulationRunning = false;
-    edgeReached = false;
-    
-    // Reset trolley positions
-    trolley1.style.left = '20%';
-    trolley2.style.left = '80%';
-    trolley1.style.transition = "none";
-    trolley2.style.transition = "none";
-    
-    // Reset velocity indicator positions
-    velocity1Indicator.style.left = '20%';
-    velocity2Indicator.style.left = '80%';
-    
-    // Reset velocity indicators to initial values
-    updateVelocityIndicators(parseFloat(velocity1Slider.value), parseFloat(velocity2Slider.value));
-    
-    // Reset simulation time
-    simulationTime = 0;
-    
-    // Hide edge notification
-    edgeNotification.style.opacity = "0";
-    
-    // Enable inputs
-    mass1Slider.disabled = false;
-    mass2Slider.disabled = false;
-    velocity1Slider.disabled = false;
-    velocity2Slider.disabled = false;
-    document.querySelectorAll('input[name="collisionType"]').forEach(input => {
-        input.disabled = false;
-    });
-    
-    startBtn.disabled = false;
-    startBtn.style.opacity = "1";
-});
+    // Ensure totals & moment feedback reflect current masses
+    updateMassCount();
+    updateMomentFeedback();
+    return;
+  }
 
-// Capture results - BACK TO 2 DECIMAL PLACES
-captureBtn.addEventListener('click', () => {
-    if (!collisionOccurred && simulationRunning && !edgeReached) {
-        showToast("No collision has occurred yet. Wait for the trolleys to collide before capturing results.", 'warning');
-        return;
-    }
-    
-    if (!simulationRunning && !collisionOccurred && !edgeReached) {
-        showToast("Please run a simulation first.", 'warning');
-        return;
-    }
-    
-    // Remove empty rows if they exist
-    const emptyRowBefore = document.getElementById('emptyRowBefore');
-    if (emptyRowBefore) {
-        emptyRowBefore.remove();
-    }
-    
-    const emptyRowAfter = document.getElementById('emptyRowAfter');
-    if (emptyRowAfter) {
-        emptyRowAfter.remove();
-    }
-    
-    // Increment result count
-    resultCount++;
-    
-    // Get current values
-    const collisionType = document.querySelector('input[name="collisionType"]:checked').value;
-    
-    // Format collision type for display
-    let collisionTypeDisplay = collisionType;
-    if (collisionType === 'elastic') {
-        collisionTypeDisplay = 'Elastic';
-    } else if (collisionType === 'inelastic') {
-        collisionTypeDisplay = 'Inelastic (e=0.5)';
-    } else if (collisionType === 'perfectlyInelastic') {
-        collisionTypeDisplay = 'Perfectly Inelastic';
-    }
-    
-    // Calculate exact values with 2 decimal places
-    const displayInitialV1 = roundToTwo(initialV1);
-    const displayInitialV2 = roundToTwo(initialV2);
-    const displayInitialMomentum1 = roundToTwo(m1 * initialV1);
-    const displayInitialMomentum2 = roundToTwo(m2 * initialV2);
-    const displayInitialMomentumTotal = roundToTwo(m1 * initialV1 + m2 * initialV2);
-    
-    // Use post-collision velocities if available, otherwise use current velocities
-    const finalV1 = postCollisionV1 !== null ? postCollisionV1 : v1;
-    const finalV2 = postCollisionV2 !== null ? postCollisionV2 : v2;
-    
-    // Calculate exact values with 2 decimal places
-    const displayFinalV1 = roundToTwo(finalV1);
-    const displayFinalV2 = roundToTwo(finalV2);
-    const displayFinalP1 = roundToTwo(m1 * finalV1);
-    const displayFinalP2 = roundToTwo(m2 * finalV2);
-    const displayFinalPTotal = roundToTwo(m1 * finalV1 + m2 * finalV2);
-    
-    // Create new row for "Before" table
-    const beforeRow = document.createElement('tr');
-    beforeRow.innerHTML = `
-        <td>${resultCount}</td>
-        <td>${collisionTypeDisplay}</td>
-        <td class="trolley1-bg">${m1}</td>
-        <td class="trolley1-bg">${displayInitialV1.toFixed(2)}</td>
-        <td class="trolley1-bg">
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-before" data-correct="${displayInitialMomentum1.toFixed(2)}">
-        </td>
-        <td class="trolley2-bg">${m2}</td>
-        <td class="trolley2-bg">${displayInitialV2.toFixed(2)}</td>
-        <td class="trolley2-bg">
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-before" data-correct="${displayInitialMomentum2.toFixed(2)}">
-        </td>
-        <td>
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input total-momentum-before" data-correct="${displayInitialMomentumTotal.toFixed(2)}">
-        </td>
-    `;
-    
-    // Create new row for "After" table
-    const afterRow = document.createElement('tr');
-    afterRow.innerHTML = `
-        <td>${resultCount}</td>
-        <td>${collisionTypeDisplay}</td>
-        <td class="trolley1-bg">${m1}</td>
-        <td class="trolley1-bg">${displayFinalV1.toFixed(2)}</td>
-        <td class="trolley1-bg">
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-after" data-correct="${displayFinalP1.toFixed(2)}">
-        </td>
-        <td class="trolley2-bg">${m2}</td>
-        <td class="trolley2-bg">${displayFinalV2.toFixed(2)}</td>
-        <td class="trolley2-bg">
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input momentum-after" data-correct="${displayFinalP2.toFixed(2)}">
-        </td>
-        <td>
-            <input type="number" step="0.01" placeholder="Calculate..." class="student-input total-momentum-after" data-correct="${displayFinalPTotal.toFixed(2)}">
-        </td>
-        <td>
-            <input type="text" placeholder="Add notes..." class="notes-input">
-        </td>
-    `;
-    
-    // Add rows to tables
-    beforeTableBody.appendChild(beforeRow);
-    afterTableBody.appendChild(afterRow);
-    
-    // Highlight the new rows briefly
-    beforeRow.style.backgroundColor = 'rgba(26, 188, 156, 0.1)';
-    afterRow.style.backgroundColor = 'rgba(26, 188, 156, 0.1)';
-    setTimeout(() => {
-        beforeRow.style.backgroundColor = '';
-        afterRow.style.backgroundColor = '';
-    }, 1000);
-    
-    // Add tooltips with formulas to help students
-    const inputs = document.querySelectorAll('.student-input');
-    inputs.forEach(input => {
-        if (!input.parentNode.querySelector('.tooltip')) {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tooltip';
-            
-            const tooltipText = document.createElement('span');
-            tooltipText.className = 'tooltiptext';
-            tooltipText.textContent = "Momentum = m × v";
-            
-            tooltip.appendChild(tooltipText);
-            
-            // Replace the input with the tooltip containing the input
-            const parent = input.parentNode;
-            const inputClone = input.cloneNode(true);
-            
-            parent.innerHTML = '';
-            tooltip.appendChild(inputClone);
-            parent.appendChild(tooltip);
+  // ADVANCED MODE: one row per mass. LEFT masses first, then RIGHT
+  const leftMasses  = masses.filter(m => m.position < 0).sort((a,b) => a.position - b.position);
+  const rightMasses = masses.filter(m => m.position > 0).sort((a,b) => a.position - b.position);
+
+  function makeRowForMass(m) {
+    const tr = document.createElement('tr');
+
+    // Side cell
+    const tdSide = document.createElement('td');
+    tdSide.innerHTML = `<strong>${m.position < 0 ? 'Left' : 'Right'}</strong> (${m.position})`;
+    tr.appendChild(tdSide);
+
+    // Force (readonly)
+    const tdForce = document.createElement('td');
+    const forceInput = document.createElement('input');
+    forceInput.type = 'number';
+    forceInput.value = (m.value * GRAVITY_N_PER_KG) || 0;
+    forceInput.readOnly = true;
+    forceInput.className = 'force-cell';
+    tdForce.appendChild(forceInput);
+    tr.appendChild(tdForce);
+
+    // Distance (student types)
+    const tdDist = document.createElement('td');
+    const distInput = document.createElement('input');
+    distInput.type = 'number';
+    distInput.min = '0';
+    distInput.step = 'any';
+    distInput.className = 'distance-input';
+    distInput.dataset.massId = String(m.id);
+    distInput.value = ''; // students must enter
+    tdDist.appendChild(distInput);
+    tr.appendChild(tdDist);
+
+    // Moment (student types) — validated
+    const tdMoment = document.createElement('td');
+    const momentInput = document.createElement('input');
+    momentInput.type = 'number';
+    momentInput.className = 'moment-input';
+    momentInput.dataset.massId = String(m.id);
+    momentInput.value = '';
+    tdMoment.appendChild(momentInput);
+    tr.appendChild(tdMoment);
+
+    // Wire live validation: when either distance or moment changes, validate this row
+    const force = Number(forceInput.value) || 0;
+    const onChange = () => validateAdvancedRow(distInput, momentInput, force);
+    distInput.addEventListener('input', onChange);
+    momentInput.addEventListener('input', onChange);
+
+    return tr;
+  }
+
+  leftMasses.forEach(m => tbody.appendChild(makeRowForMass(m)));
+  rightMasses.forEach(m => tbody.appendChild(makeRowForMass(m)));
+
+  // Keep summary totals updated
+  updateMassCount();
+
+  // Immediately validate rows (in case any inputs prefilled)
+  validateAllAdvancedRows();
+}
+
+
+// Storage tiles 
+function renderMassOptionTiles() {
+  document.querySelectorAll('.mass-option').forEach(opt => {
+    const value = parseInt(opt.dataset.value, 10);
+    opt.innerHTML = '';
+    const mass = document.createElement('div');
+    mass.className = `mass mass-value-${value}`;
+    mass.textContent = value; // label on the block
+    opt.appendChild(mass);
+  });
+}
+
+// Create a full mass element (with hooks) for the beam + arrow
+function createMassElement(value) {
+  const massContainer = document.createElement('div');
+  massContainer.className = 'mass-container';
+  massContainer.dataset.value = String(value);
+
+  const hookTop = document.createElement('div'); hookTop.className = 'hook-top';
+  const hook    = document.createElement('div'); hook.className    = 'hook';
+  const mass    = document.createElement('div'); mass.className    = `mass mass-value-${value}`;
+  mass.textContent = value;
+
+  // Force arrow scaffold (shaft + head + label)
+  const arrow = document.createElement('div'); arrow.className = 'force-arrow';
+  const shaft = document.createElement('div'); shaft.className = 'force-shaft';
+  const head  = document.createElement('div'); head.className  = 'force-head';
+  const label = document.createElement('div'); label.className = 'force-label';
+  arrow.appendChild(shaft); arrow.appendChild(head); arrow.appendChild(label);
+
+  massContainer.appendChild(hookTop);
+  massContainer.appendChild(hook);
+  massContainer.appendChild(mass);
+  massContainer.appendChild(arrow);
+  return massContainer;
+}
+
+// programmatic create (not used by storage drag)
+function createMass(value) {
+  const node = createMassElement(value);
+  node.dataset.id = massCounter;
+  node.dataset.position = 0;
+
+  document.getElementById('beam').appendChild(node);
+
+  const spacing = getInsetSpacingPx();
+  node.style.left = `calc(50% + ${0 * spacing}px)`;
+  node.style.top  = '50px';
+  node.style.transform = ''; // let CSS counter-rotation apply
+
+  node.addEventListener('pointerdown', startDrag, { passive: false });
+
+  masses.push({ id: massCounter, position: 0, value, element: node });
+  massCounter++;
+  updateBeamBalance();
+  updateMassCount();
+  updateForceArrows();
+  updateMomentFeedback();
+  renderResultsTable();
+}
+
+// Drag creation from storage (pointer events)
+function startCreateDrag(e) {
+  e.preventDefault();
+  const value = parseInt(e.currentTarget.dataset.value, 10);
+
+  const node = createMassElement(value);
+  draggedMass = node;
+  originalParent = document.getElementById('beam');
+  nextSibling = null;
+
+  document.body.appendChild(node);
+
+  // While dragging, remove counter-rotation and use viewport coords
+  node.style.transform = 'none';
+  node.style.position = 'fixed';
+  node.style.zIndex = '1000';
+  node.style.bottom = '';
+
+  // Center under finger
+  const rect = node.getBoundingClientRect();
+  dragOffset.x = rect.width / 2;
+  dragOffset.y = rect.height / 2;
+  node.style.left = `${e.clientX - dragOffset.x}px`;
+  node.style.top  = `${e.clientY - dragOffset.y}px`;
+
+  // Document-level listeners (safer cross-browser for newly created node)
+  document.addEventListener('pointermove', drag, { passive: false });
+  document.addEventListener('pointerup', endDrag, { passive: false });
+  document.addEventListener('pointercancel', cancelDrag, { passive: false });
+
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.add('active'));
+}
+
+// Start drag for an existing mass on the beam (pointer events)
+function startDrag(e) {
+  const container = e.target.closest('.mass-container');
+  if (!container) return;
+  e.preventDefault();
+
+  draggedMass = container;
+  draggedMass.classList.add('dragging');
+
+  const massId = parseInt(draggedMass.dataset.id, 10);
+  const massObj = masses.find(m => m.id === massId);
+  draggedMass.dataset.originalPosition = massObj ? massObj.position : 0;
+
+  const rect = draggedMass.getBoundingClientRect();
+  dragOffset.x = e.clientX - rect.left;
+  dragOffset.y = e.clientY - rect.top;
+
+  originalParent = draggedMass.parentNode;
+  nextSibling = draggedMass.nextSibling;
+
+  activePointerId = e.pointerId;
+  try { draggedMass.setPointerCapture(activePointerId); } catch (_) {}
+
+  // Freeze size to avoid reflow jump
+  draggedMass.style.width = `${rect.width}px`;
+  draggedMass.style.height = `${rect.height}px`;
+
+  // Move to <body> so it’s not inside a rotated container
+  document.body.appendChild(draggedMass);
+
+  draggedMass.style.position = 'fixed';
+  draggedMass.style.left = `${e.clientX - dragOffset.x}px`;
+  draggedMass.style.top  = `${e.clientY - dragOffset.y}px`;
+  draggedMass.style.bottom = '';
+  draggedMass.style.transform = 'none';
+  draggedMass.style.zIndex = '1000';
+
+  // Also add document-level listeners
+  document.addEventListener('pointermove', drag, { passive: false });
+  document.addEventListener('pointerup', endDrag, { passive: false });
+  document.addEventListener('pointercancel', cancelDrag, { passive: false });
+
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.add('active'));
+}
+
+// Drag move
+function drag(e) {
+  if (!draggedMass) return;
+  if (activePointerId !== null && e.pointerId !== activePointerId) return;
+  e.preventDefault(); // stops page from scrolling on touch
+  draggedMass.style.left = `${e.clientX - dragOffset.x}px`;
+  draggedMass.style.top  = `${e.clientY - dragOffset.y}px`;
+}
+
+// Helpers for Basic mode (limit one mass per side)
+function sideOf(pos) {
+  if (pos < 0) return 'left';
+  if (pos > 0) return 'right';
+  return 'center';
+}
+function countOnSide(side, excludeId = null) {
+  return masses.reduce((n, m) => {
+    if (excludeId !== null && m.id === excludeId) return n;
+    if (side === 'left'  && m.position < 0) return n + 1;
+    if (side === 'right' && m.position > 0) return n + 1;
+    return n;
+  }, 0);
+}
+
+// End drag (snap, enforce basic-mode limit, cleanup)
+function endDrag(e) {
+  if (!draggedMass || (e && activePointerId !== null && e.pointerId !== activePointerId)) return;
+  const node = draggedMass;
+
+  // Geometry
+  const beam = document.getElementById('beam');
+  const br = beam.getBoundingClientRect();
+
+  const massRect = node.getBoundingClientRect();
+  const mCX = massRect.left + massRect.width / 2;
+  const mCY = massRect.top  + massRect.height / 2;
+
+  const H_MARGIN = 40, V_MARGIN_TOP = 160, V_MARGIN_BOTTOM = 240;
+  const xWithin = (mCX >= br.left - H_MARGIN) && (mCX <= br.right + H_MARGIN);
+  const yWithin = (mCY >= br.top - V_MARGIN_TOP) && (mCY <= br.bottom + V_MARGIN_BOTTOM);
+  const canSnap = xWithin && yWithin;
+
+  const isNew = !node.dataset.id;
+  const existingId = isNew ? null : parseInt(node.dataset.id, 10);
+  const massObj = isNew ? null : masses.find(m => m.id === existingId);
+  const originalPos = isNew ? 0 :
+    parseInt(node.dataset.originalPosition || String(massObj?.position || 0), 10);
+
+  // Avoid 1-frame flash
+  node.style.visibility = 'hidden';
+  node.style.left = '';
+  node.style.top  = '';
+
+  if (!originalParent) originalParent = beam;
+
+  const spacingPx = getInsetSpacingPx();
+
+  if (canSnap) {
+    if (nextSibling && originalParent) originalParent.insertBefore(node, nextSibling);
+    else if (originalParent) originalParent.appendChild(node);
+
+    node.style.position = 'absolute';
+    node.style.zIndex = '10';
+    node.style.top = '50px';     // top-based layout
+    node.style.transform = '';   // CSS counter-rotation applies
+
+    let position = Math.round((mCX - (br.left + br.width / 2)) / spacingPx);
+    position = Math.max(-12, Math.min(12, position));
+
+    // Basic mode limit (only 1 per side)
+    if (!advancedMode) {
+      const targetSide = sideOf(position);
+      if (targetSide !== 'center') {
+        const existingCount = countOnSide(
+          targetSide,
+          isNew ? null : (massObj ? massObj.id : null)
+        );
+        if (existingCount >= 1) {
+          // Reject the drop
+          if (isNew) {
+            node.remove();
+          } else {
+            if (nextSibling && originalParent) originalParent.insertBefore(node, nextSibling);
+            else if (originalParent) originalParent.appendChild(node);
+
+            node.style.position = 'absolute';
+            node.style.zIndex = '10';
+            node.style.top = '50px';
+            node.style.transform = '';
+            node.style.left = `calc(50% + ${originalPos * spacingPx}px)`;
+            node.dataset.position = originalPos;
+            if (massObj) massObj.position = originalPos;
+          }
+
+          // NEW: show temporary notice (robust, avoids races)
+          showToast('Basic mode: only one mass per side', 2000);
+
+          requestAnimationFrame(() => { if (node && node.style) node.style.visibility = 'visible'; });
+          return finishCleanup(node);
         }
-    });
-    
-    // Add special behavior for total momentum inputs
-    document.querySelectorAll('.total-momentum-before, .total-momentum-after').forEach(input => {
-        input.addEventListener('blur', function() {
-            if (this.value && !isNaN(parseFloat(this.value))) {
-                const originalValue = parseFloat(this.value);
-                const roundedValue = roundToOne(originalValue);
-                this.value = roundedValue.toFixed(1);
-                
-                if (originalValue !== roundedValue) {
-                    showToast("Total momentum to 1 decimal place to avoid rounding error", 'info');
-                }
-            }
-        });
-    });
-});
-
-// Check student answers
-checkAnswersBtn.addEventListener('click', () => {
-    const inputs = document.querySelectorAll('.student-input');
-    if (inputs.length === 0) {
-        showToast("No results to check. Capture some results first.", 'warning');
-        return;
+      }
     }
-    
-    let correctCount = 0;
-    let totalCount = 0;
-    
-    inputs.forEach(input => {
-        const studentValue = parseFloat(input.value);
-        const correctValue = parseFloat(input.dataset.correct);
-        
-        // Only count if student entered a value
-        if (!isNaN(studentValue)) {
-            totalCount++;
-            
-            // For total momentum, round student input to 1 decimal place for comparison
-            let comparisonValue = studentValue;
-            if (input.classList.contains('total-momentum-before') || input.classList.contains('total-momentum-after')) {
-                comparisonValue = roundToOne(studentValue);
-            }
-            
-            // Check if student's answer matches
-            if (Math.abs(comparisonValue - correctValue) < TOLERANCE) {
-                input.classList.add('correct-answer');
-                input.classList.remove('incorrect-answer');
-                correctCount++;
-            } else {
-                input.classList.add('incorrect-answer');
-                input.classList.remove('correct-answer');
-            }
-        } else {
-            // Student didn't enter anything for this field
-            input.classList.remove('correct-answer', 'incorrect-answer');
-        }
-    });
-    
-    if (totalCount > 0) {
-        const percentage = Math.round((correctCount / totalCount) * 100);
-        const message = `You got ${correctCount} out of ${totalCount} answers correct (${percentage}%).`;
-        showToast(message, 'score');
+
+    // Accept the drop
+    node.style.left = `calc(50% + ${position * spacingPx}px)`;
+    node.dataset.position = position;
+
+    if (isNew) {
+      const id = massCounter++;
+      node.dataset.id = String(id);
+      const value = parseInt(node.dataset.value, 10);
+      masses.push({ id, position, value, element: node });
+      node.addEventListener('pointerdown', startDrag, { passive: false });
+    } else if (massObj) {
+      massObj.position = position;
+    }
+  } else {
+    // Not near the beam → remove or revert
+    if (isNew) {
+      node.remove();
+      return finishCleanup(node);
     } else {
-        showToast("Please enter your calculations before checking answers.", 'warning');
-    }
-});
+      if (nextSibling && originalParent) originalParent.insertBefore(node, nextSibling);
+      else if (originalParent) originalParent.appendChild(node);
 
-// Clear table
-clearTableBtn.addEventListener('click', () => {
-    if (confirm("Are you sure you want to clear all results?")) {
-        beforeTableBody.innerHTML = `
-            <tr id="emptyRowBefore">
-                <td colspan="9" class="empty-message">No results captured yet. Run a simulation and click "Capture Results".</td>
-            </tr>
-        `;
-        afterTableBody.innerHTML = `
-            <tr id="emptyRowAfter">
-                <td colspan="10" class="empty-message">No results captured yet. Run a simulation and click "Capture Results".</td>
-            </tr>
-        `;
-        resultCount = 0;
+      node.style.position = 'absolute';
+      node.style.zIndex = '10';
+      node.style.top = '50px';
+      node.style.transform = '';
+      node.style.left = `calc(50% + ${originalPos * spacingPx}px)`;
+      node.dataset.position = originalPos;
+      if (massObj) massObj.position = originalPos;
     }
-});
+  }
 
-// Download CSV
-downloadBtn.addEventListener('click', () => {
-    if (resultCount === 0) {
-        showToast("No results to download. Capture some results first.", 'warning');
-        return;
-    }
-    
-    // Create CSV content
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Experiment,Collision Type,m₁ (kg),v₁ before (m/s),m₂ (kg),v₂ before (m/s),";
-    csvContent += "p₁ before (kg·m/s),p₂ before (kg·m/s),p total before (kg·m/s),";
-    csvContent += "m₁ (kg),v₁ after (m/s),m₂ (kg),v₂ after (m/s),";
-    csvContent += "p₁ after (kg·m/s),p₂ after (kg·m/s),p total after (kg·m/s),Notes\n";
-    
-    // Get all rows from both tables
-    const beforeRows = Array.from(beforeTableBody.querySelectorAll('tr:not(#emptyRowBefore)'));
-    const afterRows = Array.from(afterTableBody.querySelectorAll('tr:not(#emptyRowAfter)'));
-    
-    // Combine data from both tables
-    for (let i = 0; i < beforeRows.length; i++) {
-        const beforeCells = Array.from(beforeRows[i].querySelectorAll('td'));
-        const afterCells = Array.from(afterRows[i].querySelectorAll('td'));
-        
-        // Extract data from before table
-        const rowNum = beforeCells[0].textContent;
-        const collisionType = beforeCells[1].textContent;
-        const m1Before = beforeCells[2].textContent;
-        const v1Before = beforeCells[3].textContent;
-        const m2Before = beforeCells[4].textContent;
-        const v2Before = beforeCells[5].textContent;
-        
-        // Get momentum values (either student input or correct values)
-        const p1Before = getInputValueOrCorrect(beforeCells[6]);
-        const p2Before = getInputValueOrCorrect(beforeCells[7]);
-        const pTotalBefore = getInputValueOrCorrect(beforeCells[8]);
-        
-        // Extract data from after table
-        const m1After = afterCells[2].textContent;
-        const v1After = afterCells[3].textContent;
-        const m2After = afterCells[4].textContent;
-        const v2After = afterCells[5].textContent;
-        const p1After = getInputValueOrCorrect(afterCells[6]);
-        const p2After = getInputValueOrCorrect(afterCells[7]);
-        const pTotalAfter = getInputValueOrCorrect(afterCells[8]);
-        const notes = afterCells[9]?.querySelector('input')?.value || "";
-        
-        // Combine all data
-        const rowData = [
-            rowNum, collisionType, 
-            m1Before, v1Before, m2Before, v2Before,
-            p1Before, p2Before, pTotalBefore,
-            m1After, v1After, m2After, v2After,
-            p1After, p2After, pTotalAfter, notes
-        ];
-        
-        csvContent += rowData.join(',') + '\n';
-    }
-    
-    // Create download link
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "momentum_experiment_results.csv");
-    document.body.appendChild(link);
-    
-    // Trigger download
-    link.click();
-    document.body.removeChild(link);
-});
-
-// Helper function to get input value or correct value
-function getInputValueOrCorrect(cell) {
-    const input = cell.querySelector('input');
-    if (input && input.value) {
-        return input.value;
-    } else if (input) {
-        return input.dataset.correct;
-    }
-    return "";
+  requestAnimationFrame(() => { if (node && node.style) node.style.visibility = 'visible'; });
+  finishCleanup(node);
 }
+
+
+function cancelDrag(e) {
+  endDrag(e);
+}
+
+function finishCleanup(node) {
+  try { if (activePointerId !== null) node.releasePointerCapture(activePointerId); } catch (_) {}
+  node.classList.remove('dragging');
+  node.style.width = '';   // clear frozen size
+  node.style.height = '';  // clear frozen size
+
+  draggedMass = null;
+  originalParent = null;
+  nextSibling = null;
+  activePointerId = null;
+
+  document.removeEventListener('pointermove', drag);
+  document.removeEventListener('pointerup', endDrag);
+  document.removeEventListener('pointercancel', cancelDrag);
+
+  document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('active'));
+
+  updateBeamBalance();
+  updateMassCount();
+  updateForceArrows();
+  updateMomentFeedback();
+  renderResultsTable(); // ensure table reflects current masses / mode
+}
+
+// Beam physics + UI
+function updateBeamBalance() {
+  let leftMoment = 0;
+  let rightMoment = 0;
+
+  // Keep physics unchanged (moment = mass × position)
+  masses.forEach(mass => {
+    const moment = mass.position * mass.value;
+    if (mass.position < 0) leftMoment += Math.abs(moment);
+    else if (mass.position > 0) rightMoment += moment;
+  });
+
+  const totalMoment = rightMoment - leftMoment;
+  const maxRotation = 15;
+  const rotation = Math.max(-maxRotation, Math.min(maxRotation, totalMoment));
+
+  const beam = document.getElementById('beam');
+  beam.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+  beam.style.setProperty('--counter-rot', `${-rotation}deg`);
+
+  const balanceStatus = document.getElementById('balanceStatus');
+  if (Math.abs(totalMoment) < 0.1) {
+    balanceStatus.textContent = "Balanced!";
+    balanceStatus.className = "balance-status balanced";
+  } else if (totalMoment > 0) {
+    balanceStatus.textContent = "Clockwise Resultant";
+    balanceStatus.className = "balance-status unbalanced";
+  } else {
+    balanceStatus.textContent = "Anti-clockwise Resultant";
+    balanceStatus.className = "balance-status unbalanced";
+  }
+
+  // Keep moment input feedback in sync
+  updateMomentFeedback();
+}
+
+// Results numbers (now force totals)
+function updateMassCount() {
+  let leftForce = 0, rightForce = 0;
+
+  masses.forEach(m => {
+    const F = m.value * GRAVITY_N_PER_KG;
+    if (m.position < 0) leftForce += F;
+    else if (m.position > 0) rightForce += F;
+  });
+
+  const leftTotal = document.getElementById('leftTotalMass');
+  const rightTotal = document.getElementById('rightTotalMass');
+  if (leftTotal)  leftTotal.value  = leftForce;
+  if (rightTotal) rightTotal.value = rightForce;
+}
+
+// Clear all
+function clearAll() {
+  masses.forEach(m => m.element.remove());
+  masses = [];
+  massCounter = 1;
+  updateBeamBalance();
+  updateMassCount();
+  updateForceArrows();
+  updateMomentFeedback();
+  renderResultsTable();
+}
+
+// Force arrows (length & label)
+function updateForceArrows() {
+  masses.forEach(m => {
+    const node = m.element;
+    let arrow = node.querySelector('.force-arrow');
+    if (!arrow) {
+      arrow = document.createElement('div'); arrow.className = 'force-arrow';
+      const shaft = document.createElement('div'); shaft.className = 'force-shaft';
+      const head  = document.createElement('div'); head.className  = 'force-head';
+      const label = document.createElement('div'); label.className = 'force-label';
+      arrow.appendChild(shaft); arrow.appendChild(head); arrow.appendChild(label);
+      node.appendChild(arrow);
+    }
+    const N = m.value * GRAVITY_N_PER_KG;
+    const shaftEl = arrow.querySelector('.force-shaft');
+    const labelEl = arrow.querySelector('.force-label');
+
+    const h = Math.max(ARROW_MIN_PX, Math.min(ARROW_MAX_PX, N * ARROW_PX_PER_NEWTON));
+    shaftEl.style.height = `${h}px`;
+    labelEl.textContent = `${N} N`;
+  });
+}
+
+// Moment feedback (✓ / ✗) — uses Force × distance now
+function getExpectedMoments() {
+  let left = 0, right = 0;
+  masses.forEach(m => {
+    const F = m.value * GRAVITY_N_PER_KG; // convert mass to force
+    const contrib = Math.abs(m.position) * F;
+    if (m.position < 0) left  += contrib;
+    else if (m.position > 0) right += contrib;
+  });
+  return { left, right };
+}
+
+function setInputFeedback(inputEl, state) {
+  if (!inputEl) return;
+  const td = inputEl.parentNode;
+  let mark = td.querySelector('.feedback-mark');
+  if (!mark) {
+    mark = document.createElement('span');
+    mark.className = 'feedback-mark';
+    td.appendChild(mark);
+  }
+  inputEl.classList.remove('answer-correct', 'answer-incorrect');
+  mark.classList.remove('correct', 'incorrect');
+  mark.textContent = '';
+
+  if (state === true) {
+    inputEl.classList.add('answer-correct');
+    mark.classList.add('correct');
+    mark.textContent = '✓';
+  } else if (state === false) {
+    inputEl.classList.add('answer-incorrect');
+    mark.classList.add('incorrect');
+    mark.textContent = '✗';
+  }
+}
+
+function updateMomentFeedback() {
+  const { left, right } = getExpectedMoments();
+  const leftInput  = document.getElementById('leftMoment');
+  const rightInput = document.getElementById('rightMoment');
+  const tol = 1e-6;
+
+  if (leftInput) {
+    const txt = leftInput.value.trim();
+    if (txt === '') setInputFeedback(leftInput, null);
+    else {
+      const v = Number(txt);
+      setInputFeedback(leftInput, Number.isFinite(v) && Math.abs(v - left) <= tol);
+    }
+  }
+  if (rightInput) {
+    const txt = rightInput.value.trim();
+    if (txt === '') setInputFeedback(rightInput, null);
+    else {
+      const v = Number(txt);
+      setInputFeedback(rightInput, Number.isFinite(v) && Math.abs(v - right) <= tol);
+    }
+  }
+}
+
+// Results table headings (rename to Force / Force×distance)
+function updateResultsTableHeadings() {
+  const ths = document.querySelectorAll('.data-table thead th');
+  if (!ths || ths.length === 0) return;
+  if (ths.length === 4) {
+    ths[0].textContent = 'Side';
+    ths[1].textContent = advancedMode ? 'Force (N)' : 'Total Force (N)';
+    ths[2].textContent = 'Distance (cm)';
+    ths[3].textContent = 'Moment (N cm) = Force × Distance';
+  } else if (ths.length === 5) {
+    // fallback
+    ths[0].textContent = 'Side';
+    ths[2].textContent = advancedMode ? 'Force (N)' : 'Total Force (N)';
+    ths[3].textContent = 'Distance (cm)';
+    ths[4].textContent = 'Moment (N cm) (Force × Distance)';
+  }
+}
+
+// Boot + resize
+document.addEventListener('DOMContentLoaded', init);
+
+window.addEventListener('resize', () => {
+  createScale();
+  createDropZones();
+  const spacing = getInsetSpacingPx();
+  masses.forEach(m => {
+    m.element.style.left = `calc(50% + ${m.position * spacing}px)`;
+    m.element.style.top  = '50px';   // top-based layout
+    m.element.style.transform = '';  // let CSS (counter-rotation) apply
+  });
+  updateBeamBalance();
+  updateForceArrows();
+  updateMomentFeedback();
+  renderResultsTable();
+});
