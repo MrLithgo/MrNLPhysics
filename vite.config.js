@@ -13,10 +13,10 @@ export default defineConfig({
     port: 3000
   },
   build: {
-    // 🔹 Remove the big modulepreload polyfill Lighthouse is moaning about
+    
     polyfillModulePreload: false,
 
-    // 🔹 Split Vue into its own chunk so Lighthouse sees smaller, focused files
+    
     rollupOptions: {
       output: {
         manualChunks: {
