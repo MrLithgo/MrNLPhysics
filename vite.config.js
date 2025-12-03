@@ -23,7 +23,7 @@ export default defineConfig({
           vue: ['vue']
         }
       }
-    }
+    },
 
     
     minify: 'esbuild',
