@@ -225,7 +225,8 @@ li {
 }
 
 .mass-container:hover {
-    transform: translateX(-50%) --scale(1.05);  
+    scale: 1.05;  
+ 
 }
 
 .mass-container.dragging {
