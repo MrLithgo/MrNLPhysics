@@ -15,7 +15,24 @@
   from = "/*"
   to = "/index.html"
   status = 200
+  
+[[redirects]]
+  from = "http://simpliphys.com/*"
+  to = "https://simpliphys.com/:splat"
+  status = 301
+  force = true
 
+[[redirects]]
+  from = "http://www.simpliphys.com/*"
+  to = "https://simpliphys.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.simpliphys.com/*"
+  to = "https://simpliphys.com/:splat"
+  status = 301
+  force = true
   
 # Config for the Netlify Build Plugin: netlify-plugin-minify-html
 [[plugins]]
