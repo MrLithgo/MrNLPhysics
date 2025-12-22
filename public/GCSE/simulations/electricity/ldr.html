@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LDR Investigation</title>
+    <meta
+      name="description"
+      content="Minimalist physics simulations designed to reduce cognitive load. Free interactive labs for forces, electricity, waves, radioactivity with worksheets & quizzes."
+    />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://simpliphys.com/your-page-url" />
+    <meta property="og:title" content="Page Title - Interactive Physics Simulation" />
+    <meta
+      property="og:description"
+      content="Brief description of the simulation and educational value"
+    />
+    <meta property="og:image" content="https://simpliphys.com/images/your-preview-image.png" />
+    <meta property="og:site_name" content="SimpliPhys" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@SimpliPhys" />
+    <meta name="twitter:creator" content="@SimpliPhys" />
+    <meta name="twitter:title" content="Page Title - Interactive Physics Simulation" />
+    <meta name="twitter:description" content="Brief description of the simulation" />
+    <meta name="twitter:image" content="https://simpliphys.com/images/your-preview-image.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" href="/assets/atomlogo.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png" />
+    <link rel="stylesheet" href="ldr-styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="page-header">
+        <div class="header-grid">
+          <div class="header-left">
+            <button
+              id="download-worksheet-btn"
+              class="btn navy-btn"
+              aria-label="Download worksheet PDF"
+            >
+              Worksheet
+            </button>
+          </div>
+          <h1 class="page-title">LDR: Light level and Resistance</h1>
+          <div class="header-actions">
+            <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+          </div>
+        </div>
+      </header>
+      <script>
+        document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+          const url = '/assets/ldr-worksheet.pdf'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            // popup blocked — fallback to navigate in same tab
+            window.location.href = url
+          }
+        })
+        document.getElementById('quiz-btn').addEventListener('click', () => {
+          const url = '/GCSE/quizzes/electricity/ldr-quiz.html'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            // popup blocked — fallback to navigate in same tab
+            window.location.href = url
+          }
+        })
+      </script>
+
+      <section class="experiment-area">
+        <div class="cols">
+          <!-- SIMULATION AREA -->
+          <div class="sim-area" id="simArea">
+            <div class="rig" id="rig">
+              <!-- Wires overlay -->
+              <svg class="wires" id="wires" aria-hidden="true">
+                <defs>
+                  <filter id="wireShadow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="1.2" stdDeviation="1.2" flood-opacity="0.35" />
+                  </filter>
+                </defs>
+                <path id="wireRed" class="wire wire-red" d="" filter="url(#wireShadow)"></path>
+                <path id="wireBlack" class="wire wire-black" d="" filter="url(#wireShadow)"></path>
+              </svg>
+
+              <!-- Lamp (top left) -->
+              <div class="lamp-block">
+                <div class="bulb" id="bulb" aria-label="Light bulb">
+                  <div class="bulb-glow" id="bulbGlow"></div>
+                  <div class="bulb-glass"></div>
+                  <div class="bulb-filament"></div>
+                  <div class="bulb-highlight"></div>
+                  <div class="bulb-cap"></div>
+                  <div class="bulb-thread"></div>
+                  <div class="bulb-base"></div>
+                </div>
+                <div class="bulb-tag">Light source</div>
+              </div>
+
+              <!-- LDR (bottom left) -->
+              <div class="ldr-block" id="ldrBlock" aria-label="Light dependent resistor">
+                <div class="ldr-head">
+                  <div class="ldr-title">LDR</div>
+                  <div class="ldr-terminals">
+                    <div class="terminal" id="ldrLeft" title="LDR terminal"></div>
+                    <div class="terminal" id="ldrRight" title="LDR terminal"></div>
+                  </div>
+                </div>
+
+                <div class="ldr-body">
+                  <div class="ldr-disc" id="ldrDisc" aria-hidden="true">
+                    <div class="ldr-serpentine"></div>
+                    <div class="ldr-serpentine s2"></div>
+                    <div class="ldr-shine"></div>
+                  </div>
+                </div>
+
+                <div class="ldr-lightwash" id="ldrWash"></div>
+              </div>
+
+              <!-- Meter (right) -->
+              <div class="meter" id="meter" aria-label="Ohmmeter">
+                <div class="meter-topbar">
+                  <div class="meter-name">OHMMETER</div>
+                  <div class="meter-mode">Ω</div>
+                </div>
+
+                <div class="meter-jacks">
+                  <div class="jack jack-red" id="meterRed" title="Red jack"></div>
+                  <div class="jack jack-black" id="meterBlack" title="Black jack"></div>
+                </div>
+
+                <div class="lcd" aria-live="polite">
+                  <div class="lcd-live">
+                    <span class="lcd-value" id="resistanceValue">—</span>
+                    <span class="lcd-unit" id="resistanceUnit">Ω</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTROLS -->
+          <aside class="controls" aria-label="Controls">
+            <div class="control-group">
+              <label class="label" for="lightSlider">Light level</label>
+              <div class="range-row">
+                <input class="range" id="lightSlider" type="range" min="0" max="100" value="50" />
+                <span class="value" id="lightPct">50%</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="label" for="rangeSelect">LDR type</label>
+              <select id="rangeSelect" class="range">
+                <option value="classic" selected>Classic (school lab)</option>
+                <option value="highR">High resistance</option>
+                <option value="lowR">Low resistance</option>
+              </select>
+            </div>
+
+            <div class="button-stack">
+              <button class="btn teal-btn" id="addRowBtn" type="button">
+                Add to results table
+              </button>
+              <button class="btn navy-btn" id="resetBtn" type="button">Reset</button>
+              <button class="btn coral-btn" id="clearTableBtn" type="button">Clear table</button>
+              <button class="btn gold-btn" id="exportCsvBtn" type="button">Export CSV</button>
+            </div>
+          </aside>
+        </div>
+
+        <section class="panel">
+          <h3>Method</h3>
+          <div class="panel-body">
+            <ol>
+              <li>Set a light level using the slider.</li>
+              <li>Read the resistance on the ohmmeter.</li>
+              <li>Click <strong>Add to results table</strong>.</li>
+              <li>Repeat for at least 6 light levels.</li>
+            </ol>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h3>Results table</h3>
+          <div class="panel-body">
+            <div class="table-wrap">
+              <table class="results-table" id="resultsTable">
+                <thead>
+                  <tr>
+                    <th>Light level (%)</th>
+                    <th>Resistance (kΩ)</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="resultsBody">
+                  <!-- rows added by JS -->
+                </tbody>
+              </table>
+            </div>
+            <div class="status" id="tableStatus" style="display: none"></div>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script src="ldr-script.js"></script>
+  </body>
+</html>
