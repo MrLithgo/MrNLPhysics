@@ -109,7 +109,7 @@ export default {
   methods: {
     launchSimulation(page) {
       if (!page) return
-      const url = `/GCSE/simulations/magnetism/${page}`
+      const url = `/gcse/simulations/magnetism/${page}`
       window.open(url, '_blank', 'noopener,noreferrer')
     },
 
@@ -144,9 +144,7 @@ export default {
       }, 50)
     },
   },
-  mounted() {
-    this.scrollToTop()
-  },
+
   activated() {
     this.scrollToTop()
   },

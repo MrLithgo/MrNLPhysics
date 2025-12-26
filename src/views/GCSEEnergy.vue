@@ -93,7 +93,7 @@ export default {
           subtitle: 'Heat transfer in solids',
           description: 'Investigate how different metals conduct heat at different rates',
           page: 'conduction.html',
-          available: true,
+          available: false,
           accent: 'teal-accent',
           iconClass: 'teal-icon',
           btnClass: 'teal-btn',
