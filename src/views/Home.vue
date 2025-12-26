@@ -211,6 +211,7 @@ export default {
             'Explore magnetic fields, electromagnetic induction, and motor/generator principles.',
           category: 'magnetism',
           icon: MagnetismIcon,
+          route: '/gcse/magnetism',
         },
         {
           id: 7,
