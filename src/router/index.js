@@ -5,7 +5,7 @@ import GCSEForces from '@/views/GCSEForces.vue'
 //import GCSEWaves from '@/views/GCSEWaves.vue'
 import GCSEEnergy from '@/views/GCSEEnergy.vue'
 //import GCSESlg from '@/views/GCSESlg.vue'
-//import GCSEMagnetism from '@/views/GCSEMagnetism.vue'
+import GCSEMagnetism from '@/views/GCSEMagnetism.vue'
 //import GCSERadioactivity from '@/views/GCSERadioactivity.vue'
 //import GCSEAstro from '@/views/GCSEAstro.vue'
 
@@ -28,6 +28,12 @@ const routes = [
     path: '/gcse/energy',
     name: 'GCSEEnergy',
     component: GCSEEnergy,
+  },
+
+  {
+    path: '/gcse/magnetism',
+    name: 'GCSEMagnetism',
+    component: GCSEMagnetism,
   },
 
   {

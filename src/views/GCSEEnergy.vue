@@ -301,7 +301,7 @@ export default {
   },
 
   async mounted() {
-    document.title = 'Forces & Motion Simulations - GCSE Physics Interactive Labs'
+    document.title = 'Energy Simulations - GCSE Physics Interactive Labs'
     this.scrollToTop()
     await nextTick()
     if (typeof window !== 'undefined') window.prerenderReady = true

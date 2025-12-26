@@ -1,0 +1,168 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Magnetic Field Plotting Simulation</title>
+    <link rel="stylesheet" href="magnets-styles.css" />
+    <meta
+      name="description"
+      content="Minimalist physics simulations designed to reduce cognitive load. Free interactive labs for forces, electricity, waves, radioactivity with worksheets & quizzes."
+    />
+
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://simpliphys.com/your-page-url" />
+    <meta property="og:title" content="Magnetic Fields - Interactive Physics Simulation" />
+    <meta
+      property="og:description"
+      content="Use a plotting compass to map magnetic field lines around different magnet configurations"
+    />
+    <meta property="og:image" content="https://simpliphys.com/images/your-preview-image.png" />
+    <meta property="og:site_name" content="SimpliPhys" />
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@SimpliPhys" />
+    <meta name="twitter:creator" content="@SimpliPhys" />
+    <meta name="twitter:title" content="Magnetic Fields - Interactive Physics Simulation" />
+    <meta
+      name="twitter:description"
+      content="Use a plotting compass to map magnetic field lines around different magnet configurations"
+    />
+    <meta name="twitter:image" content="https://simpliphys.com/images/your-preview-image.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" href="/assets/atomlogo.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="page-header">
+        <div class="header-grid">
+          <div class="header-left">
+            <button
+              id="download-worksheet-btn"
+              class="btn navy-btn"
+              aria-label="Download worksheet PDF"
+            >
+              Worksheet
+            </button>
+          </div>
+          <h1 class="page-title">Magnetic Fields</h1>
+          <div class="header-actions">
+            <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+          </div>
+        </div>
+      </header>
+      <script>
+        document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+          const url = '/assets/magnets-worksheet.pdf'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            // popup blocked — fallback to navigate in same tab
+            window.location.href = url
+          }
+        })
+        document.getElementById('quiz-btn').addEventListener('click', () => {
+          const url = '/GCSE/quizzes/magnetism/magnets-quiz.html'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            // popup blocked — fallback to navigate in same tab
+            window.location.href = url
+          }
+        })
+      </script>
+
+      <div class="summary">
+        Use the plotting compass to map magnetic field lines around different magnet configurations
+      </div>
+      <div class="controls">
+        <button class="scenario-btn active" onclick="setScenario('single')">
+          Single Bar Magnet
+        </button>
+        <button class="scenario-btn" onclick="setScenario('attract')">
+          Two Magnets Attracting
+        </button>
+        <button class="scenario-btn" onclick="setScenario('repel')">Two Magnets Repelling</button>
+        <div style="width: 20px"></div>
+        <button class="action-btn teal-btn" id="drawModeBtn" onclick="toggleDrawMode()">
+          Draw Field Lines
+        </button>
+        <button class="btn coral-btn" onclick="clearAll()">Clear All</button>
+        <!-- Advanced toggle (checkbox + label) -->
+      </div>
+      <!-- Advanced panel (single global strength slider) -->
+      <div id="advancedPanel" class="advanced-panel hidden" aria-hidden="true">
+        <h3 style="margin-bottom: 0.5rem">Advanced: Global magnet strength</h3>
+
+        <div class="magnet-control" style="align-items: center">
+          <div class="magnet-label" style="min-width: 120px">Global strength</div>
+
+          <input
+            id="globalStrengthRange"
+            type="range"
+            min="0"
+            max="5"
+            step="0.1"
+            value="1"
+            aria-label="Global magnet strength slider"
+            style="flex: 1"
+          />
+
+          <input
+            id="globalStrengthNumber"
+            type="number"
+            min="0"
+            max="5"
+            step="0.1"
+            value="1"
+            aria-label="Global magnet strength value"
+            style="width: 72px; margin-left: 0.5rem"
+          />
+        </div>
+
+        <p style="font-size: 0.9rem; color: var(--slate); margin-top: 0.5rem">
+          This slider multiplies each magnet's base strength. 0 = off, 1 = normal, 5 = five times
+          stronger.
+        </p>
+      </div>
+
+      <div class="simulation-area" id="simulationArea">
+        <div class="compass" id="compass">
+          <div class="compass-needle" id="needle"></div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>How to Use:</h3>
+        <ol>
+          <li>Choose a magnet configuration from the buttons above</li>
+          <li>Drag the plotting compass around the simulation area</li>
+          <li>Click anywhere on the canvas to plot points where the compass needle points</li>
+          <li>
+            Click "Draw Field Lines" to enter drawing mode, then draw lines by clicking and dragging
+          </li>
+          <li>Click the drawing button again to exit drawing mode</li>
+          <li>Use "Clear All" to start over with a clean canvas</li>
+        </ol>
+      </div>
+    </div>
+
+    <script src="magnets-script.js"></script>
+  </body>
+</html>
