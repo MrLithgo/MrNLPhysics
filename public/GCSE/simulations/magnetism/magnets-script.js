@@ -14,6 +14,14 @@ let simulationArea = null
 
 let globalMagnetStrength = 1.0
 
+function centerX() {
+  return simulationArea.clientWidth / 2
+}
+
+function centerY() {
+  return simulationArea.clientHeight / 2
+}
+
 function waitForElement(id, timeout = 2000) {
   return new Promise((resolve) => {
     const el = document.getElementById(id)
@@ -69,20 +77,48 @@ function setScenario(scenario, btn) {
   clearAll()
 
   if (scenario === 'single') {
-    createMagnet(400, 250, 120, 60, 'north', 'N', 1.0)
-    createMagnet(520, 250, 120, 60, 'south', 'S', 1.0)
+    const mw = 120
+    const mh = 60
+    const gap = 0
+
+    const y = centerY() - mh / 2
+
+    createMagnet(centerX() - mw - gap / 2, y, mw, mh, 'north', 'N', 1.0)
+    createMagnet(centerX() + gap / 2, y, mw, mh, 'south', 'S', 1.0)
   }
+
   if (scenario === 'attract') {
-    createMagnet(200, 250, 100, 50, 'north', 'N', 1.0)
-    createMagnet(120, 250, 100, 50, 'south', 'S', 1.0)
-    createMagnet(600, 250, 100, 50, 'south', 'S', 1.0)
-    createMagnet(680, 250, 100, 50, 'north', 'N', 1.0)
+    const mw = 100
+    const mh = 50
+    const innerGap = 0
+    const pairGap = simulationArea.clientWidth * 0.1 // space between the two magnet pairs
+
+    const y = centerY() - mh / 2
+
+    // Left pair (N → S)
+    createMagnet(centerX() - pairGap - mw - innerGap, y, mw, mh, 'north', 'N', 1.0)
+    createMagnet(centerX() - pairGap - mw * 2 - innerGap * 2, y, mw, mh, 'south', 'S', 1.0)
+
+    // Right pair (S ← N)
+    createMagnet(centerX() + pairGap + innerGap, y, mw, mh, 'south', 'S', 1.0)
+    createMagnet(centerX() + pairGap + mw + innerGap * 2, y, mw, mh, 'north', 'N', 1.0)
   }
+
   if (scenario === 'repel') {
-    createMagnet(200, 250, 100, 50, 'north', 'N', 1.0)
-    createMagnet(120, 250, 100, 50, 'south', 'S', 1.0)
-    createMagnet(600, 250, 100, 50, 'north', 'N', 1.0)
-    createMagnet(680, 250, 100, 50, 'south', 'S', 1.0)
+    const mw = 100
+    const mh = 50
+    const innerGap = 0
+    const pairGap = simulationArea.clientWidth * 0.1
+
+    const y = centerY() - mh / 2
+
+    // Left pair (N → S)
+    createMagnet(centerX() - pairGap - mw - innerGap, y, mw, mh, 'north', 'N', 1.0)
+    createMagnet(centerX() - pairGap - mw * 2 - innerGap * 2, y, mw, mh, 'south', 'S', 1.0)
+
+    // Right pair (N → S)
+    createMagnet(centerX() + pairGap + innerGap, y, mw, mh, 'north', 'N', 1.0)
+    createMagnet(centerX() + pairGap + mw + innerGap * 2, y, mw, mh, 'south', 'S', 1.0)
   }
 
   updateCompassNeedle()

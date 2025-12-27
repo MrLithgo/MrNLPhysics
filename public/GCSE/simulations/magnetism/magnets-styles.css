@@ -63,21 +63,18 @@ body {
   gap: 24px;
 }
 
-/* center the title inside the middle column */
 .page-title {
   margin: 0;
-  justify-self: center; /* ensures exact centering of the title cell */
+  justify-self: center;
   font-size: 2rem;
   font-weight: 700;
   font-family: 'Montserrat', sans-serif;
 }
 
-/* position actions at the end of the right column */
 .header-actions {
   justify-self: end;
 }
 
-/* mobile: stack nicely */
 @media (max-width: 767px) {
   .header-grid {
     grid-template-columns: 1fr; /* stack everything */
@@ -98,7 +95,6 @@ body {
   }
 }
 
-/* Color variables */
 :root {
   --navy: #2c3e50;
   --softgray: #ecf0f1;
@@ -189,8 +185,6 @@ h6 {
 .navy-btn:hover {
   background-color: rgba(44, 62, 80, 0.7);
 }
-
-/* ===== MAGNETIC FIELD SIMULATION SPECIFIC STYLES ===== */
 
 .page-header h1 {
   font-family: 'Montserrat', sans-serif;
@@ -286,15 +280,14 @@ h6 {
 }
 
 .simulation-area {
-  user-select: none; /* prevents text selection interfering */
-  touch-action: none; /* prevents scrolling on touch devices */
+  user-select: none;
+  touch-action: none;
 }
 
-/* Allow pointer events normally, but we will block gestures during drag with JS */
 .compass,
 .magnet,
 .plot-point {
-  touch-action: none; /* ensure pointer events produce pointermove events instead of panning/zooming on touch devices */
+  touch-action: none;
 }
 
 .simulation-area {
@@ -369,31 +362,29 @@ h6 {
   transform-origin: center;
   transition: transform 0.3s ease;
 }
-/* compass needle with arrow head — paste into your styles.css */
+
 .compass-needle {
-  position: relative; /* so ::after positions relative to needle */
-  width: 40px; /* length of the needle shaft */
-  height: 4px; /* thickness */
+  position: relative;
+  width: 40px;
+  height: 4px;
   border-radius: 2px;
   background: linear-gradient(90deg, #2c3e50 0%, #2c3e50 50%, #e74c3c 50%, #e74c3c 100%);
-  transform-origin: center; /* rotate about the left end (tail) */
+  transform-origin: center;
   transition: transform 0.15s ease, opacity 0.15s ease;
   display: block;
 
-  /* adjust so the tail sits inside the compass circle */
   transform: translateY(-50%);
 }
 
-/* arrow head at the RIGHT end of the needle shaft */
 .compass-needle::after {
   content: '';
   position: absolute;
-  right: -1px; /* place triangle slightly outside the shaft */
+  right: -1px;
   top: 50%;
   transform: translateY(-50%);
   width: 0;
   height: 0;
-  border-left: 8px solid #e74c3c; /* red arrow pointing right (tip) */
+  border-left: 8px solid #e74c3c;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
   pointer-events: none;
@@ -445,8 +436,7 @@ h6 {
 .instructions li {
   margin-bottom: 0.25rem;
 }
-/* ===== COMPONENT STYLES ===== */
-/* Navigation styles */
+
 .nav {
   background-color: var(--white);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -686,117 +676,4 @@ h6 {
   .footer-container {
     padding: 0 2rem;
   }
-}
-
-/* --- Advanced panel styles --- */
-.advanced-panel {
-  background-color: var(--white);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  margin: 1rem auto;
-  max-width: 1200px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-}
-
-.magnet-control {
-  display: flex;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.magnet-control .magnet-label {
-  min-width: 90px;
-  font-weight: 600;
-  color: var(--navy);
-}
-
-.magnet-control input[type='range'] {
-  flex: 1;
-  appearance: none;
-  height: 6px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, rgba(26, 188, 156, 0.8), rgba(241, 196, 15, 0.8));
-  outline: none;
-}
-
-.magnet-control input[type='number'] {
-  width: 64px;
-  padding: 0.25rem;
-  border: 1px solid var(--gray-300);
-  border-radius: 0.375rem;
-  text-align: center;
-}
-
-.hidden {
-  display: none;
-} /* you already had this; keep to toggle panel */
-/*/* ===== Advanced Toggle ===== */
-.advanced-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.advanced-toggle__input {
-  /* hide native checkbox but keep it accessible */
-  position: absolute;
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.advanced-toggle__label {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-
-/* Track acts as the positioning context */
-.advanced-toggle__track {
-  width: 46px;
-  height: 26px;
-  border-radius: 999px;
-  background: var(--gray-300);
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.06);
-  position: relative; /* <-- key */
-  overflow: hidden; /* keeps thumb clipped inside */
-}
-
-/* Thumb sits INSIDE the track, so it’s visible */
-.advanced-toggle__thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--white);
-  box-shadow: 0 2px 6px rgba(44, 62, 80, 0.25);
-  transition: transform 160ms ease;
-}
-
-.advanced-toggle__text {
-  font-size: 0.95rem;
-  color: var(--navy);
-  font-weight: 600;
-}
-
-/* ON state */
-.advanced-toggle__input:checked + .advanced-toggle__label .advanced-toggle__track {
-  background: var(--teal);
-}
-.advanced-toggle__input:checked + .advanced-toggle__label .advanced-toggle__thumb {
-  transform: translateX(20px);
-}
-
-/* Focus ring (keyboard) */
-.advanced-toggle__input:focus-visible + .advanced-toggle__label .advanced-toggle__track,
-.advanced-toggle__label:focus-visible .advanced-toggle__track {
-  outline: 3px solid rgba(26, 188, 156, 0.35);
-  outline-offset: 2px;
 }
