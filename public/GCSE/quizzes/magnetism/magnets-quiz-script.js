@@ -1,98 +1,101 @@
 document.addEventListener('DOMContentLoaded', function () {
   const questions = [
     {
-      question: 'What does LDR stand for?',
+      question: 'What does a compass needle align with?',
       options: [
-        'Low Density Resistor',
-        'Light Dependent Resistor',
-        'Long Distance Resistor',
-        'Linear Dynamic Resistor',
+        'Electric current',
+        'Magnetic field lines',
+        'Gravitational force',
+        'Electric field lines',
+      ],
+      correctAnswer: 1,
+      explanation: 'A compass needle aligns itself with the direction of magnetic field lines.',
+    },
+    {
+      question: 'Outside a bar magnet, magnetic field lines travel from:',
+      options: ['South to north', 'North to south', 'Centre to edges', 'Both directions equally'],
+      correctAnswer: 1,
+      explanation: 'Magnetic field lines leave the north pole and enter the south pole.',
+    },
+    {
+      question: 'Which part of a bar magnet produces the strongest magnetic field?',
+      options: [
+        'The centre',
+        'The ends (poles)',
+        'The entire surface equally',
+        'Only the north pole',
       ],
       correctAnswer: 1,
       explanation:
-        'An LDR is a Light Dependent Resistor, meaning its resistance depends on light intensity.',
+        'The magnetic field is strongest at the poles, which are at the ends of the magnet.',
     },
     {
-      question: 'What is the independent variable in this experiment?',
-      options: [
-        'Resistance of the LDR',
-        'Current through the circuit',
-        'Light level on the LDR',
-        'Temperature of the LDR',
-      ],
+      question: 'What happens to magnetic field strength as distance from the magnet increases?',
+      options: ['It increases', 'It stays constant', 'It decreases', 'It reverses direction'],
       correctAnswer: 2,
-      explanation: 'The independent variable is what you change, which is the light level.',
-    },
-    {
-      question: 'What is the dependent variable in this experiment?',
-      options: [
-        'Light level',
-        'Resistance of the LDR',
-        'Position of the LDR',
-        'Power supply voltage',
-      ],
-      correctAnswer: 1,
-      explanation:
-        'The resistance changes in response to the light level, making it the dependent variable.',
-    },
-    {
-      question: 'Which piece of equipment is used to measure the resistance of the LDR?',
-      options: ['A voltmeter', 'An ammeter', 'An ohmmeter', 'A light sensor'],
-      correctAnswer: 2,
-      explanation: 'An ohmmeter measures resistance directly.',
-    },
-    {
-      question: 'As the light level on the LDR increases, what happens to its resistance?',
-      options: ['It increases', 'It decreases', 'It stays the same', 'It becomes zero'],
-      correctAnswer: 1,
-      explanation: 'LDR resistance decreases as light intensity increases.',
-    },
-    {
-      question: 'Why should several different light levels be tested?',
-      options: [
-        'To make the experiment longer',
-        'To improve the reliability of the results',
-        'To reduce the effect of temperature',
-        'To avoid using a graph',
-      ],
-      correctAnswer: 1,
-      explanation:
-        'Using multiple values improves reliability and allows a clear trend to be identified.',
-    },
-    {
-      question: 'Which unit is resistance recorded in for this experiment?',
-      options: ['Ohms (Ω)', 'Volts (V)', 'Amps (A)', 'Watts (W)'],
-      correctAnswer: 0,
-      explanation: 'Resistance is measured in ohms, often recorded in kilo-ohms for an LDR.',
+      explanation: 'Magnetic field strength decreases as you move further away from the magnet.',
     },
 
     {
-      question: 'What is the main conclusion from this experiment?',
+      question: 'If two like poles face each other, what happens to the field lines between them?',
+      options: ['They join together', 'They disappear', 'They spread apart', 'They form circles'],
+      correctAnswer: 2,
+      explanation: 'Like poles repel, causing magnetic field lines to spread apart.',
+    },
+    {
+      question: 'If two unlike poles face each other, the field lines between them:',
+      options: ['Cancel out', 'Become weaker', 'Join smoothly', 'Reverse direction'],
+      correctAnswer: 2,
+      explanation: 'Unlike poles attract, so the field lines join smoothly between them.',
+    },
+    {
+      question: 'What does the direction of a compass needle show?',
       options: [
-        'Resistance increases as light level increases',
-        'Resistance is independent of light level',
-        'Resistance decreases as light level increases',
-        'Resistance becomes zero in bright light',
+        'The direction of force on the magnet',
+        'The direction of electron flow',
+        'The direction of the magnetic field',
+        'The direction of gravity',
       ],
       correctAnswer: 2,
-      explanation: 'An LDR has lower resistance at higher light levels.',
+      explanation:
+        'The compass needle points in the direction of the magnetic field at that location.',
     },
+
     {
-      question: 'Which real-life device commonly uses an LDR?',
-      options: ['Electric kettle', 'Street light', 'Electric heater', 'Fuse'],
-      correctAnswer: 1,
-      explanation: 'Street lights use LDRs to switch on automatically when it gets dark.',
-    },
-    {
-      question: 'How could the reliability of the results be improved?',
+      question: 'Which statement about magnetic field lines is correct?',
       options: [
-        'Using fewer readings',
-        'Repeating readings and calculating a mean',
-        'Changing the LDR each time',
-        'Increasing the power supply voltage',
+        'They can cross each other',
+        'They show the path a magnet moves',
+        'They never cross',
+        'They only exist near north poles',
       ],
-      correctAnswer: 1,
-      explanation: 'Repeating readings and finding the mean reduces random error.',
+      correctAnswer: 2,
+      explanation:
+        'Magnetic field lines never cross because the field has only one direction at any point.',
+    },
+
+    {
+      question: 'Why are magnetic field diagrams drawn with arrows?',
+      options: [
+        'To show field strength',
+        'To show magnet shape',
+        'To show field direction',
+        'To show electric charge',
+      ],
+      correctAnswer: 2,
+      explanation: 'Arrows on field lines show the direction of the magnetic field.',
+    },
+
+    {
+      question: 'Why is plotting magnetic fields considered indirect measurement?',
+      options: [
+        'The magnet cannot be seen',
+        'The compass is inaccurate',
+        'The field itself is invisible',
+        'The poles move during the experiment',
+      ],
+      correctAnswer: 2,
+      explanation: 'Magnetic fields are invisible, so we infer their shape using compasses.',
     },
   ]
 
@@ -233,15 +236,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const resultMessage = document.getElementById('result-message')
     if (score === 10) {
-      resultMessage.textContent = "Perfect! You're a LDR master!"
+      resultMessage.textContent = "Perfect! You're a magnets master!"
     } else if (score >= 8) {
-      resultMessage.textContent = 'Excellent! You understand LDRs well.'
+      resultMessage.textContent = 'Excellent! You understand magnetic fields well.'
     } else if (score >= 6) {
-      resultMessage.textContent = 'Good job! You know most key concepts about LDRs.'
+      resultMessage.textContent = 'Good job! You know most key concepts about magnetic fields.'
     } else if (score >= 4) {
-      resultMessage.textContent = "You're learning - review what LDRs are."
+      resultMessage.textContent = "You're learning - review what magnetic fields are."
     } else {
-      resultMessage.textContent = 'Revise the basics of LDRs and try again!'
+      resultMessage.textContent = 'Revise the basics of magnets and magnetic fields and try again!'
     }
 
     // review list
