@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import GCSEForces from '@/views/GCSEForces.vue'
-//import GCSEElectricity from '@/views/GCSEElectricity.vue'
+import GCSEElectricity from '@/views/GCSEElectricity.vue'
 //import GCSEWaves from '@/views/GCSEWaves.vue'
 import GCSEEnergy from '@/views/GCSEEnergy.vue'
 //import GCSESlg from '@/views/GCSESlg.vue'
@@ -34,6 +34,12 @@ const routes = [
     path: '/gcse/magnetism',
     name: 'GCSEMagnetism',
     component: GCSEMagnetism,
+  },
+
+  {
+    path: '/gcse/electricity',
+    name: 'GCSEElectricity',
+    component: GCSEElectricity,
   },
 
   {
