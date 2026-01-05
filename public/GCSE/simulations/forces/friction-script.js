@@ -435,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
       <td>${surfaceName}</td>
       <td>${blockMass.toFixed(1)}</td>
       <td>${recordedForce.toFixed(2)}</td>
-      <td>${calculatedMu}</td>
+      
     `
 
     row.style.backgroundColor = '#e6fffa'
