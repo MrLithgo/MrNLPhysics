@@ -241,7 +241,7 @@ export default {
         },
         {
           id: 3,
-          title: 'ASWaves',
+          title: 'Waves',
           description: 'Explore light, sound and mechanical waves through advanced simulations.',
           category: 'waves',
           topics: [
@@ -253,7 +253,7 @@ export default {
             'Refraction',
           ],
           icon: WavesIcon,
-          route: 'ALevel/aswaves',
+          route: 'ALevel/waves',
         },
         {
           id: 6,
@@ -271,46 +271,24 @@ export default {
   },
   methods: {
     handleSimulationClick(clickedData) {
-      const aLevelSims = Array.isArray(this.alevelUnits)
-        ? this.alevelUnits.flatMap((u) => u.simulations ?? u.items ?? u.sims ?? [])
-        : []
-
-      const allSimulations = [...this.igcseSimulations, ...aLevelSims]
-
-      console.log('clickedData:', clickedData)
-      console.log('allSimulations count:', allSimulations.length)
-
-      const simulation =
-        allSimulations.find((sim) => sim.id && clickedData.id && sim.id === clickedData.id) ??
-        allSimulations.find(
-          (sim) => sim.title && clickedData.title && sim.title === clickedData.title
-        )
-
-      const target = simulation?.route ?? simulation?.path
-
-      console.log('found simulation:', simulation)
-      console.log('target route/path:', target)
-
-      if (target) {
-        this.$router.push(target).catch((err) => console.error('Router push failed:', err))
-        return
-      }
-
-      console.warn('Coming soon fallback:', {
-        found: !!simulation,
-        hasRouteOrPath: !!target,
-        clickedData,
-      })
-
-      window.dispatchEvent(
-        new CustomEvent('ui-notify', {
-          detail: {
-            type: 'modal',
-            title: 'Coming soon',
-            message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`,
-          },
-        })
+      const allSimulations = [...this.igcseSimulations, ...this.alevelUnits]
+      const simulation = allSimulations.find(
+        (sim) => sim.title === clickedData.title || sim.id === clickedData.id
       )
+
+      if (simulation && simulation.route) {
+        this.$router.push(simulation.route)
+      } else {
+        window.dispatchEvent(
+          new CustomEvent('ui-notify', {
+            detail: {
+              type: 'modal',
+              title: 'Coming soon',
+              message: `The <strong>${clickedData.title}</strong> simulation is coming soon!`,
+            },
+          })
+        )
+      }
     },
 
     scrollToSection(sectionId) {
