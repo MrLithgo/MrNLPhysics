@@ -11,6 +11,7 @@ import GCSEMagnetism from '@/views/GCSEMagnetism.vue'
 
 import ALevelMechanics from '@/views/ALevelMechanics.vue'
 import ALevelParticles from '@/views/ALevelParticles.vue'
+import ALevelWaves from '@/views/ALevelWaves.vue'
 
 const routes = [
   {
@@ -51,6 +52,11 @@ const routes = [
     path: '/ALevel/nuclear-and-particles',
     name: 'ALevelParticles',
     component: ALevelParticles,
+  },
+  {
+    path: '/ALevel/waves',
+    name: 'ALevelWaves',
+    component: ALevelWaves,
   },
 ]
 
