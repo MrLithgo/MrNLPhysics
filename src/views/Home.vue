@@ -240,6 +240,22 @@ export default {
           route: 'ALevel/mechanics',
         },
         {
+          id: 3,
+          title: 'Waves',
+          description: 'Explore light, sound and mechanical waves through advanced simulations.',
+          category: 'waves',
+          topics: [
+            'Light',
+            'Sound',
+            'Waves in a string',
+            'Superposition',
+            'Doppler Effect',
+            'Refraction',
+          ],
+          icon: WavesIcon,
+          route: 'ALevel/waves',
+        },
+        {
           id: 6,
           title: 'Nuclear and Particle Physics',
           description:
