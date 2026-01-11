@@ -54,7 +54,7 @@ const routes = [
     component: ALevelParticles,
   },
   {
-    path: '/ALevel/waves',
+    path: '/ALevel/aswaves',
     name: 'ALevelWaves',
     component: ALevelWaves,
   },

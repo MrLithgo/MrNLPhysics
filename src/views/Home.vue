@@ -241,9 +241,9 @@ export default {
         },
         {
           id: 13,
-          title: 'Waves',
+          title: 'AS Waves',
           description: 'Explore light, sound and mechanical waves through advanced simulations.',
-          category: 'waves',
+          category: 'AS waves',
           topics: [
             'Light',
             'Sound',
@@ -253,7 +253,7 @@ export default {
             'Refraction',
           ],
           icon: WavesIcon,
-          route: 'ALevel/waves',
+          route: 'ALevel/aswaves',
         },
         {
           id: 16,
