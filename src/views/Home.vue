@@ -195,7 +195,6 @@ export default {
             'Explore energy transformations, conservation of energy, and efficiency in various systems.',
           category: 'energy',
           icon: EnergyIcon,
-          route: '/gcse/energy',
         },
         {
           id: 5,
@@ -232,7 +231,7 @@ export default {
       ],
       alevelUnits: [
         {
-          id: 1,
+          id: 10,
           title: 'Mechanics',
           description: 'Explore mechanics, kinematics and moments through advanced simulations.',
           category: 'mechanics',
@@ -241,7 +240,7 @@ export default {
           route: 'ALevel/mechanics',
         },
         {
-          id: 3,
+          id: 13,
           title: 'Waves',
           description: 'Explore light, sound and mechanical waves through advanced simulations.',
           category: 'waves',
@@ -257,7 +256,7 @@ export default {
           route: 'ALevel/waves',
         },
         {
-          id: 6,
+          id: 16,
           title: 'Nuclear and Particle Physics',
           description:
             'The world of the very small - explore the nuclear atom, particle physics and fundamental forces.',
