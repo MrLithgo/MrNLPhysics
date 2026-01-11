@@ -186,6 +186,7 @@ export default {
             'Visualize wave properties, reflection, refraction, diffraction, and interference patterns.',
           category: 'waves',
           icon: WavesIcon,
+          route: '/gcse/waves',
         },
         {
           id: 4,
