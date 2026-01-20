@@ -117,6 +117,30 @@ svg: `
                 </svg>
                 `
         },
+        {
+          id: 'ionising-radiation',
+          title: 'Penetration of Ionising Radiation',
+          subtitle: 'Investigating absorption of alpha, beta and gamma',
+          description: 'Investigate how distance and barriers affect the penetration of ionising radiation',
+          page: 'ionising.html',
+          available: true,
+          accent: 'navy-accent',
+          iconClass: 'navy-icon',
+          btnClass: 'navy-btn',
+          svg: `
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
+                <path id="svg_1" d="m13.4375,5.75003l0.875,0l0,13.49995l-0.875,0l0,-13.49995z" opacity="undefined" stroke="#000" fill="#fff"/>
+  <rect id="svg_2" height="0.625" width="1.37499" y="2.24994" x="-6.84367" stroke="#000" fill="#fff"/>
+  <rect id="svg_4" height="3.81248" width="1.25" y="10.59376" x="20.34372" stroke="#000" fill="#000000"/>
+  <rect id="svg_5" height="1.56249" width="2.18749" y="11.71875" x="21.78121" stroke="#000" fill="#000000"/>
+  <g id="svg_23">
+   <path id="svg_20" d="m-0.59375,14.65621c1.53125,0.02083 1.1875,-4.02083 2.46875,-4.125c1.45833,0.14583 0.97917,4.04167 2.3125,4" opacity="NaN" stroke="#000" fill="#fff"/>
+   <path id="svg_21" d="m4.15625,14.53121c1.53125,0.02083 1.1875,-4.02083 2.46875,-4.125c1.45833,0.14583 0.97917,4.04167 2.3125,4" opacity="NaN" stroke="#000" fill="#fff"/>
+   <path id="svg_22" d="m8.90625,14.46871c1.53125,0.02083 1.1875,-4.02083 2.46875,-4.125c1.45833,0.14583 0.97917,4.04167 2.3125,4" opacity="NaN" stroke="#000" fill="#fff"/>
+  </g>
+                </svg>
+                `
+        },
       ]
     }
   },
