@@ -10,9 +10,9 @@
     <div class="container main-content">
       <div class="quote-card">
         <p class="quote-text">
-          "Not only is the universe stranger than we think, it is stranger than we <b>can</b> think"
+          "Change is the Universal wake-up call."
         </p>
-        <p class="quote-author">- Werner Heisenberg</p>
+        <p class="quote-author">- Andrew Pacholyk, Barefoot ~ A Surfer's View of the Universe</p>
       </div>
 
       <div class="cards-grid">
