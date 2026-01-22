@@ -89,7 +89,7 @@ export default {
           btnClass: 'navy-btn',
 
           svg: `
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" stroke="currentColor" stroke-width="1.5">
     <path d="M5.403724,16h21.569644" transform="translate(-0.188546 0)" fill="none"  stroke-linecap="round"/><path d="M8.948386,5.807212L16,16l3.205279,9.415979" transform="translate(0.000001 0.000001)" fill="none"  stroke-linecap="round"/><path d="M13.322649,9.125619l-.226255,2.639641-2.187132-.075419" transform="matrix(0.98709 0.160167 -0.160167 0.98709 1.980267 -1.881139)" fill="none"  stroke-linecap="round"/><path d="M13.322649,9.125619l-.226255,2.639641-2.187132-.075419" transform="matrix(0.897017 0.441996 -0.441996 0.897017 11.288121 5.573907)" fill="none" stroke-linecap="round"/>
 </svg>
 `,
@@ -105,7 +105,7 @@ export default {
           iconClass: 'coral-icon',
           btnClass: 'coral-btn',
           svg: `
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke="currentColor" stroke-width="1.5">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" stroke="currentColor" stroke-width="1.5">
                 <path d="M2.958877,16c0,0,1.55433-7.07067,5.437085-7.095789s6.751722,13.318846,10.480177,13.316916s4.885496-6.221128,4.885496-6.221128" transform="translate(2.639744 0.43734)" fill="none" stroke="#3f5787"/>
                 </svg>
                 `,
