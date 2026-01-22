@@ -99,7 +99,7 @@ export default {
           title: 'Measuring Speed of Sound',
           subtitle: 'Investigating Sound Waves',
           description: 'Using an oscilloscope to measure the speed of sound in air',
-          page: 'gamma-absorption.html',
+          page: 'sound.html',
           available: true,
           accent: 'coral-accent',
           iconClass: 'coral-icon',
