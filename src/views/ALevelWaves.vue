@@ -79,7 +79,7 @@ export default {
         {
           id: 'refraction',
           title: 'Refraction of Light',
-          subtitle: 'Exploring Refraction, Dispersion and Totsl Internal Reflection',
+          subtitle: 'Exploring Refraction, Dispersion and Total Internal Reflection',
           description:
             'Investigate how light refracts through different mediums and the effects of dispersion.',
           page: 'refraction.html',
