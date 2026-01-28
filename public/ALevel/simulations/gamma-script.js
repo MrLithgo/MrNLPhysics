@@ -4,7 +4,12 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const rect = canvas.getBoundingClientRect();
 const addSourceButton = document.getElementById("add-source");
+
+// ✅ single source-of-truth for whether a source is present
 let sourceVisible = false;
+// ✅ controls whether the animation loop is running
+let animationRunning = false;
+
 const startStopButton = document.getElementById("start-stop-button");
 const clearButton = document.getElementById("clear-button");
 const countInput = document.getElementById("count");
@@ -94,9 +99,7 @@ document.getElementById("help-button").addEventListener("click", function () {
   document.body.appendChild(helpWindow);
 });
 
-
 window.currentMaterial = (materialSelect && materialSelect.value) ? materialSelect.value : "lead";
-
 
 const materialDropdownGroup = document.getElementById("materialDropdownGroup");
 if (materialDropdownGroup) {
@@ -189,7 +192,7 @@ if (materialDropdownGroup) {
     // Trigger redraws
     if (typeof drawRectangle === "function") drawRectangle();
     if (typeof drawGeigerCounter === "function") drawGeigerCounter();
-    if (addSourceButton.textContent === "Remove Source" && typeof drawSource === "function") drawSource();
+    if (sourceVisible && typeof drawSource === "function") drawSource(); // ✅ use boolean
   }
 } else {
   // Fallback: keep using the select element (if present)
@@ -199,7 +202,7 @@ if (materialDropdownGroup) {
       window.currentMaterial = materialSelect.value;
       if (typeof drawRectangle === "function") drawRectangle();
       if (typeof drawGeigerCounter === "function") drawGeigerCounter();
-      if (addSourceButton.textContent === "Remove Source" && typeof drawSource === "function") drawSource();
+      if (sourceVisible && typeof drawSource === "function") drawSource(); // ✅ use boolean
     });
   }
 }
@@ -249,8 +252,8 @@ function drawRectangle() {
 document.getElementById("thickness").addEventListener("input", () => {
   drawRectangle();
   drawGeigerCounter();
-  if (addSourceButton.textContent === "Remove Source") {
-    drawSource();
+  if (sourceVisible) {
+    drawSource(); // ✅ use boolean
   }
 });
 
@@ -281,15 +284,30 @@ function drawSource() {
   ctx.fillRect(sourceX, sourceY, sourceWidth, sourceHeight);
 }
 
-// start / stop animation on addSource (only starts RAF loop once)
+// ---------- SOURCE TOGGLE (REPLACED) ----------
+// ✅ do NOT rely on button text for state; keep UI synced to sourceVisible
 addSourceButton.addEventListener("click", () => {
-  if (addSourceButton.textContent === "Add Source") {
-    addSourceButton.textContent = "Remove Source";
-    // start animation loop only once by requesting animation if not already started
-    if (!lastTime) requestAnimationFrame(animateGammaPhotons);
-  } else {
-    addSourceButton.textContent = "Add Source";
-    photons = []; // optional: clear photons
+  sourceVisible = !sourceVisible;
+  addSourceButton.textContent = sourceVisible ? "Remove Source" : "Add Source";
+
+  if (!sourceVisible) {
+    // turn off source: clear photons and stop animation loop once photons are gone
+    photons = [];
+    animationRunning = false;
+    lastTime = undefined;
+
+    // draw static scene immediately
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawRectangle();
+    drawGeigerCounter();
+    return;
+  }
+
+  // turn on source: start animation loop if not running
+  if (!animationRunning) {
+    animationRunning = true;
+    lastTime = undefined;
+    requestAnimationFrame(animateGammaPhotons);
   }
 });
 
@@ -336,23 +354,23 @@ let cumulativeCount = 0;
 
 function updateCount() {
   const countInput = document.getElementById("count");
-  if (addSourceButton.textContent === "Add Source") {
+
+  // ✅ source presence determined by boolean, not button text
+  if (!sourceVisible) {
     const backgroundCount = Math.random() * 0.06;
     cumulativeCount += backgroundCount;
     countInput.value = Math.floor(cumulativeCount).toString();
-  } else {
-    const thickness = parseInt(document.getElementById("thickness").value) / 10;
-    // use currentMaterial for consistency
-    const selectedMaterial = window.currentMaterial || (materialSelect ? materialSelect.value : "lead");
-
-    const attenuationCoefficient =
-      materials[selectedMaterial].attenuationCoefficient;
-
-    const sourceCount = 6 * Math.exp(-attenuationCoefficient * thickness);
-    const backgroundCount = Math.random() * 0.06;
-    cumulativeCount += sourceCount + backgroundCount;
-    countInput.value = Math.floor(cumulativeCount).toString();
+    return;
   }
+
+  const thickness = parseInt(document.getElementById("thickness").value) / 10;
+  const selectedMaterial = window.currentMaterial || (materialSelect ? materialSelect.value : "lead");
+  const attenuationCoefficient = materials[selectedMaterial].attenuationCoefficient;
+
+  const sourceCount = 6 * Math.exp(-attenuationCoefficient * thickness);
+  const backgroundCount = Math.random() * 0.06;
+  cumulativeCount += sourceCount + backgroundCount;
+  countInput.value = Math.floor(cumulativeCount).toString();
 }
 
 // start/stop UI logic (unchanged)
@@ -398,27 +416,34 @@ clearButton.addEventListener("click", () => {
   timerInput.value = "00:00";
 });
 
-// ---------- photon animation (kept but made robust) ----------
+// ---------- photon animation (updated to use sourceVisible + stop cleanly) ----------
 let photons = [];
 let lastTime;
 
 function animateGammaPhotons(time) {
-  // ensure lastTime is initialized on first frame only
+  // ✅ if source is off and no photons remain, stop the loop cleanly
+  if (!sourceVisible && photons.length === 0) {
+    animationRunning = false;
+    lastTime = undefined;
+    // draw static scene once
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawRectangle();
+    drawGeigerCounter();
+    return;
+  }
+
   if (!lastTime) lastTime = time;
   const deltaTime = (time - lastTime) / 1000;
   lastTime = time;
 
-  // Clear canvas and redraw everything
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   drawRectangle();
   drawGeigerCounter();
 
-  if (addSourceButton.textContent === "Remove Source") {
+  if (sourceVisible) {
     drawSource();
 
-    // Spawn new photons at source position (aligned with drawSource)
     if (Math.random() < 0.3) {
-      // source rectangle used in drawSource: x = canvas.width/4 - 90, width 40
       const sourceX = canvas.width / 4 - 90 + 20; // center of source rect
       const sourceY = canvas.height * 0.5 - 10 + 10 + (Math.random() * 10 - 5);
 
@@ -450,8 +475,7 @@ function animateGammaPhotons(time) {
     const wavelength = 7;
     for (let j = 0; j < p.length; j++) {
       const x = j;
-      const y =
-        amplitude * Math.sin((2 * Math.PI * j) / wavelength + p.phaseOffset);
+      const y = amplitude * Math.sin((2 * Math.PI * j) / wavelength + p.phaseOffset);
       j === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
     ctx.strokeStyle = p.color;
@@ -460,21 +484,18 @@ function animateGammaPhotons(time) {
     ctx.restore();
 
     const leadX = canvas.width * 0.5 - 50;
-    const timeToReachLead = (leadX - p.x) / p.vx;
     if (p.x >= leadX && !p.hasPassedLead) {
-      const leadThickness =
-        parseInt(document.getElementById("thickness").value) * 0.05 + 0.0001;
+      const leadThickness = parseInt(document.getElementById("thickness").value) * 0.05 + 0.0001;
       const selectedMaterial = window.currentMaterial || (materialSelect ? materialSelect.value : "lead");
-      const attenuationCoefficient =
-        materials[selectedMaterial].attenuationCoefficient;
-      const probability =
-        0.7 * Math.exp(-attenuationCoefficient * leadThickness);
-      const randN = Math.random();
-      if (randN < probability) {
+      const attenuationCoefficient = materials[selectedMaterial].attenuationCoefficient;
+      const probability = 0.7 * Math.exp(-attenuationCoefficient * leadThickness);
+
+      if (Math.random() < probability) {
         p.hasPassedLead = true;
       } else {
         photons.splice(i, 1);
         i--;
+        continue;
       }
     }
 
@@ -485,42 +506,50 @@ function animateGammaPhotons(time) {
     ) {
       photons.splice(i, 1);
       i--;
+      continue;
     }
+
     // Remove off-screen photons
     if (p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
       photons.splice(i, 1);
       i--;
+      continue;
     }
   }
 
   requestAnimationFrame(animateGammaPhotons);
 }
 
-
+// ----------------- Results table / recording (your code, with small fixes) -----------------
 window.capturedResults = window.capturedResults || [];
 
-
+// ✅ dedup to prevent accidental double-saves (same material/thickness/count/time)
 function recordResult() {
-  // read UI state (fall back gracefully)
   const material = window.currentMaterial || (materialSelect ? materialSelect.value : "lead");
   const thickness = (document.getElementById("thickness") ? parseInt(document.getElementById("thickness").value, 10) : 0);
   const countVal = (countInput && countInput.value !== "" ? parseInt(countInput.value, 10) : Math.floor(cumulativeCount || 0));
   const timeVal = (timerInput && timerInput.value ? timerInput.value : "00:00");
-  const timestamp = new Date().toISOString();
 
   const result = {
-    id: Date.now() + Math.floor(Math.random() * 1000), // unique-ish id
+    id: Date.now() + Math.floor(Math.random() * 1000),
     material,
     thickness_mm: thickness,
     count: isNaN(countVal) ? 0 : countVal,
-    time: timeVal,
-    timestamp
+    time: timeVal
   };
+
+  const last = window.capturedResults.length ? window.capturedResults[window.capturedResults.length - 1] : null;
+  if (last &&
+      last.material === result.material &&
+      last.thickness_mm === result.thickness_mm &&
+      last.count === result.count &&
+      last.time === result.time) {
+    return null;
+  }
 
   window.capturedResults.push(result);
   renderResultsTable();
 
-  // UX feedback: briefly flash the Save button if present
   const saveBtn = document.getElementById("saveResultBtn");
   if (saveBtn) {
     saveBtn.classList.add("flash");
@@ -530,46 +559,38 @@ function recordResult() {
   return result;
 }
 
-
 function renderResultsTable() {
   const tbody = document.getElementById("resultsTable");
   if (!tbody) return;
-  // Build rows
-  tbody.innerHTML = ""; // clear
+  tbody.innerHTML = "";
+
   window.capturedResults.forEach((r, idx) => {
     const tr = document.createElement("tr");
 
-    // index
     const tdIndex = document.createElement("td");
     tdIndex.textContent = idx + 1;
     tr.appendChild(tdIndex);
 
-    // material
     const tdMat = document.createElement("td");
     tdMat.textContent = r.material;
     tr.appendChild(tdMat);
 
-    // thickness
     const tdThick = document.createElement("td");
     tdThick.textContent = `${r.thickness_mm}`;
     tr.appendChild(tdThick);
 
-    // count
     const tdCount = document.createElement("td");
     tdCount.textContent = r.count;
     tr.appendChild(tdCount);
 
-    // time
     const tdTime = document.createElement("td");
     tdTime.textContent = r.time;
     tr.appendChild(tdTime);
 
-    
-
-    // actions (Delete row)
+    // ✅ Actions column = Delete row action
     const tdActions = document.createElement("td");
     const delBtn = document.createElement("button");
-    delBtn.className = "btn.small coral-btn";
+    delBtn.className = "btn coral-btn"; // ✅ fixed className (no dot)
     delBtn.textContent = "Delete row";
     delBtn.setAttribute("aria-label", `Delete recorded row ${idx + 1}`);
     delBtn.addEventListener("click", (e) => {
@@ -583,24 +604,16 @@ function renderResultsTable() {
   });
 }
 
-
 function deleteResultById(id) {
   window.capturedResults = window.capturedResults.filter(r => r.id !== id);
   renderResultsTable();
 }
-
-function deleteResultById(id) {
-  window.capturedResults = window.capturedResults.filter(r => r.id !== id);
-  renderResultsTable();
-}
-
 
 function clearAllResults() {
   window.capturedResults = [];
   renderResultsTable();
 }
 
-// Wire existing "Clear All Results" button if present
 const clearResultsBtn = document.getElementById("clearResultsBtn");
 if (clearResultsBtn) {
   clearResultsBtn.addEventListener("click", (e) => {
@@ -608,7 +621,6 @@ if (clearResultsBtn) {
     clearAllResults();
   });
 }
-
 
 function exportResultsCSV(filename = "gamma_results.csv") {
   if (!window.capturedResults || window.capturedResults.length === 0) {
@@ -622,8 +634,7 @@ function exportResultsCSV(filename = "gamma_results.csv") {
     `"${r.material}"`,
     r.thickness_mm,
     r.count,
-    `"${r.time}"`,
-
+    `"${r.time}"`
   ]);
 
   const csvContent = [header, ...rows].map(r => r.join(",")).join("\r\n");
@@ -639,31 +650,25 @@ function exportResultsCSV(filename = "gamma_results.csv") {
   URL.revokeObjectURL(url);
 }
 
-
 (function ensureExportButton() {
-
- 
-
   const resultsPanel = document.querySelector(".panel.results");
   if (!resultsPanel) return;
 
   const footer = resultsPanel.querySelector(".panel-footer") || document.createElement("div");
   footer.classList.add("panel-footer");
 
-  const exportBtn = document.createElement("button");
-  exportBtn.id = "exportResultsBtn";
-  exportBtn.className = "btn teal-btn";
-  exportBtn.textContent = "Export CSV";
-  exportBtn.style.marginRight = "8px";
-  exportBtn.addEventListener("click", () => exportResultsCSV());
+  if (!document.getElementById("exportResultsBtn")) {
+    const exportBtn = document.createElement("button");
+    exportBtn.id = "exportResultsBtn";
+    exportBtn.className = "btn teal-btn";
+    exportBtn.textContent = "Export CSV";
+    exportBtn.style.marginRight = "8px";
+    exportBtn.addEventListener("click", () => exportResultsCSV());
+    footer.insertBefore(exportBtn, footer.firstChild);
+  }
 
-  
-  footer.insertBefore(exportBtn, footer.firstChild);
-
-  
   if (!resultsPanel.querySelector(".panel-footer")) resultsPanel.appendChild(footer);
 })();
-
 
 (function ensureSaveButton() {
   if (document.getElementById("saveResultBtn")) return;
@@ -680,14 +685,12 @@ function exportResultsCSV(filename = "gamma_results.csv") {
     recordResult();
   });
 
-  // style flash for quick feedback
   const style = document.createElement("style");
   style.innerHTML = `
     .flash { transform: scale(1.02); box-shadow: 0 6px 18px rgba(2,8,23,0.12); transition: transform .12s ease;}
   `;
   document.head.appendChild(style);
 
-  
   const startBtnEl = document.getElementById("start-stop-button");
   if (startBtnEl && startBtnEl.parentNode) {
     startBtnEl.parentNode.appendChild(saveBtn);
@@ -695,6 +698,5 @@ function exportResultsCSV(filename = "gamma_results.csv") {
     controls.appendChild(saveBtn);
   }
 })();
-
 
 renderResultsTable();
