@@ -178,6 +178,7 @@ export default {
             'Experiment with circuits, current, voltage, and resistance in various configurations.',
           category: 'electricity',
           icon: ElectricityIcon,
+          route: '/gcse/electricity',
         },
         {
           id: 3,
