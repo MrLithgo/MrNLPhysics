@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Circuit Builder - Interactive Physics Simulation</title>
+  <meta name="description" content="Build and analyse series and parallel circuits. Measure current and voltage in real-time with interactive circuit symbols."/>
+  
+  <!-- Open Graph Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://simpliphys.com/gcse/circuits" />
+  <meta property="og:title" content="Circuit Builder - Interactive Physics Simulation"/>
+  <meta property="og:description" content="Build series and parallel circuits, measure current and voltage in real-time"/>
+  <meta property="og:image" content="https://simpliphys.com/images/circuit-preview.png"/>
+  <meta property="og:site_name" content="SimpliPhys" />
+
+  <!-- Twitter Card Tags -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:site" content="@SimpliPhys"/>
+  <meta name="twitter:creator" content="@SimpliPhys"/>
+  <meta name="twitter:title" content="Circuit Builder - Interactive Physics Simulation"/>
+  <meta name="twitter:description" content="Build series and parallel circuits with real-time measurements"/>
+  <meta name="twitter:image" content="https://simpliphys.com/images/circuit-preview.png"/>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="circuits-styles.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/assets/atomlogo.svg">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png">
+</head>
+
+<body>
+  <div class="container">
+    <header class="page-header">
+      <div class="header-grid">
+        <div class="header-left">
+          <button id="download-worksheet-btn" class="btn navy-btn" aria-label="Download worksheet PDF">Worksheet</button>
+        </div>
+        <h1 class="page-title">Circuit Builder</h1>
+        <div class="header-actions">
+          <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+        </div>
+      </div>
+    </header>
+
+    <script>
+      document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+        const url = '/assets/circuits-worksheet.pdf';
+        const w = window.open(url, '_blank');
+        if (w) {
+          try { w.opener = null; } catch (e) { }
+        } else {
+          window.location.href = url;
+        }
+      });
+      
+      document.getElementById('quiz-btn').addEventListener('click', () => {
+        const url = '/GCSE/quizzes/electricity/circuits-quiz.html';
+        const w = window.open(url, '_blank');
+        if (w) {
+          try { w.opener = null; } catch (e) { }
+        } else {
+          window.location.href = url;
+        }
+      });
+    </script>
+
+    <section class="experiment-area">
+      <div class="cols">
+        <!-- Simulation Area -->
+        <div class="sim-area">
+          <canvas id="circuit-canvas"></canvas>
+        </div>
+
+        <!-- Controls Area -->
+        <aside class="controls">
+          <!-- Component Bank -->
+          <div class="control-group">
+            <label class="label">Components - Drag onto canvas</label>
+            <div class="component-bank">
+              <div class="component-item" draggable="true" data-type="battery" data-value="6">
+                <svg class="component-icon" viewBox="0 0 80 40">
+                  <line x1="35" y1="12" x2="35" y2="28" stroke="currentColor" stroke-width="3"/>
+                  <line x1="45" y1="8" x2="45" y2="32" stroke="currentColor" stroke-width="2"/>
+                  <line x1="10" y1="20" x2="35" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <line x1="45" y1="20" x2="70" y2="20" stroke="currentColor" stroke-width="2"/>
+                  
+                </svg>
+                <span>Cell</span>
+              </div>
+              
+              <div class="component-item" draggable="true" data-type="resistor" data-value="10">
+                <svg class="component-icon" viewBox="0 0 80 40">
+                  <line x1="5" y1="20" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <rect x="20" y="12" width="40" height="16" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <line x1="60" y1="20" x2="75" y2="20" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Fixed Resistor</span>
+              </div>
+
+              <div class="component-item" draggable="true" data-type="variable-resistor" data-value="10">
+                <svg class="component-icon" viewBox="0 0 80 40">
+
+  <line x1="5" y1="20" x2="20" y2="20" stroke="currentColor" stroke-width="2"/>
+  <line x1="60" y1="20" x2="75" y2="20" stroke="currentColor" stroke-width="2"/>
+
+ 
+  <rect x="20" y="12" width="40" height="16" fill="none" stroke="currentColor" stroke-width="2"/>
+
+
+  <line x1="26" y1="30" x2="54" y2="8" stroke="currentColor" stroke-width="1.8"/>
+
+
+  <polygon points="54,8 50,12 56,11" fill="currentColor"/>
+</svg>
+                <span>Variable Resistor</span>
+              </div>
+              
+              <div class="component-item" draggable="true" data-type="bulb" data-value="10">
+                <svg class="component-icon" viewBox="0 0 80 40">
+                  <line x1="5" y1="20" x2="26" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="40" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <line x1="32" y1="12" x2="48" y2="28" stroke="currentColor" stroke-width="2"/>
+                  <line x1="48" y1="12" x2="32" y2="28" stroke="currentColor" stroke-width="2"/>
+                  <line x1="52" y1="20" x2="75" y2="20" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Lamp</span>
+              </div>
+
+              <div class="component-item" draggable="true" data-type="ammeter" data-value="0">
+                <svg class="component-icon" viewBox="0 0 80 40">
+                  <line x1="5" y1="20" x2="26" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="40" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <text x="40" y="25" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">A</text>
+                  <line x1="52" y1="20" x2="75" y2="20" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Ammeter</span>
+              </div>
+              
+              <div class="component-item" draggable="true" data-type="voltmeter" data-value="0">
+                <svg class="component-icon" viewBox="0 0 80 40">
+                  <line x1="5" y1="20" x2="26" y2="20" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="40" cy="20" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
+                  <text x="40" y="25" font-size="14" font-weight="bold" fill="currentColor" text-anchor="middle">V</text>
+                  <line x1="52" y1="20" x2="75" y2="20" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>Voltmeter</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings -->
+          <div class="control-group">
+            <label class="label">Cell Voltage</label>
+            <div class="range-row">
+              <input type="range" id="battery-voltage" min="3" max="12" value="6" step="1" class="range">
+              <span id="battery-voltage-value" class="value">6 V</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="label">Component Value</label>
+            <div class="range-row">
+              <input type="range" id="component-value" min="1" max="50" value="10" step="1" class="range">
+              <span id="component-value-display" class="value coral">10 Ω</span>
+            </div>
+          </div>
+
+          <!-- Display Options -->
+          <div class="control-group">
+            <label class="label">
+              <input type="checkbox" id="show-grid" checked style="margin-right: 8px;">
+              Show Grid
+            </label>
+          </div>
+
+          <div class="control-group">
+            <label class="label">
+              <input type="checkbox" id="show-values" checked style="margin-right: 8px;">
+              Show Values
+            </label>
+          </div>
+
+          <!-- Actions -->
+          <div class="button-stack">
+            <button id="delete-mode-btn" class="btn coral-btn">Delete Mode (OFF)</button>
+            <button id="clear-btn" class="btn teal-btn">Clear Circuit</button>
+            <button id="reset-btn" class="btn navy-btn">Reset</button>
+          </div>
+        </aside>
+      </div>
+
+      <!-- Instructions Panel -->
+      <section class="panel instructions">
+        <h3>Experiment Instructions</h3>
+        <div class="panel-body">
+          <ol>
+            <li>Drag components onto the canvas</li>
+            <li><strong>Right-click</strong> on a component to rotate it 90°</li>
+            <li>Draw from one point on the grid to another to wire components together</li>
+            
+   
+            <li>Build the circuits on the worksheet and record the values</li>
+          </ol>
+          
+         
+      </section>
+
+     
+
+    </section>
+  </div>
+
+  <script src="circuits-script.js"></script>
+</body>
+</html>
