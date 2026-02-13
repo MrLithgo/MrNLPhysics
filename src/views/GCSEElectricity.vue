@@ -102,6 +102,32 @@ export default {
           svg: `<svg id="eBthFUX7Pg91" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" project-id="9927e984341547938a42a2f9e9d69647" export-id="570b69fbbed34040a3a95ffe5c65eb2d" cached="false"><rect width="16.74287" height="6.033467" rx="1" ry="1" transform="translate(7.656847 17.614585)" fill="none" stroke="#000"/><path d="M24.371435,16h3.808626" transform="translate(0.028282 4.631319)" fill="none" stroke="#000"/><path d="M24.371435,16h3.808626" transform="translate(-20.579778 4.631319)" fill="none" stroke="#000"/><path d="M9.38286,3.720631l3.630067,6.261865.726012-2.813302" transform="translate(0.028283 4.631319)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.381128,9.437986l2.6318.54451" transform="translate(0.028282 4.631319)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"/><g transform="translate(6.645421 4.631318)"><path d="M9.38286,3.720631l3.630067,6.261865.726012-2.813302" transform="translate(0.000001 0)" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.381128,9.437986l2.6318.54451" fill="none" stroke="#000" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
 `,
         },
+         {
+          id: 'circuits',
+          title: 'Circuit Builder',
+          subtitle: 'Investigate how current and voltage change in simple circuits',
+          description:
+            'Build and analyse series and parallel circuits. Measure current and voltage in real-time with interactive circuit symbols.',
+          page: 'circuits.html',
+          available: true,
+          accent: 'teal-accent',
+          iconClass: 'teal-icon',
+          btnClass: 'teal-btn',
+          svg: `<svg class="component-icon" viewBox="0 0 25 25">
+  <!-- short plate (negative) -->
+  <line x1="11" y1="7" x2="11" y2="18" stroke="currentColor" stroke-width="2"/>
+
+  <!-- long plate (positive) -->
+  <line x1="14" y1="5" x2="14" y2="20" stroke="currentColor" stroke-width="1.5"/>
+
+  <!-- left lead -->
+  <line x1="3" y1="12.5" x2="11" y2="12.5" stroke="currentColor" stroke-width="1.5"/>
+
+  <!-- right lead -->
+  <line x1="14" y1="12.5" x2="22" y2="12.5" stroke="currentColor" stroke-width="1.5"/>
+</svg>
+`,
+        },
       ],
     }
   },
