@@ -891,7 +891,7 @@ for (const w of this.wires) {
       uf.find(`t:${c.id}:0`);
       uf.find(`t:${c.id}:1`);
     }
-    // ✅ NEW: auto-connect terminals that overlap on the same grid point (no wire needed)
+   
 const terminalsAtGrid = new Map(); // key "x,y" -> array of {compId,pin}
 
 for (const c of this.components) {
@@ -1074,10 +1074,23 @@ for (const [key, list] of terminalsAtGrid.entries()) {
       } else if (c.type === "battery") {
         c.voltage = c.value;
         c.current = Math.abs(sol.branchIById.get(c.id) ?? 0);
-      } else {
-        c.voltage = Math.abs(dvSafe);
-        c.current = Math.abs(sol.branchIById.get(c.id) ?? 0);
-      }
+     } else if (c.type === "ammeter") {
+  c.voltage = Math.abs(dvSafe);
+
+  const I = Math.abs(sol.branchIById.get(c.id) ?? 0);
+
+  
+  const MAX_A = 5; 
+  c.current = Math.min(I, MAX_A);
+
+  // optional flag if you want to show a warning text later
+  c._clamped = I > MAX_A;
+
+} else {
+  c.voltage = Math.abs(dvSafe);
+  c.current = Math.abs(sol.branchIById.get(c.id) ?? 0);
+}
+
     }
   }
 
