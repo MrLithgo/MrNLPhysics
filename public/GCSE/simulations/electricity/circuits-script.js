@@ -381,6 +381,16 @@ this.canvas.addEventListener("touchstart", (e) => this.onTouchStart(e), { passiv
 this.canvas.addEventListener("touchmove",  (e) => this.onTouchMove(e),  { passive: false });
 this.canvas.addEventListener("touchend",   (e) => this.onTouchEnd(e),   { passive: false });
 this.canvas.addEventListener("touchcancel",(e) => this.onTouchEnd(e),   { passive: false });
+const rotateBtn = document.getElementById("rotate-btn");
+if (rotateBtn) {
+  rotateBtn.addEventListener("click", () => {
+    const sel = this.getSelectedComponent();
+    if (!sel) return;
+
+    sel.orientation = sel.orientation === "horizontal" ? "vertical" : "horizontal";
+    this.calculateCircuit();
+  });
+}
 
 
     this.canvas.addEventListener("contextmenu", (e) => this.handleRightClick(e));
