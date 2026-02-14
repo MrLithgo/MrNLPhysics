@@ -247,50 +247,6 @@ onPaletteGhostUp(e, isCancel) {
   this.paletteDrag = null;
 }
 
-
-tryDropPaletteItemToCanvas(clientX, clientY, type, value) {
-  const rect = this.canvas.getBoundingClientRect();
-
-  const inside =
-    clientX >= rect.left &&
-    clientX <= rect.right &&
-    clientY >= rect.top &&
-    clientY <= rect.bottom;
-
-  if (!inside) return false;
-
-  // Convert to canvas coords
-  const x = this.snapToGrid(clientX - rect.left);
-  const y = this.snapToGrid(clientY - rect.top);
-
-  // Collision check
-  const collision = this.components.find(
-    (c) => Math.abs(c.x - x) < this.gridSize && Math.abs(c.y - y) < this.gridSize
-  );
-  if (collision) return false;
-
-  const component = {
-    id: this.nextId++,
-    type,
-    x,
-    y,
-    value: type === "battery" ? this.batteryVoltage : this.componentValue,
-    current: 0,
-    voltage: 0,
-    orientation: "horizontal",
-  };
-
-  this.components.push(component);
-
-  // Select newly placed component
-  this.selectedComponentId = component.id;
-  this.syncComponentValueUI(component);
-
-  this.calculateCircuit();
-  this.updateHint();
-
-  return true;
-}
 onTouchStart(e) {
   // Stop page scrolling/zoom stealing the gesture
   e.preventDefault();
@@ -396,15 +352,10 @@ document.addEventListener("pointercancel", (e) => this.onPaletteGhostUp(e, true)
     // Canvas events
     this.canvas.addEventListener("drop", (e) => this.handleDrop(e));
     this.canvas.addEventListener("dragover", (e) => this.handleDragOver(e));
-   this.canvas.addEventListener("pointerdown", e => this.handlePointerDown(e), { passive: false });
-this.canvas.addEventListener("pointermove", e => this.handlePointerMove(e), { passive: false });
-this.canvas.addEventListener("pointerup",   e => this.handlePointerUp(e),   { passive: false });
     this.canvas.addEventListener("pointerdown", e => this.handlePointerDown(e), { passive: false });
-this.canvas.addEventListener("pointermove", e => this.handlePointerMove(e), { passive: false });
-this.canvas.addEventListener("pointerup",   e => this.handlePointerUp(e),   { passive: false });
-
-// ADD (important on iPad)
-this.canvas.addEventListener("pointercancel", e => this.handlePointerUp(e), { passive: false });
+    this.canvas.addEventListener("pointermove", e => this.handlePointerMove(e), { passive: false });
+    this.canvas.addEventListener("pointerup",   e => this.handlePointerUp(e),   { passive: false });
+    this.canvas.addEventListener("pointercancel", e => this.handlePointerUp(e), { passive: false });
 
 // ADD: iPad fallback
 this.canvas.addEventListener("touchstart", (e) => this.onTouchStart(e), { passive: false });
@@ -613,16 +564,14 @@ if (rotateBtn) {
   handlePointerDown(e) {
     e.preventDefault();
 
-this.activePointerId = e.pointerId ?? 1; // fallback
+    this.activePointerId = e.pointerId ?? 1;
 
-try {
-  if (e.pointerId != null) this.canvas.setPointerCapture(e.pointerId);
-} catch (_) {
-  // iPad WebKit sometimes throws here, ignore
-}
+    try {
+      if (e.pointerId != null) this.canvas.setPointerCapture(e.pointerId);
+    } catch (_) {
+      // iPad WebKit sometimes throws here, ignore
+    }
 
-  this.canvas.setPointerCapture(e.pointerId);
-  this.activePointerId = e.pointerId;
     const { x, y } = this.getPointerCanvasXY(e);
     const gx = this.snapToGrid(x);
     const gy = this.snapToGrid(y);
@@ -719,19 +668,16 @@ if (this.activePointerId != null && e.pointerId != null && this.activePointerId 
   }
 
   handlePointerUp(e) {
-     // Only block if BOTH ids exist and they differ
-try {
-  if (e.pointerId != null && this.canvas.releasePointerCapture) {
-    this.canvas.releasePointerCapture(e.pointerId);
-  }
-} catch (_) {}
+    e.preventDefault();
 
-this.activePointerId = null;
+    try {
+      if (e.pointerId != null && this.canvas.releasePointerCapture) {
+        this.canvas.releasePointerCapture(e.pointerId);
+      }
+    } catch (_) {}
 
+    this.activePointerId = null;
 
-  e.preventDefault();
-  this.canvas.releasePointerCapture(e.pointerId);
-  this.activePointerId = null;
     if (this.draggedCanvasComponent) {
       this.draggedCanvasComponent = null;
       this.canvas.style.cursor = "crosshair";
@@ -886,8 +832,7 @@ this.activePointerId = null;
     const uf = new UnionFind();
 
     // union along wire paths + attach endpoints to terminals
-    // union along wire paths + attach endpoints to terminals
-for (const w of this.wires) {
+    for (const w of this.wires) {
   const pts = w.path || [];
   if (pts.length < 2) continue;
 
