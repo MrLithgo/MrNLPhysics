@@ -6,7 +6,6 @@
   <title>Ionising Radiation</title>
 
   <meta name="description" content="Minimalist physics simulations designed to reduce cognitive load. Free interactive labs for forces, electricity, waves, radioactivity with worksheets & quizzes." />
-  <meta name="keywords" content="ionising radiation simulation, alpha beta gamma radiation, Geiger-Muller tube, GM counter, A-Level physics, background radiation, radiation absorbers, radioactivity, nuclear physics, radiation detection, radiation penetration, physics practical, virtual lab, interactive physics, free physics simulation, nuclear physics A-Level, radiation safety"/>
 
   <!-- Open Graph Tags -->
   <meta property="og:type" content="website" />
@@ -24,3 +23,180 @@
   <meta name="twitter:description" content="Investigate alpha, beta and gamma with a virtual GM tube." />
   <meta name="twitter:image" content="https://simpliphys.com/images/your-preview-image.png" />
 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="ionising-styles.css" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="/assets/atomlogo.svg">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png">
+</head>
+
+<body>
+  <div class="container">
+    <header class="page-header">
+      <div class="header-grid">
+        <div class="header-left">
+          <button id="download-worksheet-btn" class="btn navy-btn" aria-label="Download worksheet PDF">Worksheet</button>
+        </div>
+        <h1 class="page-title">Ionising Radiation</h1>
+        <div class="header-actions">
+          <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="experiment-area">
+      <div class="cols">
+        <!-- Simulation Area -->
+        <div class="sim-area" id="simArea">
+          <canvas id="stage" width="900" height="500" aria-label="Ionising radiation simulation canvas"></canvas>
+         
+        </div>
+
+        <!-- Controls Area -->
+        <aside class="controls" aria-label="Simulation controls">
+
+         <div class="control-group">
+  <label class="label" for="sourceSelect">Source</label>
+  <select id="sourceSelect" class="select">
+    <option value="background">Background only</option>
+
+    <optgroup label="Alpha emitters">
+      <option value="am241">Am-241 (smoke detector)</option>
+    </optgroup>
+
+    <optgroup label="Beta emitters">
+      <option value="sr90">Sr-90 (beta source)</option>
+    </optgroup>
+
+    <optgroup label="Gamma emitters">
+      <option value="cs137">Cs-137 (gamma source)</option>
+    </optgroup>
+
+    <option value="mystery">Mystery source</option>
+  </select>
+</div>
+
+
+          
+
+          <div class="control-group">
+            <label class="label" for="distanceSlider">Distance (cm)</label>
+            <div class="range-row">
+              <input type="range" id="distanceSlider" min="2" max="50" value="15" step="1" class="range">
+              <span id="distanceValue" class="value">15</span>
+            </div>
+          </div>
+
+         
+
+          <div class="control-group">
+            <label class="label" for="absorberMaterial">Absorber</label>
+            <select id="absorberMaterial" class="select">
+              <option value="none">None</option>
+              <option value="paper">Paper</option>
+              <option value="aluminium">Aluminium</option>
+              <option value="lead">Lead</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label class="label" for="thicknessSlider">Thickness</label>
+            <div class="range-row">
+              <input type="range" id="thicknessSlider" min="0" max="10" value="0" step="1" class="range">
+              <span id="thicknessValue" class="value">0</span>
+            </div>
+            <div class="help-text" id="thicknessUnit">mm</div>
+          </div>
+
+          <div class="control-group">
+            <label class="label" for="sampleTime">Sample time</label>
+            <select id="sampleTime" class="select">
+              <option value="5">5 s</option>
+              <option value="10" selected>10 s</option>
+              <option value="20">20 s</option>
+            </select>
+          </div>
+
+          <div class="button-stack">
+            <button id="startBtn" class="btn teal-btn">Start</button>
+            <button id="resetBtn" class="btn navy-btn">Reset</button>
+          </div>
+
+        </aside>
+      </div>
+
+      <!-- Instructions Panel -->
+      <section class="panel instructions">
+        <h3>Experiment Instructions</h3>
+        <div class="panel-body">
+          <ol>
+            <li>Start with <strong>No absorber</strong> and measure the count rate for background radiation.</li>
+            <li>Select a radiation type and record the rate at a fixed distance.</li>
+            <li>Add an absorber and increase thickness until the radiation is mostly stopped.</li>
+            <li>Change the distance and observe how the count rate changes.</li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- Results Table -->
+      <section class="panel results">
+        <h3>Results</h3>
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Radiation</th>
+                <th>Distance (cm)</th>
+                <th>Absorber</th>
+                <th>Thickness</th>
+                <th>Rate (cps)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="resultsTable"></tbody>
+          </table>
+        </div>
+        <br>
+        <div class="panel-footer">
+          <button id="clearResultsBtn" class="btn coral-btn">Clear All Results</button>
+        </div>
+      </section>
+
+      <!-- Student Worksheet -->
+      <section class="panel worksheet">
+        <div class="panel-body">
+          <h3>Student prompts</h3>
+          <ul>
+            <li>Which absorber stops alpha most effectively?</li>
+            <li>How many mm of aluminium are needed to reduce beta noticeably?</li>
+            <li>Why does gamma reduce slowly, even with lead?</li>
+            <li>How does doubling the distance affect the count rate?</li>
+          </ul>
+        </div>
+      </section>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+      const url = '/assets/ionising-radiation-worksheet.pdf';
+      const w = window.open(url, '_blank');
+      if (w) { try { w.opener = null; } catch (e) {} }
+      else { window.location.href = url; }
+    });
+
+    document.getElementById('quiz-btn').addEventListener('click', () => {
+      const url = '/GCSE/quizzes/radioactivity/ionising-radiation-quiz.html';
+      const w = window.open(url, '_blank');
+      if (w) { try { w.opener = null; } catch (e) {} }
+      else { window.location.href = url; }
+    });
+  </script>
+
+  <script src="ionising-script.js"></script>
+</body>
+</html>

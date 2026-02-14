@@ -7,3 +7,112 @@
 
     <!-- Fonts -->
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/GCSE/quizzes/forces/quiz-styles.css" />
+    <link rel="icon" type="image/svg+xml" href="/assets/atomlogo.svg" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="site-title">Simpliphys</div>
+
+        <h1 class="page-title">Magnetic Fields</h1>
+        <p class="page-sub">Quick Quiz</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="quiz-wrap">
+        <div class="quiz-container">
+          <div id="quiz-header" class="quiz-header">
+            <div class="logo-large">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 32 32"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <rect
+                  width="20.890879"
+                  height="6.108886"
+                  rx="0"
+                  ry="0"
+                  transform="translate(5.554561 12.945557)"
+                  fill="none"
+                  stroke="#000"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M5.401098,15.861742c-2.400378-.082961-3.377804-3.149406-2.389163-6.132777s4.678065-6.033468,12.998866-6.033468s11.853409,3.157845,12.922177,6.033468.007283,5.906522-2.480255,6.132777"
+                  transform="matrix(0.983425 0 0 1 0.259959 -0.69936)"
+                  fill="none"
+                  stroke="#000"
+                />
+                <path
+                  d="M5.532032,15.733042c-2.400378-.082961-3.508738-3.020706-2.520097-6.004077s4.678065-6.033468,12.998866-6.033468s11.853409,3.157845,12.922177,6.033468.136468,5.510898-2.35107,5.737153"
+                  transform="matrix(-0.983343 -0.01268 0.012893 -0.999917 31.511266 32.680872)"
+                  fill="none"
+                  stroke="#000"
+                />
+                <path
+                  d="M5.026527,14.789071c-1.74586-.172004-1.614412-4.025741.718584-6.298801s6.248153-3.539416,10.330057-3.41018s7.233456.951626,9.858414,3.581812s3.229373,6.233152,1.301984,6.31598"
+                  transform="matrix(0.932126 -0.006728 0.005712 0.791361 0.801708 2.349385)"
+                  fill="none"
+                  stroke="#000"
+                />
+                <path
+                  d="M5.026527,14.789071c-1.74586-.172004-1.614412-4.025741.718584-6.298801s6.248153-3.539416,10.330057-3.41018s7.233456.951626,9.858414,3.581812s3.229373,6.233152,1.301984,6.31598"
+                  transform="matrix(-0.932148 -0.002099 0.001782 -0.79138 30.880775 30.057988)"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div id="progress-container" class="progress-container">
+            <div class="progress-top">
+              <span id="question-number">Question 1/10</span>
+              <span id="score-display">Score: 0</span>
+            </div>
+            <div class="progress-track">
+              <div id="progress-bar" class="progress-bar" style="width: 10%"></div>
+            </div>
+          </div>
+
+          <div id="quiz-content" class="quiz-content">
+            <!-- questions inserted by script -->
+          </div>
+
+          <div id="results" class="result-card hidden">
+            <h2 class="results-title">Quiz Results</h2>
+            <div class="final-score"><span id="final-score">0</span>/10</div>
+            <p id="result-message" class="result-message">You've completed the quiz!</p>
+
+            <div class="final-progress-wrap">
+              <div class="progress-track small">
+                <div id="final-progress" class="progress-bar" style="width: 0%"></div>
+              </div>
+              <div class="final-count">
+                <span id="correct-count">0</span> correct out of 10 questions
+              </div>
+            </div>
+
+            <button id="restart-btn" class="btn btn-primary restart-btn">Restart Quiz</button>
+
+            <div id="review-section" class="review-section">
+              <h3>Review Your Answers</h3>
+              <div id="review-list" class="review-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="magnets-quiz-script.js"></script>
+  </body>
+</html>

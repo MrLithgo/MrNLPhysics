@@ -9,7 +9,6 @@
       name="description"
       content="Minimalist physics simulations designed to reduce cognitive load. Ray model for refraction, dispersion, and total internal reflection."
     />
-    <meta name="keywords" content="refraction simulation, light dispersion, Snell's law, A-Level physics, total internal reflection, refractive index, critical angle, prism, wavelength dependence, ray optics, physics practical, virtual lab, interactive physics, free physics simulation, waves A-Level, optics simulation, TIR"/>
 
     <!-- Open Graph Tags -->
     <meta property="og:type" content="website" />
@@ -34,3 +33,169 @@
     <meta name="twitter:image" content="https://simpliphys.com/images/refraction-preview.png" />
 
     <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Montserrat:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link href="refraction-styles.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/assets/atomlogo.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon-180.png" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="page-header">
+        <div class="header-grid">
+          <div class="header-left">
+            <button
+              id="download-worksheet-btn"
+              class="btn navy-btn"
+              aria-label="Download worksheet PDF"
+            >
+              Worksheet
+            </button>
+          </div>
+          <h1 class="page-title">Refraction & Dispersion</h1>
+          <div class="header-actions">
+            <button id="quiz-btn" class="btn gold-btn">Quiz yourself!</button>
+          </div>
+        </div>
+      </header>
+
+      <script>
+        document.getElementById('download-worksheet-btn').addEventListener('click', () => {
+          const url = '/assets/AS-refraction-worksheet.pdf'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            window.location.href = url
+          }
+        })
+        document.getElementById('quiz-btn').addEventListener('click', () => {
+          const url = '/ALevel/quizzes/waves/refraction-quiz.html'
+          const w = window.open(url, '_blank')
+          if (w) {
+            try {
+              w.opener = null
+            } catch (e) {}
+          } else {
+            window.location.href = url
+          }
+        })
+      </script>
+
+      <section class="experiment-area">
+        <div class="cols">
+          <!-- Simulation Area -->
+          <div class="sim-area">
+            <canvas id="simCanvas"></canvas>
+
+            <div class="sim-overlay" aria-hidden="true"></div>
+          </div>
+
+          <!-- Controls Area -->
+          <aside class="controls">
+            <div class="control-group">
+              <label class="label">Incident angle θᵢ (from normal)</label>
+              <div class="range-row">
+                <input
+                  type="range"
+                  id="angleSlider"
+                  min="0"
+                  max="85"
+                  value="45"
+                  step="1"
+                  class="range"
+                />
+                <span id="angleValue" class="value">45°</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="label">Wavelength λ</label>
+              <div class="range-row">
+                <input
+                  type="range"
+                  id="lambdaSlider"
+                  min="380"
+                  max="750"
+                  value="550"
+                  step="1"
+                  class="range"
+                />
+                <span id="lambdaValue" class="value">550 nm</span>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="label">View</label>
+              <div class="range-row">
+                <span style="font-weight: 700; color: var(--slate)">Rays</span>
+
+                <label class="switch" aria-label="Toggle wave view">
+                  <input type="checkbox" id="viewToggle" />
+                  <span class="slider"></span>
+                </label>
+
+                <span style="font-weight: 700; color: var(--slate)">Waves</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="label">Top medium (n₁)</label>
+              <div class="range-row">
+                <select id="mat1" class="select">
+                  <option value="air" selected>Air</option>
+
+                  <option value="water">Water</option>
+                  <option value="bk7">Glass (BK7)</option>
+                  <option value="pmma">Perspex (PMMA)</option>
+                  <option value="diamond">Diamond</option>
+                </select>
+                <span id="n1Value" class="value">n₁ 1.000</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="label">Bottom medium (n₂)</label>
+              <div class="range-row">
+                <select id="mat2" class="select">
+                  <option value="air">Air</option>
+                  <option value="water" selected>Water</option>
+                  <option value="bk7">Glass (BK7)</option>
+                  <option value="pmma">Perspex (PMMA)</option>
+                  <option value="diamond">Diamond</option>
+                </select>
+                <span id="n2Value" class="value">n₂ 1.000</span>
+              </div>
+            </div>
+
+            <div class="button-stack">
+              <button id="swapBtn" class="btn teal-btn">Swap media</button>
+              <button id="resetBtn" class="btn navy-btn">Reset</button>
+            </div>
+
+            <div class="readout" id="readout"></div>
+          </aside>
+        </div>
+
+        <section class="panel instructions">
+          <h3>Experiment Instructions</h3>
+          <div class="panel-body">
+            <ol>
+              <li>Pick materials for the top and bottom media.</li>
+              <li>Change θᵢ to see refraction, then try a high angle for TIR when n₁ &gt; n₂.</li>
+              <li>Move λ to see how dispersion changes n(λ) and therefore θt.</li>
+            </ol>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script src="refraction-script.js"></script>
+  </body>
+</html>
