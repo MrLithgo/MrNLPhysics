@@ -101,57 +101,69 @@ this._touchDragging = false;
   positionGhostImmediate(clientX, clientY) {
     if (!this.paletteDrag || !this.paletteDrag.ghost) return;
 
-    const { ghost, offX, offY } = this.paletteDrag;
+    const { ghost } = this.paletteDrag;
 
-    // Position ghost instantly at finger position
-    const x = clientX - offX;
-    const y = clientY - offY;
+    // Position ghost CENTER directly under finger (no offset - feels more responsive)
+    const ghostWidth = 120; // matches ghost.style.width
+    const ghostHeight = 80; // approximate height
+    const x = clientX - ghostWidth / 2;
+    const y = clientY - ghostHeight / 2;
 
     // Only update transform - this is the fastest way to move an element
     ghost.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
 
   startPaletteGhostDrag(e, item, type, value) {
-    // build ghost
-    const ghost = item.cloneNode(true);
-    ghost.classList.add("component-ghost");
-    ghost.classList.remove("dragging");
+    // Create LIGHTWEIGHT ghost (text only - much faster than cloning)
+    const ghost = document.createElement('div');
+    ghost.className = 'component-ghost';
+    ghost.textContent = item.querySelector('span')?.textContent || type;
 
-    ghost.style.width = "120px";
-    ghost.style.background = "rgba(255,255,255,0.92)";
-    ghost.style.borderRadius = "12px";
-    ghost.style.padding = "8px 10px";
-    ghost.style.border = "1px solid rgba(0,0,0,0.08)";
-    ghost.style.position = "fixed";
-    ghost.style.left = "0";
-    ghost.style.top = "0";
-    ghost.style.pointerEvents = "none";
-    ghost.style.touchAction = "none"; // Prevent browser touch handling
-    ghost.style.zIndex = "10000";
-    ghost.style.willChange = "transform"; // GPU acceleration hint
+    const ghostWidth = 120;
+    const ghostHeight = 50;
 
-    const r = item.getBoundingClientRect();
+    // Set all styles at once for better performance
+    Object.assign(ghost.style, {
+      width: ghostWidth + "px",
+      height: ghostHeight + "px",
+      background: "rgba(255,255,255,0.95)",
+      borderRadius: "12px",
+      padding: "12px",
+      border: "2px solid #3498db",
+      position: "fixed",
+      left: "0",
+      top: "0",
+      pointerEvents: "none",
+      touchAction: "none",
+      zIndex: "10000",
+      willChange: "transform",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      fontSize: "14px",
+      fontWeight: "600",
+      color: "#2c3e50",
+      boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+    });
 
-    // Finger offset within the palette item
-    const offX = e.clientX - r.left;
-    const offY = e.clientY - r.top;
+    // Set INITIAL transform BEFORE appending to avoid flash at (0,0)
+    const initX = e.clientX - ghostWidth / 2;
+    const initY = e.clientY - ghostHeight / 2;
+    ghost.style.transform = `translate3d(${initX}px, ${initY}px, 0)`;
 
     this.paletteDrag = {
       type,
       value,
       ghost,
       pointerId: e.pointerId,
-      offX,
-      offY,
+      ghostWidth,
+      ghostHeight,
       lastX: e.clientX,
       lastY: e.clientY,
     };
 
-    // Append to body
+    // Append to body (transform already set, no flash)
     document.body.appendChild(ghost);
-
-    // Position immediately at finger
-    this.positionGhostImmediate(e.clientX, e.clientY);
 
     // Capture pointer for reliability
     try { item.setPointerCapture(e.pointerId); } catch {}
@@ -202,21 +214,14 @@ onPaletteGhostMove(e) {
   e.preventDefault();
   e.stopPropagation();
 
-  // Use coalesced events to get ALL intermediate positions for smooth tracking
-  const coalescedEvents = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  // Center ghost on finger - direct transform update
+  const x = e.clientX - this.paletteDrag.ghostWidth / 2;
+  const y = e.clientY - this.paletteDrag.ghostHeight / 2;
+  this.paletteDrag.ghost.style.transform = `translate3d(${x}px, ${y}px, 0)`;
 
-  // Get predicted events for lower latency (anticipates finger movement)
-  const predictedEvents = e.getPredictedEvents ? e.getPredictedEvents() : [];
-
-  // Use predicted position if available (lowest latency), otherwise use latest coalesced
-  const events = predictedEvents.length > 0 ? predictedEvents : coalescedEvents;
-  const latestEvent = events[events.length - 1];
-
-  this.paletteDrag.lastX = latestEvent.clientX;
-  this.paletteDrag.lastY = latestEvent.clientY;
-
-  // Update ghost to latest/predicted position immediately
-  this.positionGhostImmediate(this.paletteDrag.lastX, this.paletteDrag.lastY);
+  // Store for drop
+  this.paletteDrag.lastX = e.clientX;
+  this.paletteDrag.lastY = e.clientY;
 }
 
 onPaletteGhostUp(e, isCancel) {
