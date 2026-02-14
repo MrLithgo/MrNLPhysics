@@ -4,7 +4,7 @@
 
 class UnionFind {
   constructor() {
-    
+
     this.parent = new Map();
     this.rank = new Map();
   }
@@ -45,7 +45,7 @@ class CircuitBuilder {
     this.palettePick = null;     // { type, value } when user taps a palette item
 this.paletteEl = null;       // DOM element to highlight (optional)
 this.paletteDrag = null; // { type, value, ghost, pointerId, startX, startY, lastX, lastY }
-    
+
 
 this.isTouchLike = (e) =>
   e.pointerType === "touch" ||
@@ -98,53 +98,64 @@ this._touchDragging = false;
 
     this.init();
   }
+  positionGhostImmediate(clientX, clientY) {
+    if (!this.paletteDrag || !this.paletteDrag.ghost) return;
+
+    const { ghost, offX, offY } = this.paletteDrag;
+
+    // Position ghost instantly at finger position
+    const x = clientX - offX;
+    const y = clientY - offY;
+
+    // Only update transform - this is the fastest way to move an element
+    ghost.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  }
+
   startPaletteGhostDrag(e, item, type, value) {
-  // build ghost
-  const ghost = item.cloneNode(true);
-  ghost.classList.add("component-ghost");
-  ghost.classList.remove("dragging");
+    // build ghost
+    const ghost = item.cloneNode(true);
+    ghost.classList.add("component-ghost");
+    ghost.classList.remove("dragging");
 
-  ghost.style.width = "120px";
-  ghost.style.background = "rgba(255,255,255,0.92)";
-  ghost.style.borderRadius = "12px";
-  ghost.style.padding = "8px 10px";
-  ghost.style.border = "1px solid rgba(0,0,0,0.08)";
-  ghost.style.transform = "translate3d(0,0,0)"; // avoid -9999 initial jump
+    ghost.style.width = "120px";
+    ghost.style.background = "rgba(255,255,255,0.92)";
+    ghost.style.borderRadius = "12px";
+    ghost.style.padding = "8px 10px";
+    ghost.style.border = "1px solid rgba(0,0,0,0.08)";
+    ghost.style.position = "fixed";
+    ghost.style.left = "0";
+    ghost.style.top = "0";
+    ghost.style.pointerEvents = "none";
+    ghost.style.touchAction = "none"; // Prevent browser touch handling
+    ghost.style.zIndex = "10000";
+    ghost.style.willChange = "transform"; // GPU acceleration hint
 
-  // Append FIRST
-  document.body.appendChild(ghost);
+    const r = item.getBoundingClientRect();
 
-  // Force layout so the browser "knows" the element exists before first paint
-  ghost.getBoundingClientRect();
+    // Finger offset within the palette item
+    const offX = e.clientX - r.left;
+    const offY = e.clientY - r.top;
 
-  const r = item.getBoundingClientRect();
+    this.paletteDrag = {
+      type,
+      value,
+      ghost,
+      pointerId: e.pointerId,
+      offX,
+      offY,
+      lastX: e.clientX,
+      lastY: e.clientY,
+    };
 
-  // Finger offset within the palette item
-  const offX = e.clientX - r.left;
-  const offY = e.clientY - r.top;
+    // Append to body
+    document.body.appendChild(ghost);
 
-  this.paletteDrag = {
-    type,
-    value,
-    ghost,
-    pointerId: e.pointerId,
-    offX,
-    offY,
-    lastX: e.clientX,
-    lastY: e.clientY,
-  };
+    // Position immediately at finger
+    this.positionGhostImmediate(e.clientX, e.clientY);
 
-  // Capture pointer for reliability
-  try { item.setPointerCapture(e.pointerId); } catch {}
-
-  
-  const startX = r.left;
-  const startY = r.top;
-  ghost.style.transform = `translate3d(${startX}px, ${startY}px, 0)`;
-
-  // Then immediately snap under the finger
-  this.positionGhost(e.clientX, e.clientY);
-}
+    // Capture pointer for reliability
+    try { item.setPointerCapture(e.pointerId); } catch {}
+  }
 
 
 tryDropPaletteItemToCanvas(clientX, clientY, type, value) {
@@ -191,10 +202,21 @@ onPaletteGhostMove(e) {
   e.preventDefault();
   e.stopPropagation();
 
-  this.paletteDrag.lastX = e.clientX;
-  this.paletteDrag.lastY = e.clientY;
+  // Use coalesced events to get ALL intermediate positions for smooth tracking
+  const coalescedEvents = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
 
-  this.positionGhost(e.clientX, e.clientY);
+  // Get predicted events for lower latency (anticipates finger movement)
+  const predictedEvents = e.getPredictedEvents ? e.getPredictedEvents() : [];
+
+  // Use predicted position if available (lowest latency), otherwise use latest coalesced
+  const events = predictedEvents.length > 0 ? predictedEvents : coalescedEvents;
+  const latestEvent = events[events.length - 1];
+
+  this.paletteDrag.lastX = latestEvent.clientX;
+  this.paletteDrag.lastY = latestEvent.clientY;
+
+  // Update ghost to latest/predicted position immediately
+  this.positionGhostImmediate(this.paletteDrag.lastX, this.paletteDrag.lastY);
 }
 
 onPaletteGhostUp(e, isCancel) {
@@ -206,7 +228,10 @@ onPaletteGhostUp(e, isCancel) {
 
   const { ghost, type, value, lastX, lastY } = this.paletteDrag;
 
-  if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+  if (ghost && ghost.parentNode) {
+    ghost.style.willChange = "auto"; // Release GPU resources
+    ghost.parentNode.removeChild(ghost);
+  }
 
   if (isCancel) {
     this.paletteDrag = null;
@@ -339,7 +364,7 @@ onTouchEnd(e) {
 document.addEventListener("pointerup", (e) => this.onPaletteGhostUp(e, false), { passive: false, capture: true });
 document.addEventListener("pointercancel", (e) => this.onPaletteGhostUp(e, true), { passive: false, capture: true });
 
-    
+
 
    document.querySelectorAll(".component-item").forEach((item) => {
   item.addEventListener("dragstart", (e) => this.handleDragStart(e));
@@ -407,7 +432,7 @@ if (rotateBtn) {
       });
     }
 
-   
+
     const cv = document.getElementById("component-value");
     const cvOut = document.getElementById("component-value-display");
     if (cv) {
@@ -506,7 +531,7 @@ if (rotateBtn) {
     return false;
   }
 
-  
+
   handleDragStart(e) {
     const item = e.target.closest(".component-item");
     if (!item) return;
@@ -563,7 +588,7 @@ if (rotateBtn) {
     this.draggedComponent = null;
   }
 
-  
+
   handleRightClick(e) {
     e.preventDefault();
     const { x, y } = this.getPointerCanvasXY(e);
@@ -590,13 +615,13 @@ try {
 } catch (_) {
   // iPad WebKit sometimes throws here, ignore
 }
-     
+
   this.canvas.setPointerCapture(e.pointerId);
   this.activePointerId = e.pointerId;
     const { x, y } = this.getPointerCanvasXY(e);
     const gx = this.snapToGrid(x);
     const gy = this.snapToGrid(y);
-   
+
 if (this.palettePick) {
   const collision = this.components.find(
     (c) => Math.abs(c.x - gx) < this.gridSize && Math.abs(c.y - gy) < this.gridSize
@@ -901,7 +926,7 @@ for (const w of this.wires) {
       uf.find(`t:${c.id}:0`);
       uf.find(`t:${c.id}:1`);
     }
-   
+
 const terminalsAtGrid = new Map(); // key "x,y" -> array of {compId,pin}
 
 for (const c of this.components) {
@@ -1089,8 +1114,8 @@ for (const [key, list] of terminalsAtGrid.entries()) {
 
   const I = Math.abs(sol.branchIById.get(c.id) ?? 0);
 
-  
-  const MAX_A = 5; 
+
+  const MAX_A = 5;
   c.current = Math.min(I, MAX_A);
 
   // optional flag if you want to show a warning text later
@@ -1385,13 +1410,14 @@ for (const [key, list] of terminalsAtGrid.entries()) {
     const ctx = this.ctx;
     const size = 40;
 
-    // EDITED: highlight selected component
+    // EDITED: highlight selected component (smaller box so terminals are outside)
     if (comp.id === this.selectedComponentId) {
       ctx.save();
       ctx.translate(comp.x, comp.y);
       ctx.strokeStyle = "#f1c40f";
       ctx.lineWidth = 3;
-      ctx.strokeRect(-46, -46, 92, 92);
+      // Smaller highlight box (30x30) so terminals at ±40px are clearly outside
+      ctx.strokeRect(-30, -30, 60, 60);
       ctx.restore();
     }
 
