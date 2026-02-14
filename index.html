@@ -48,10 +48,9 @@
       window.prerenderReady = false
     </script>
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Inter:wght@400;500&family=Lora:ital@0;1&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="/fonts/inter/inter-v13-latin-regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/montserrat/montserrat-v25-latin-600.woff2" as="font" type="font/woff2" crossorigin>
   </head>
   <body>
     <div id="app"></div>

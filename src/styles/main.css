@@ -1,3 +1,6 @@
+/* Import self-hosted fonts */
+@import './fonts.css';
+
 /* CSS Variables */
 :root {
     --navy: #2c3e50;
